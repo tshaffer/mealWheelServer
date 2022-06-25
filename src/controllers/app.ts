@@ -1,5 +1,9 @@
 import { Request, Response } from 'express';
 import multer from 'multer';
+import * as fs from 'fs';
+const path = require('node:path');
+
+import Papa from 'papaparse';
 
 import { version } from '../version';
 
@@ -31,6 +35,19 @@ export const uploadDishSpec = (request: Request, response: Response, next: any) 
       return response.status(500).json(err);
     }
     console.log('return from upload: ', request.file);
+
+    const filePath = path.join('public', 'dishes.csv');
+    const content: string = fs.readFileSync(filePath).toString();
+    console.log(content);
+
+    const result = Papa.parse(content);
+    console.log(result);
+
+    // Papa.parse(file, {
+    //   complete: function(results) {
+    //     console.log("Finished:", results.data);
+    //   }
+    // });
 
     const responseData = {
       uploadStatus: 'success',
