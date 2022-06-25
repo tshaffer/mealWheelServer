@@ -9,8 +9,7 @@ const bodyParser = require('body-parser');
 import { Routes } from './routes/routes';
 
 import { 
-  getTest, 
-  postTest, 
+  getVersion,
  } from './controllers';
 
 class App {
@@ -32,8 +31,8 @@ class App {
     
     this.route.routes(this.app);
 
-    this.app.get('/api/v1/test', getTest);
-    this.app.post('/api/v1/test', postTest);
+    // app routes
+    this.app.get('/api/v1/version', getVersion);
   }
 
   private config(): void {
