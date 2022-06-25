@@ -44,6 +44,7 @@ export const uploadDishSpec = (request: Request, response: Response, next: any) 
       {
         header: true,
         dynamicTyping: true,
+        transform,
       });
     console.log(result);
 
@@ -59,4 +60,16 @@ export const uploadDishSpec = (request: Request, response: Response, next: any) 
     return response.status(200).send(responseData);
   });
 
+}
+
+// A function to apply on each value. The function receives the value as its first argument and the 
+// column number or header name when enabled as its second argument. The return value of the function 
+// will replace the value it received. The transform function is applied before dynamicTyping.
+// convert empty entries in the side, salad, or veg columns to false.
+const transform = (arg1: any, arg2: any) => {
+  if (arg1 === '') {
+    return 'FALSE';
+  } else {
+    return arg1;
+  }
 }
