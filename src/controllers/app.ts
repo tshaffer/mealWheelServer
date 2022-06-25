@@ -40,7 +40,11 @@ export const uploadDishSpec = (request: Request, response: Response, next: any) 
     const content: string = fs.readFileSync(filePath).toString();
     console.log(content);
 
-    const result = Papa.parse(content);
+    const result = Papa.parse(content,
+      {
+        header: true,
+        dynamicTyping: true,
+      });
     console.log(result);
 
     // Papa.parse(file, {
