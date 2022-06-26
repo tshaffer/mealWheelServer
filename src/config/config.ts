@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 import { isNil } from 'lodash';
 import { MealWheelConfiguration } from '../types';
 
-export let tedClientServerBoilerplateConfiguration: MealWheelConfiguration; 
+export let mealWheelConfiguration: MealWheelConfiguration; 
 
 export const readConfig = (pathToConfigFile: string): void => {
 
@@ -11,10 +11,11 @@ export const readConfig = (pathToConfigFile: string): void => {
     const parsedConfig: dotenv.DotenvParseOutput | undefined = configOutput.parsed;
 
     if (!isNil(parsedConfig)) {
-      tedClientServerBoilerplateConfiguration = {
+      mealWheelConfiguration = {
         PORT: Number(parsedConfig.PORT),
+        MONGO_URI: parsedConfig.MONGO_URI,
       };
-      console.log(tedClientServerBoilerplateConfiguration);
+      console.log(mealWheelConfiguration);
     }
   }
   catch (err) {
