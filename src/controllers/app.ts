@@ -2,11 +2,13 @@ import { Request, Response } from 'express';
 import multer from 'multer';
 import * as fs from 'fs';
 const path = require('node:path');
-
 import Papa from 'papaparse';
 
+import { getDishesFromDb } from './dbInterface';
+
+
 import { version } from '../version';
-import { ConvertedCSVDish, ConvertedDishes, DishEntity } from '../types';
+import { ConvertedCSVDish, DishEntity } from '../types';
 import { createDishDocument } from './dbInterface';
 
 export const getVersion = (request: Request, response: Response, next: any) => {
@@ -16,6 +18,14 @@ export const getVersion = (request: Request, response: Response, next: any) => {
   };
   response.json(data);
 };
+
+export function getDishes(request: Request, response: Response) {
+  return getDishesFromDb()
+    .then((dishEntities: DishEntity[]) => {
+      console.log('return from getDishesFromDb, invoke response.json');
+      response.json(dishEntities);
+    });
+}
 
 export const uploadDishSpec = (request: Request, response: Response, next: any) => {
 

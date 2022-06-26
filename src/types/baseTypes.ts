@@ -3,10 +3,6 @@ export interface MealWheelConfiguration {
   MONGO_URI: string;
 }
 
-export interface ConvertedDishes {
-  data: ConvertedCSVDish[];
-}
-
 export interface ConvertedCSVDish {
   name: string;
   type: string;
