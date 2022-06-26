@@ -6,6 +6,8 @@ const path = require('node:path');
 import Papa from 'papaparse';
 
 import { version } from '../version';
+import { ConvertedCSVDish, ConvertedDishes, DishEntity } from '../types';
+import { createDishDocument } from './dbInterface';
 
 export const getVersion = (request: Request, response: Response, next: any) => {
   console.log('getVersion');
@@ -47,12 +49,7 @@ export const uploadDishSpec = (request: Request, response: Response, next: any) 
         transform,
       });
     console.log(result);
-
-    // Papa.parse(file, {
-    //   complete: function(results) {
-    //     console.log("Finished:", results.data);
-    //   }
-    // });
+    processDishes(result.data as ConvertedCSVDish[]);
 
     const responseData = {
       uploadStatus: 'success',
@@ -60,6 +57,25 @@ export const uploadDishSpec = (request: Request, response: Response, next: any) 
     return response.status(200).send(responseData);
   });
 
+}
+
+// const processDishes = (convertedDishes: ConvertedCSVDish[]) => {
+const processDishes = (convertedDishes: any[]) => {
+  for (const convertedDish of convertedDishes) {
+    // TEDTODO
+    const flibbo = Object.values(convertedDish)[0].toString();
+    console.log(flibbo);
+    const dishEntity: DishEntity = {
+      name: flibbo,
+      type: convertedDish.type,
+      requiresOneOf: {
+        side: convertedDish.salad,
+        salad: convertedDish.salad,
+        veg: convertedDish.veg,
+      }
+    }
+    createDishDocument(dishEntity);
+  }
 }
 
 // A function to apply on each value. The function receives the value as its first argument and the 

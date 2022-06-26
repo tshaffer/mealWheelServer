@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import connectDB from './config/db';
 
 // import cookieParser from 'cookie-parser';
 import { readConfig } from './config';
@@ -20,6 +21,11 @@ class App {
   constructor() {
 
     readConfig('/Users/tedshaffer/Documents/Projects/tedServerBoilerplate/src/config/config.env');
+
+    console.log('port environment variable: ', process.env.PORT);
+    console.log('mongo environment variable: ', process.env.MONGO_URI);
+
+    connectDB();
 
     this.app = express();
     this.config();
