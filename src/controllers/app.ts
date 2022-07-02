@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
 import multer from 'multer';
 import * as fs from 'fs';
+import { v4 as uuidv4 } from 'uuid';
 const path = require('node:path');
 import Papa from 'papaparse';
 
 import { getDishesFromDb } from './dbInterface';
 
-
 import { version } from '../version';
-import { ConvertedCSVDish, DishEntity } from '../types';
+import { ConvertedCSVDish, DishEntity, RequiredAccompanimentFlags } from '../types';
 import { createDishDocument } from './dbInterface';
 
 export const getVersion = (request: Request, response: Response, next: any) => {
@@ -72,18 +72,38 @@ export const uploadDishSpec = (request: Request, response: Response, next: any) 
 // const processDishes = (convertedDishes: ConvertedCSVDish[]) => {
 const processDishes = (convertedDishes: any[]) => {
   for (const convertedDish of convertedDishes) {
-    // TEDTODO
-    const flibbo = Object.values(convertedDish)[0].toString();
-    console.log(flibbo);
-    const dishEntity: DishEntity = {
-      name: flibbo,
-      type: convertedDish.type,
-      requiresOneOf: {
-        side: convertedDish.salad,
-        salad: convertedDish.salad,
-        veg: convertedDish.veg,
+
+    const dishName = Object.values(convertedDish)[0].toString();
+    console.log(dishName);
+
+    let dishEntity: DishEntity;
+
+    let requiredAccompaniment: RequiredAccompanimentFlags = RequiredAccompanimentFlags.None;
+    if (convertedDish.salad) {
+      requiredAccompaniment = RequiredAccompanimentFlags.Salad;
+    }
+    if (convertedDish.side) {
+      requiredAccompaniment += RequiredAccompanimentFlags.Side;
+    }
+    if (convertedDish.veg) {
+      requiredAccompaniment += RequiredAccompanimentFlags.Veg;
+    }
+
+    if (requiredAccompaniment !== RequiredAccompanimentFlags.None) {
+      dishEntity = {
+        id: uuidv4(),
+        name: dishName,
+        type: convertedDish.type,
+        accompaniment: requiredAccompaniment,
+      }
+    } else {
+      dishEntity = {
+        id: uuidv4(),
+        name: dishName,
+        type: convertedDish.type,
       }
     }
+
     createDishDocument(dishEntity);
   }
 }
