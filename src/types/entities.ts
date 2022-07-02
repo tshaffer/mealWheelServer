@@ -1,9 +1,8 @@
+import { DishType, RequiredAccompanimentFlags } from '../types';
+
 export interface DishEntity {
+  id: string;
   name: string;
-  type: string;
-  requiresOneOf: {
-    side: boolean;
-    salad: boolean;
-    veg: boolean;
-  }
+  type: DishType;
+  accompaniment?: RequiredAccompanimentFlags;
 }

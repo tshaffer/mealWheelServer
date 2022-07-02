@@ -4,13 +4,10 @@ const Schema = mongoose.Schema;
 
 const DishSchema = new Schema(
   {
+    id: { type: String, required: true },
     name: { type: String, required: true, unique: true },
     type: { type: String, required: true },
-    requiresOneOf: {
-      side: { type: Boolean, required: true },
-      salad: { type: Boolean, required: true },
-      veg: { type: Boolean, required: true },
-    },
+    accompaniment: { type: Number },
   },
 );
 
