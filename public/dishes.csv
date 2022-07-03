@@ -1,0 +1,42 @@
+﻿dish,type,side,salad,veg
+Wings,main,TRUE,TRUE,TRUE
+Mediterranean salad,main,,,
+carbonara,main,,TRUE,TRUE
+burrito bowls,main,,,
+street tacos,main,,,
+ginger salmon,main,,,
+Asian noodle salad,main,,,
+Cauliflower enchiladas,main,,,
+Turkey tacos,main,,,
+cauliflower tacos,main,,,
+Buffalo sliders,main,,TRUE,TRUE
+Buffalo quesadilla,main,,TRUE,TRUE
+BBQ sliders,main,,TRUE,TRUE
+Detroit pizza,main,,,
+Paprika Chicken,main,TRUE,TRUE,TRUE
+French onion soup,main,TRUE,TRUE,TRUE
+Duck,main,TRUE,TRUE,TRUE
+steak,main,TRUE,TRUE,TRUE
+Potatoes au gratin,side,,,
+Ribs,main,TRUE,TRUE,TRUE
+cauliflower au gratin,side,,,
+burgers,main,TRUE,TRUE,TRUE
+Lasagna,main,,TRUE,TRUE
+Sausage pasta bake,main,,TRUE,TRUE
+Jambalaya,main,,,
+Stuffed shells,main,,TRUE,TRUE
+Caprese salad,salad,,,
+Beet salad,salad,,,
+Rice pilaf,side,,,
+Feta orzo tomato salad,salad,,,
+Whole roast chicken ,main,TRUE,TRUE,TRUE
+Spring rolls,main,TRUE,,
+Homemade dumplings,main,TRUE,,
+Pad Thai,main,,,
+pad see eww,main,,,
+Risotto,main,,TRUE,TRUE
+Shrimp and grits,main,,TRUE,TRUE
+Chicken Cesar wraps,main,,,
+asparagus,veg,,,
+roast carrots,veg,,,
+brocolli,veg,,,
