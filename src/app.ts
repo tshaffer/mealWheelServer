@@ -21,7 +21,7 @@ class App {
 
   constructor() {
 
-    readConfig('/Users/tedshaffer/Documents/Projects/tedServerBoilerplate/src/config/config.env');
+    readConfig('/Users/tedshaffer/Documents/Projects/mealWheel/mealWheelServer/src/config/config.env');
 
     console.log('port environment variable: ', process.env.PORT);
     console.log('mongo environment variable: ', process.env.MONGO_URI);
