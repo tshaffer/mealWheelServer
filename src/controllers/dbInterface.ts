@@ -1,6 +1,7 @@
+import { isArray } from 'lodash';
 import { Document } from 'mongoose';
 import Dish from '../models/Dish';
-import { DishEntity } from '../types';
+import { DishEntity, DishType, RequiredAccompanimentFlags } from '../types';
 
 export const createDishDocument = (dishEntity: DishEntity): Promise<any> => {
   return Dish.create(dishEntity)
@@ -34,3 +35,18 @@ export const getDishesFromDb = (): Promise<DishEntity[]> => {
   });
 }
 
+export const updateDishDb = (id: string, name: string, type: DishType, accompaniment: RequiredAccompanimentFlags): void => {
+  Dish.find({ id, }
+    , (err, dishDocs: any) => {
+      if (err) {
+        console.log(err);
+      } else
+        if (isArray(dishDocs) && dishDocs.length === 1) {
+          const dishDoc: any = dishDocs[0];
+          (dishDoc as DishEntity).name = name;
+          (dishDoc as DishEntity).type = type;
+          (dishDoc as DishEntity).accompaniment = accompaniment;
+          dishDoc.save();
+        }
+    });
+}

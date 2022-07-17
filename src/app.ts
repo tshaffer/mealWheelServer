@@ -9,10 +9,10 @@ const bodyParser = require('body-parser');
 
 import { Routes } from './routes/routes';
 
-import { 
+import {
   getDishes,
-  getVersion, uploadDishSpec,
- } from './controllers';
+  getVersion, updateDish, uploadDishSpec,
+} from './controllers';
 
 class App {
 
@@ -35,13 +35,14 @@ class App {
     this.app.use(cors());
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: true }));
-    
+
     this.route.routes(this.app);
 
     // app routes
     this.app.get('/api/v1/version', getVersion);
     this.app.get('/api/v1/dishes', getDishes);
     this.app.post('/api/v1/dishSpec', uploadDishSpec);
+    this.app.post('/api/v1/updateDish', updateDish);
   }
 
   private config(): void {
