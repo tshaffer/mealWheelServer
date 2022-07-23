@@ -69,7 +69,6 @@ export const uploadDishSpec = (request: Request, response: Response, next: any) 
 
 }
 
-// const processDishes = (convertedDishes: ConvertedCSVDish[]) => {
 const processDishes = (convertedDishes: any[]) => {
   for (const convertedDish of convertedDishes) {
 
@@ -120,13 +119,25 @@ const transform = (arg1: any, arg2: any) => {
   }
 }
 
+export const addDish = (request: Request, response: Response, next: any) => {
+
+  console.log('addDish');
+  console.log(request.body);
+
+  const { dish } = request.body;
+  createDishDocument(dish);
+
+  response.sendStatus(200);
+}
+
 export const updateDish = (request: Request, response: Response, next: any) => {
 
+  console.log('updateDish');
   console.log(request.body);
 
   const { dish } = request.body;
   const { id, name, type, accompaniment } = dish;
-  
+
   updateDishDb(id, name, type, accompaniment);
 
   response.sendStatus(200);
