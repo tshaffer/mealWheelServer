@@ -26,6 +26,7 @@ const getUsersFromDb = (): Promise<UserEntity[]> => {
         for (const userDoc of userDocs) {
           const userDocData: any = userDoc.toObject();
           const user: UserEntity = {
+            id: userDocData.id,
             userName: userDocData.userName,
             password: userDocData.password,
             email: userDocData.email,

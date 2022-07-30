@@ -8,6 +8,7 @@ export interface DishEntity {
 }
 
 export interface UserEntity {
+  id: string;
   userName: string;
   password: string;
   email: string;
