@@ -1,7 +1,11 @@
 import { isArray } from 'lodash';
 import { Document } from 'mongoose';
 import Dish from '../models/Dish';
-import { DishEntity, DishType, RequiredAccompanimentFlags } from '../types';
+import {
+  DishEntity,
+  DishType,
+  RequiredAccompanimentFlags,
+} from '../types';
 
 export const createDishDocument = (dishEntity: DishEntity): Promise<any> => {
   return Dish.create(dishEntity)
