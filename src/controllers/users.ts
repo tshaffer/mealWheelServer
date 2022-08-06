@@ -8,7 +8,7 @@ export const getUsers = (request: Request, response: Response, next: any) => {
 
   getUsersFromDb()
     .then((users: UserEntity[]) => {
-      console.log('puzzlesMetadata');
+      console.log('users');
       console.log(users);
       response.json(users);
     })

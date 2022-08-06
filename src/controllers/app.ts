@@ -20,7 +20,10 @@ export const getVersion = (request: Request, response: Response, next: any) => {
 };
 
 export function getDishes(request: Request, response: Response) {
-  return getDishesFromDb()
+
+  const id: string = request.query.id as string;
+
+  return getDishesFromDb(id)
     .then((dishEntities: DishEntity[]) => {
       console.log('return from getDishesFromDb, invoke response.json');
       response.json(dishEntities);
@@ -91,6 +94,7 @@ const processDishes = (convertedDishes: any[]) => {
     if (requiredAccompaniment !== RequiredAccompanimentFlags.None) {
       dishEntity = {
         id: uuidv4(),
+        userId: '',     // TEDTODO
         name: dishName,
         type: convertedDish.type,
         accompaniment: requiredAccompaniment,
@@ -98,6 +102,7 @@ const processDishes = (convertedDishes: any[]) => {
     } else {
       dishEntity = {
         id: uuidv4(),
+        userId: '',     // TEDTODO
         name: dishName,
         type: convertedDish.type,
       }
@@ -136,9 +141,9 @@ export const updateDish = (request: Request, response: Response, next: any) => {
   console.log(request.body);
 
   const { dish } = request.body;
-  const { id, name, type, accompaniment } = dish;
+  const { id, userId, name, type, accompaniment } = dish;
 
-  updateDishDb(id, name, type, accompaniment);
+  updateDishDb(id, userId, name, type, accompaniment);
 
   response.sendStatus(200);
 
