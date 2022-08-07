@@ -11,6 +11,7 @@ import { Routes } from './routes/routes';
 
 import {
   addDish,
+  addMeal,
   getDishes,
   getUsers,
   getVersion,
@@ -49,6 +50,7 @@ class App {
     this.app.post('/api/v1/dishSpec', uploadDishSpec);
     this.app.post('/api/v1/addDish', addDish);
     this.app.post('/api/v1/updateDish', updateDish);
+    this.app.post('/api/v1/addMeal', addMeal);
   }
 
   private config(): void {

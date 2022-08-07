@@ -1,4 +1,4 @@
-import { DishType, RequiredAccompanimentFlags } from '../types';
+import { DishType, MealStatus, RequiredAccompanimentFlags } from '../types';
 
 export interface DishEntity {
   id: string;
@@ -13,5 +13,15 @@ export interface UserEntity {
   userName: string;
   password: string;
   email: string;
+}
+
+export interface MealEntity {
+  id: string;
+  userId: string;
+  mealId: string;
+  mainDishId: string;
+  accompanimentDishId: string | null;
+  dateScheduled: Date;  // https://mongoosejs.com/docs/schematypes.html#dates
+  status: MealStatus;
 }
 

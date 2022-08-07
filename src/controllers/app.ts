@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 const path = require('node:path');
 import Papa from 'papaparse';
 
-import { getDishesFromDb, updateDishDb } from './dbInterface';
+import { createMealDocument, getDishesFromDb, updateDishDb } from './dbInterface';
 
 import { version } from '../version';
 import { ConvertedCSVDish, DishEntity, RequiredAccompanimentFlags } from '../types';
@@ -148,3 +148,15 @@ export const updateDish = (request: Request, response: Response, next: any) => {
   response.sendStatus(200);
 
 }
+
+export const addMeal = (request: Request, response: Response, next: any) => {
+
+  console.log('addMeal');
+  console.log(request.body);
+
+  const { meal } = request.body;
+  createMealDocument(meal);
+
+  response.sendStatus(200);
+}
+

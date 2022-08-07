@@ -1,13 +1,22 @@
 import { isArray } from 'lodash';
 import { Document } from 'mongoose';
+import Meal from '../models/Meal';
 import Dish from '../models/Dish';
 import {
   DishEntity,
   DishType,
+  MealEntity,
   RequiredAccompanimentFlags,
 } from '../types';
 
-export const createDishDocument = (dishEntity: DishEntity): Promise<any> => {
+export const createMealDocument = (mealEntity: MealEntity): Promise<Document> => {
+  return Meal.create(mealEntity)
+    .then((meal: Document) => {
+      return Promise.resolve(meal);
+    });
+}
+
+export const createDishDocument = (dishEntity: DishEntity): Promise<Document> => {
   return Dish.create(dishEntity)
     .then((dish: Document) => {
       return Promise.resolve(dish);

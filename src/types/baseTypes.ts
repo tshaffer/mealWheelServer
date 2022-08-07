@@ -24,3 +24,9 @@ export interface ConvertedCSVDish {
   salad: boolean;
   veg: boolean;
 }
+
+export enum MealStatus {
+  pending = 0,
+  accepted = 1,
+  completed = 2,
+}
