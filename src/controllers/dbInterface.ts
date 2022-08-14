@@ -64,3 +64,29 @@ export const updateDishDb = (id: string, userId: string, name: string, type: Dis
         }
     });
 }
+
+export const getMealsFromDb = (userId: string): Promise<MealEntity[]> => {
+
+  const query = Meal.find({ userId });
+  const promise: Promise<Document[]> = query.exec();
+  return promise.then((mealDocuments: Document[]) => {
+
+    console.log('mealDocuments');
+
+    const mealEntities: MealEntity[] = mealDocuments.map((mealDocument: any) => {
+
+      console.log('mealDocument', mealDocument);
+      const mealDocAsObj: any = mealDocument.toObject();
+      console.log('mealDocAsObj', mealDocAsObj);
+      const mealEntity: MealEntity = mealDocument.toObject();
+      console.log('mealEntity', mealEntity);
+
+      return mealEntity;
+    });
+
+    console.log(mealEntities);
+
+    return Promise.resolve(mealEntities);
+  });
+}
+

@@ -5,10 +5,10 @@ import { v4 as uuidv4 } from 'uuid';
 const path = require('node:path');
 import Papa from 'papaparse';
 
-import { createMealDocument, getDishesFromDb, updateDishDb } from './dbInterface';
+import { createMealDocument, getDishesFromDb, getMealsFromDb, updateDishDb } from './dbInterface';
 
 import { version } from '../version';
-import { ConvertedCSVDish, DishEntity, RequiredAccompanimentFlags } from '../types';
+import { ConvertedCSVDish, DishEntity, MealEntity, RequiredAccompanimentFlags } from '../types';
 import { createDishDocument } from './dbInterface';
 
 export const getVersion = (request: Request, response: Response, next: any) => {
@@ -148,6 +148,18 @@ export const updateDish = (request: Request, response: Response, next: any) => {
   response.sendStatus(200);
 
 }
+
+export function getMeals(request: Request, response: Response) {
+
+  const id: string = request.query.id as string;
+
+  return getMealsFromDb(id)
+    .then((dishEntities: MealEntity[]) => {
+      console.log('return from getMealsFromDb, invoke response.json');
+      response.json(dishEntities);
+    });
+}
+
 
 export const addMeal = (request: Request, response: Response, next: any) => {
 
