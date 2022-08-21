@@ -6,6 +6,7 @@ import {
   DishEntity,
   DishType,
   MealEntity,
+  MealStatus,
   RequiredAccompanimentFlags,
 } from '../types';
 
@@ -89,4 +90,32 @@ export const getMealsFromDb = (userId: string): Promise<MealEntity[]> => {
     return Promise.resolve(mealEntities);
   });
 }
+
+export const updateMealDb = (
+  id: string,
+  userId: string,
+  mealId: string,
+  mainDishId: string,
+  accompanimentDishId: string | null,
+  dateScheduled: Date,
+  status: MealStatus,
+): void => {
+  Meal.find({ id, }
+    , (err, mealsDocs: any) => {
+      if (err) {
+        console.log(err);
+      } else
+        if (isArray(mealsDocs) && mealsDocs.length === 1) {
+          const mealDoc: any = mealsDocs[0];
+          (mealDoc as MealEntity).userId = userId;
+          (mealDoc as MealEntity).mealId = mealId;
+          (mealDoc as MealEntity).mainDishId = mainDishId;
+          (mealDoc as MealEntity).accompanimentDishId = accompanimentDishId;
+          (mealDoc as MealEntity).dateScheduled = dateScheduled;
+          (mealDoc as MealEntity).status = status;
+          mealDoc.save();
+        }
+    });
+}
+
 

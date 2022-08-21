@@ -17,6 +17,7 @@ import {
   getUsers,
   getVersion,
   updateDish,
+  updateMeal,
   uploadDishSpec,
 } from './controllers';
 
@@ -55,6 +56,7 @@ class App {
 
     this.app.get('/api/v1/meals', getMeals);
     this.app.post('/api/v1/addMeal', addMeal);
+    this.app.post('/api/v1/updateMeal', updateMeal);
   }
 
   private config(): void {
