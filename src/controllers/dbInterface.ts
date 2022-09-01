@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 import Meal from '../models/Meal';
 import Dish from '../models/Dish';
 import {
-  DishEntity,
+  // DishEntity,
   DishType,
   MealEntity,
   MealStatus,
@@ -17,37 +17,37 @@ export const createMealDocument = (mealEntity: MealEntity): Promise<Document> =>
     });
 }
 
-export const createDishDocument = (dishEntity: DishEntity): Promise<Document> => {
-  return Dish.create(dishEntity)
-    .then((dish: Document) => {
-      return Promise.resolve(dish);
-    });
-};
+// export const createDishDocument = (dishEntity: DishEntity): Promise<Document> => {
+//   return Dish.create(dishEntity)
+//     .then((dish: Document) => {
+//       return Promise.resolve(dish);
+//     });
+// };
 
-export const getDishesFromDb = (userId: string): Promise<DishEntity[]> => {
+// export const getDishesFromDb = (userId: string): Promise<DishEntity[]> => {
 
-  const query = Dish.find({ userId });
-  const promise: Promise<Document[]> = query.exec();
-  return promise.then((dishDocuments: Document[]) => {
+//   const query = Dish.find({ userId });
+//   const promise: Promise<Document[]> = query.exec();
+//   return promise.then((dishDocuments: Document[]) => {
 
-    console.log('dishDocuments');
+//     console.log('dishDocuments');
 
-    const dishEntities: DishEntity[] = dishDocuments.map((dishDocument: any) => {
+//     const dishEntities: DishEntity[] = dishDocuments.map((dishDocument: any) => {
 
-      console.log('dishDocument', dishDocument);
-      const dishDocAsObj: any = dishDocument.toObject();
-      console.log('dishDocAsObj', dishDocAsObj);
-      const dishEntity: DishEntity = dishDocument.toObject();
-      console.log('dishEntity', dishEntity);
+//       console.log('dishDocument', dishDocument);
+//       const dishDocAsObj: any = dishDocument.toObject();
+//       console.log('dishDocAsObj', dishDocAsObj);
+//       const dishEntity: DishEntity = dishDocument.toObject();
+//       console.log('dishEntity', dishEntity);
 
-      return dishEntity;
-    });
+//       return dishEntity;
+//     });
 
-    console.log(dishEntities);
+//     console.log(dishEntities);
 
-    return Promise.resolve(dishEntities);
-  });
-}
+//     return Promise.resolve(dishEntities);
+//   });
+// }
 
 export const updateDishDb = (id: string, userId: string, name: string, type: DishType, accompaniment: RequiredAccompanimentFlags): void => {
   Dish.find({ id, }
@@ -57,10 +57,10 @@ export const updateDishDb = (id: string, userId: string, name: string, type: Dis
       } else
         if (isArray(dishDocs) && dishDocs.length === 1) {
           const dishDoc: any = dishDocs[0];
-          (dishDoc as DishEntity).userId = userId;
-          (dishDoc as DishEntity).name = name;
-          (dishDoc as DishEntity).type = type;
-          (dishDoc as DishEntity).accompaniment = accompaniment;
+          // (dishDoc as DishEntity).userId = userId;
+          // (dishDoc as DishEntity).name = name;
+          // (dishDoc as DishEntity).type = type;
+          // (dishDoc as DishEntity).accompaniment = accompaniment;
           dishDoc.save();
         }
     });
@@ -100,22 +100,22 @@ export const updateMealDb = (
   dateScheduled: Date,
   status: MealStatus,
 ): void => {
-  Meal.find({ id, }
-    , (err, mealsDocs: any) => {
-      if (err) {
-        console.log(err);
-      } else
-        if (isArray(mealsDocs) && mealsDocs.length === 1) {
-          const mealDoc: any = mealsDocs[0];
-          (mealDoc as MealEntity).userId = userId;
-          (mealDoc as MealEntity).mealId = mealId;
-          (mealDoc as MealEntity).mainDishId = mainDishId;
-          (mealDoc as MealEntity).accompanimentDishId = accompanimentDishId;
-          (mealDoc as MealEntity).dateScheduled = dateScheduled;
-          (mealDoc as MealEntity).status = status;
-          mealDoc.save();
-        }
-    });
+  // Meal.find({ id, }
+  //   , (err, mealsDocs: any) => {
+  //     if (err) {
+  //       console.log(err);
+  //     } else
+  //       if (isArray(mealsDocs) && mealsDocs.length === 1) {
+  //         const mealDoc: any = mealsDocs[0];
+  //         (mealDoc as MealEntity).userId = userId;
+  //         (mealDoc as MealEntity).mealId = mealId;
+  //         (mealDoc as MealEntity).mainDishId = mainDishId;
+  //         (mealDoc as MealEntity).accompanimentDishId = accompanimentDishId;
+  //         (mealDoc as MealEntity).dateScheduled = dateScheduled;
+  //         (mealDoc as MealEntity).status = status;
+  //         mealDoc.save();
+  //       }
+  //   });
 }
 
 

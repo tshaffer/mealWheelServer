@@ -5,11 +5,30 @@ import { v4 as uuidv4 } from 'uuid';
 const path = require('node:path');
 import Papa from 'papaparse';
 
-import { createMealDocument, getDishesFromDb, getMealsFromDb, updateDishDb, updateMealDb } from './dbInterface';
+import {
+  DishType,
+  MealWheelEntityType
+} from '../types';
+
+import {
+  createMealDocument,
+  // getDishesFromDb,
+  getMealsFromDb,
+  updateDishDb,
+  updateMealDb
+} from './dbInterface';
 
 import { version } from '../version';
-import { ConvertedCSVDish, DishEntity, MealEntity, RequiredAccompanimentFlags } from '../types';
-import { createDishDocument } from './dbInterface';
+import {
+  ConvertedCSVDish,
+  // DishEntity,
+  MealEntity,
+  RequiredAccompanimentFlags
+} from '../types';
+import { isString } from 'lodash';
+// import {
+//   createDishDocument
+// } from './dbInterface';
 
 export const getVersion = (request: Request, response: Response, next: any) => {
   console.log('getVersion');
@@ -19,25 +38,14 @@ export const getVersion = (request: Request, response: Response, next: any) => {
   response.json(data);
 };
 
-export function getDishes(request: Request, response: Response) {
-
-  const id: string = request.query.id as string;
-
-  return getDishesFromDb(id)
-    .then((dishEntities: DishEntity[]) => {
-      console.log('return from getDishesFromDb, invoke response.json');
-      response.json(dishEntities);
-    });
-}
-
-export const uploadDishSpec = (request: Request, response: Response, next: any) => {
+export const uploadMealWheelSpec = (request: Request, response: Response, next: any) => {
 
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, 'public');
     },
     filename: function (req, file, cb) {
-      cb(null, 'dishes.csv');
+      cb(null, 'mealWheelSpec.csv');
     }
   });
 
@@ -51,7 +59,7 @@ export const uploadDishSpec = (request: Request, response: Response, next: any) 
     }
     console.log('return from upload: ', request.file);
 
-    const filePath = path.join('public', 'dishes.csv');
+    const filePath = path.join('public', 'mealWheelSpec.csv');
     const content: string = fs.readFileSync(filePath).toString();
     console.log(content);
 
@@ -62,55 +70,151 @@ export const uploadDishSpec = (request: Request, response: Response, next: any) 
         transform,
       });
     console.log(result);
-    processDishes(result.data as ConvertedCSVDish[]);
+    //processMealWheelSpec(result.data as ConvertedCSVDish[]);
+    processMealWheelSpec(result.data as any[]);
 
     const responseData = {
       uploadStatus: 'success',
     };
     return response.status(200).send(responseData);
   });
+};
 
-}
+const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
 
-const processDishes = (convertedDishes: any[]) => {
-  for (const convertedDish of convertedDishes) {
+  for (let i = 0; i < convertedMealWheelSpecItems.length; i++) {
+    const convertedMealWheelSpecItemProperties = Object.values(convertedMealWheelSpecItems[i]);
+    console.log(convertedMealWheelSpecItemProperties);
 
-    const dishName = Object.values(convertedDish)[0].toString();
-    console.log(dishName);
+    const entityType: MealWheelEntityType = convertedMealWheelSpecItemProperties[0] === 'meal' ? MealWheelEntityType.Meal : MealWheelEntityType.Dish;
 
-    let dishEntity: DishEntity;
-
-    let requiredAccompaniment: RequiredAccompanimentFlags = RequiredAccompanimentFlags.None;
-    if (convertedDish.salad) {
-      requiredAccompaniment = RequiredAccompanimentFlags.Salad;
-    }
-    if (convertedDish.side) {
-      requiredAccompaniment += RequiredAccompanimentFlags.Side;
-    }
-    if (convertedDish.veg) {
-      requiredAccompaniment += RequiredAccompanimentFlags.Veg;
-    }
-
-    if (requiredAccompaniment !== RequiredAccompanimentFlags.None) {
-      dishEntity = {
-        id: uuidv4(),
-        userId: '',     // TEDTODO
-        name: dishName,
-        type: convertedDish.type,
-        accompaniment: requiredAccompaniment,
+    let dishType: DishType = DishType.Main;
+    if (entityType === MealWheelEntityType.Dish) {
+      switch (convertedMealWheelSpecItemProperties[1]) {
+        case 'veg':
+          dishType = DishType.Veg;
+          break;
+        case 'salad':
+          dishType = DishType.Salad;
+          break;
+        case 'side':
+          dishType = DishType.Side;
+          break;
+        // case 'main':
+        //   default:
       }
+    }
+
+    const main: string = isString(convertedMealWheelSpecItemProperties[2]) ? convertedMealWheelSpecItemProperties[2] : '';
+    const veg: string = isString(convertedMealWheelSpecItemProperties[3]) ? convertedMealWheelSpecItemProperties[3] : '';
+    const salad: string = isString(convertedMealWheelSpecItemProperties[4]) ? convertedMealWheelSpecItemProperties[4] : '';
+    const side: string = isString(convertedMealWheelSpecItemProperties[5]) ? convertedMealWheelSpecItemProperties[5] : '';
+
+    const requiresVeg: boolean = convertedMealWheelSpecItemProperties[6] as boolean;
+    const requiresSalad: boolean = convertedMealWheelSpecItemProperties[7] as boolean;
+    const requiresSide: boolean = convertedMealWheelSpecItemProperties[8] as boolean;
+
+    if (entityType === MealWheelEntityType.Meal) {
+
     } else {
-      dishEntity = {
-        id: uuidv4(),
-        userId: '',     // TEDTODO
-        name: dishName,
-        type: convertedDish.type,
-      }
+      
     }
-
-    createDishDocument(dishEntity);
   }
 }
+
+
+// export function getDishes(request: Request, response: Response) {
+
+//   const id: string = request.query.id as string;
+
+//   return getDishesFromDb(id)
+//     .then((dishEntities: DishEntity[]) => {
+//       console.log('return from getDishesFromDb, invoke response.json');
+//       response.json(dishEntities);
+//     });
+// }
+
+// export const uploadDishSpec = (request: Request, response: Response, next: any) => {
+
+//   const storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null, 'public');
+//     },
+//     filename: function (req, file, cb) {
+//       cb(null, 'dishes.csv');
+//     }
+//   });
+
+//   const upload = multer({ storage: storage }).single('file');
+
+//   upload(request, response, function (err) {
+//     if (err instanceof multer.MulterError) {
+//       return response.status(500).json(err);
+//     } else if (err) {
+//       return response.status(500).json(err);
+//     }
+//     console.log('return from upload: ', request.file);
+
+//     const filePath = path.join('public', 'dishes.csv');
+//     const content: string = fs.readFileSync(filePath).toString();
+//     console.log(content);
+
+//     const result = Papa.parse(content,
+//       {
+//         header: true,
+//         dynamicTyping: true,
+//         transform,
+//       });
+//     console.log(result);
+//     processDishes(result.data as ConvertedCSVDish[]);
+
+//     const responseData = {
+//       uploadStatus: 'success',
+//     };
+//     return response.status(200).send(responseData);
+//   });
+
+// }
+
+// const processDishes = (convertedDishes: any[]) => {
+//   for (const convertedDish of convertedDishes) {
+
+//     const dishName = Object.values(convertedDish)[0].toString();
+//     console.log(dishName);
+
+//     let dishEntity: DishEntity;
+
+//     let requiredAccompaniment: RequiredAccompanimentFlags = RequiredAccompanimentFlags.None;
+//     if (convertedDish.salad) {
+//       requiredAccompaniment = RequiredAccompanimentFlags.Salad;
+//     }
+//     if (convertedDish.side) {
+//       requiredAccompaniment += RequiredAccompanimentFlags.Side;
+//     }
+//     if (convertedDish.veg) {
+//       requiredAccompaniment += RequiredAccompanimentFlags.Veg;
+//     }
+
+//     if (requiredAccompaniment !== RequiredAccompanimentFlags.None) {
+//       dishEntity = {
+//         id: uuidv4(),
+//         userId: '',     // TEDTODO
+//         name: dishName,
+//         type: convertedDish.type,
+//         accompaniment: requiredAccompaniment,
+//       }
+//     } else {
+//       dishEntity = {
+//         id: uuidv4(),
+//         userId: '',     // TEDTODO
+//         name: dishName,
+//         type: convertedDish.type,
+//       }
+//     }
+
+//     createDishDocument(dishEntity);
+//   }
+// }
 
 // A function to apply on each value. The function receives the value as its first argument and the 
 // column number or header name when enabled as its second argument. The return value of the function 
@@ -130,7 +234,7 @@ export const addDish = (request: Request, response: Response, next: any) => {
   console.log(request.body);
 
   const { dish } = request.body;
-  createDishDocument(dish);
+  // createDishDocument(dish);
 
   response.sendStatus(200);
 }
@@ -179,7 +283,7 @@ export const updateMeal = (request: Request, response: Response, next: any) => {
 
   const { meal } = request.body;
   const { id, userId, mealId, mainDishId, accompanimentDishId, dateScheduled, status } = meal;
-  
+
   updateMealDb(id, userId, mealId, mainDishId, accompanimentDishId, dateScheduled, status);
 
   response.sendStatus(200);

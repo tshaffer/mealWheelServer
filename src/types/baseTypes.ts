@@ -3,6 +3,11 @@ export interface MealWheelConfiguration {
   MONGO_URI: string;
 }
 
+export enum MealWheelEntityType {
+  Meal = 'meal',
+  Dish = 'dish',
+};
+
 export enum DishType {
   Main = 'main',
   Side = 'side',
@@ -17,6 +22,9 @@ export enum RequiredAccompanimentFlags {
   Veg = 4,
 }
 
+// export interface ConvertMealWheelSpecItem {
+
+// }
 export interface ConvertedCSVDish {
   name: string;
   type: string;
