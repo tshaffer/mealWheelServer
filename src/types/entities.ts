@@ -18,6 +18,7 @@ export interface MealEntity {
   mainDishId: string;
   accompanimentDishIds: string[];
   // determine the best way to do the following
+  mainName: string;
   vegName: string;
   saladName: string;
   sideName: string;

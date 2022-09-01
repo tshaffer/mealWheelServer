@@ -129,6 +129,7 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
         userId: '',                   // TEDTODO
         mainDishId: '',               // fill in after parsing dishes
         accompanimentDishIds: [],     // fill in after parsing dishes
+        mainName: name,
         vegName: veg,
         saladName: salad,
         sideName: side,
@@ -182,6 +183,7 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
 
   // return to meals and fill in the accompaniment id's
   for (const mealEntity of mealEntities) {
+    mealEntity.mainDishId = dishesByName[mealEntity.mainName].id;
     if (mealEntity.vegName !== '') {
       mealEntity.accompanimentDishIds.push(dishesByName[mealEntity.vegName].id);
     }

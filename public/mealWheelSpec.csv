@@ -1,6 +1,8 @@
 ﻿entitytype,dishtype,name,veg,salad,side,requires veg,requires salad,requires side
 meal,,BBQ Chicken,Riced Cauliflower,,Couscous,,,
 meal,,Ground turkey with pesto pasta,,,,,,
+dish,main,BBQ Chicken,,,,,,
+dish,main,Ground turkey with pesto pasta,,,,,,
 dish,main,Wings,,,,TRUE,TRUE,TRUE
 dish,main,Mediterranean salad,,,,,,
 dish,main,Carbonara,,,,TRUE,TRUE,
