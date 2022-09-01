@@ -1,5 +1,5 @@
-﻿entitytype,dishtype,main,veg,salad,side,requires veg,requires salad,requires side
-meal,,BBQ Chicken,Riced Cauliflower,,Coucous,,,
+﻿entitytype,dishtype,name,veg,salad,side,requires veg,requires salad,requires side
+meal,,BBQ Chicken,Riced Cauliflower,,Couscous,,,
 meal,,Ground turkey with pesto pasta,,,,,,
 dish,main,Wings,,,,TRUE,TRUE,TRUE
 dish,main,Mediterranean salad,,,,,,
@@ -36,9 +36,11 @@ dish,main,Chicken Caesar wraps,,,,,,
 dish,veg,,asparagus,,,,,
 dish,veg,,roast carrots,,,,,
 dish,veg,,brocolli,,,,,
+dish,veg,,Riced Cauliflower,,,,,
 dish,salad,,,Caprese salad,,,,
 dish,salad,,,Beet salad,,,,
 dish,salad,,,Feta orzo tomato salad,,,,
 dish,side,,,,Potatoes au gratin,,,
 dish,side,,,,cauliflower au gratin,,,
 dish,side,,,,Rice pilaf,,,
+dish,side,,,,Couscous,,,

@@ -8,7 +8,7 @@ const DishSchema = new Schema(
     userId: { type: String, required: true },
     name: { type: String, required: true, unique: true },
     type: { type: String, required: true },
-    accompaniment: { type: Number },
+    accompaniment: { type: Number, required: true },
   },
 );
 

@@ -6,11 +6,15 @@ const path = require('node:path');
 import Papa from 'papaparse';
 
 import {
+  BaseDishEntity,
   DishType,
+  MainDishEntity,
   MealWheelEntityType
 } from '../types';
 
 import {
+  createBaseDishDocument,
+  createMainDishDocument,
   createMealDocument,
   // getDishesFromDb,
   getMealsFromDb,
@@ -82,7 +86,11 @@ export const uploadMealWheelSpec = (request: Request, response: Response, next: 
 
 const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
 
+  const mealEntities: MealEntity[] = [];
+  let dishesByName: { [id: string]: BaseDishEntity; } = {};  // id is dish name
+
   for (let i = 0; i < convertedMealWheelSpecItems.length; i++) {
+
     const convertedMealWheelSpecItemProperties = Object.values(convertedMealWheelSpecItems[i]);
     console.log(convertedMealWheelSpecItemProperties);
 
@@ -105,7 +113,7 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
       }
     }
 
-    const main: string = isString(convertedMealWheelSpecItemProperties[2]) ? convertedMealWheelSpecItemProperties[2] : '';
+    let name: string = isString(convertedMealWheelSpecItemProperties[2]) ? convertedMealWheelSpecItemProperties[2] : '';
     const veg: string = isString(convertedMealWheelSpecItemProperties[3]) ? convertedMealWheelSpecItemProperties[3] : '';
     const salad: string = isString(convertedMealWheelSpecItemProperties[4]) ? convertedMealWheelSpecItemProperties[4] : '';
     const side: string = isString(convertedMealWheelSpecItemProperties[5]) ? convertedMealWheelSpecItemProperties[5] : '';
@@ -116,11 +124,87 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
 
     if (entityType === MealWheelEntityType.Meal) {
 
+      const mealEntity: MealEntity = {
+        id: uuidv4(),
+        userId: '',                   // TEDTODO
+        mainDishId: '',               // fill in after parsing dishes
+        accompanimentDishIds: [],     // fill in after parsing dishes
+        vegName: veg,
+        saladName: salad,
+        sideName: side,
+      }
+      mealEntities.push(mealEntity);
     } else {
-      
+      if (dishType === DishType.Main) {
+        const mainDish: MainDishEntity = {
+          id: uuidv4(),
+          userId: '',
+          name,
+          type: DishType.Main,
+          accompanimentRequired: RequiredAccompanimentFlags.None
+        }
+        if (requiresVeg) {
+          mainDish.accompanimentRequired = RequiredAccompanimentFlags.Veg;
+        }
+        if (requiresSalad) {
+          mainDish.accompanimentRequired += RequiredAccompanimentFlags.Salad;
+        }
+        if (requiresSide) {
+          mainDish.accompanimentRequired += RequiredAccompanimentFlags.Side;
+        }
+        // createMainDishDocument(mainDish);
+        dishesByName[name] = mainDish;
+
+      } else {
+        switch (dishType) {
+          case DishType.Veg:
+            name = veg;
+            break;
+          case DishType.Salad:
+            name = salad;
+            break;
+          case DishType.Side:
+            name = side;
+            break;
+        }
+        const baseDish: BaseDishEntity = {
+          id: uuidv4(),
+          userId: '',
+          name,
+          type: dishType
+        }
+        // createBaseDishDocument(baseDish);
+        dishesByName[name] = baseDish;
+      }
     }
+
   }
+
+  // return to meals and fill in the accompaniment id's
+  for (const mealEntity of mealEntities) {
+    if (mealEntity.vegName !== '') {
+      mealEntity.accompanimentDishIds.push(dishesByName[mealEntity.vegName].id);
+    }
+    if (mealEntity.saladName !== '') {
+      mealEntity.accompanimentDishIds.push(dishesByName[mealEntity.saladName].id);
+    }
+    if (mealEntity.sideName !== '') {
+      console.log('check values here');
+      console.log(mealEntity.sideName);
+      console.log(dishesByName[mealEntity.sideName]);
+      console.log(Object.keys(dishesByName[mealEntity.sideName]));
+      console.log(mealEntity.accompanimentDishIds);
+      console.log(dishesByName[mealEntity.sideName].id);
+      mealEntity.accompanimentDishIds.push(dishesByName[mealEntity.sideName].id);
+
+    }
+
+    // createMealDocument(mealEntity);
+  }
+
+  console.log('upload complete');
 }
+
 
 
 // export function getDishes(request: Request, response: Response) {

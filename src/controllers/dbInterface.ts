@@ -3,8 +3,10 @@ import { Document } from 'mongoose';
 import Meal from '../models/Meal';
 import Dish from '../models/Dish';
 import {
+  BaseDishEntity,
   // DishEntity,
   DishType,
+  MainDishEntity,
   MealEntity,
   MealStatus,
   RequiredAccompanimentFlags,
@@ -17,12 +19,20 @@ export const createMealDocument = (mealEntity: MealEntity): Promise<Document> =>
     });
 }
 
-// export const createDishDocument = (dishEntity: DishEntity): Promise<Document> => {
-//   return Dish.create(dishEntity)
-//     .then((dish: Document) => {
-//       return Promise.resolve(dish);
-//     });
-// };
+export const createMainDishDocument = (dishEntity: MainDishEntity): Promise<Document> => {
+  return Dish.create(dishEntity)
+    .then((dish: Document) => {
+      return Promise.resolve(dish);
+    });
+};
+
+export const createBaseDishDocument = (dishEntity: BaseDishEntity): Promise<Document> => {
+  (dishEntity as MainDishEntity).accompanimentRequired = RequiredAccompanimentFlags.None;
+  return Dish.create(dishEntity)
+    .then((dish: Document) => {
+      return Promise.resolve(dish);
+    });
+};
 
 // export const getDishesFromDb = (userId: string): Promise<DishEntity[]> => {
 
