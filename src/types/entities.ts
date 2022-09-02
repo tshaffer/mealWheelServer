@@ -11,19 +11,15 @@ export interface MainDishEntity extends BaseDishEntity {
   accompanimentRequired: RequiredAccompanimentFlags;
 }
 
-// predefined meal
 export interface MealEntity {
   id: string;
   userId: string;
   mainDishId: string;
   accompanimentDishIds: string[];
-  // determine the best way to do the following
   mainName: string;
   vegName: string;
   saladName: string;
   sideName: string;
-  // dateScheduled: Date;  // https://mongoosejs.com/docs/schematypes.html#dates
-  // status: MealStatus;
 }
 
 export interface UserEntity {

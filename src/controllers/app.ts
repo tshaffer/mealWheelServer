@@ -16,8 +16,13 @@ import {
   createBaseDishDocument,
   createMainDishDocument,
   createMealDocument,
-  // getDishesFromDb,
+  getAccompanimentDishesFromDb,
+  getDishesFromDb,
+  getMainDishesFromDb,
   getMealsFromDb,
+  getSaladDishesFromDb,
+  getSideDishesFromDb,
+  getVegDishesFromDb,
   updateDishDb,
   updateMealDb
 } from './dbInterface';
@@ -208,42 +213,80 @@ const transform = (arg1: any, arg2: any) => {
   }
 }
 
-export const addDish = (request: Request, response: Response, next: any) => {
-
-  console.log('addDish');
-  console.log(request.body);
-
-  const { dish } = request.body;
-  // createDishDocument(dish);
-
-  response.sendStatus(200);
-}
-
-export const updateDish = (request: Request, response: Response, next: any) => {
-
-  console.log('updateDish');
-  console.log(request.body);
-
-  const { dish } = request.body;
-  const { id, userId, name, type, accompaniment } = dish;
-
-  updateDishDb(id, userId, name, type, accompaniment);
-
-  response.sendStatus(200);
-
-}
-
 export function getMeals(request: Request, response: Response) {
 
   const id: string = request.query.id as string;
 
   return getMealsFromDb(id)
-    .then((dishEntities: MealEntity[]) => {
+    .then((mealEntities: MealEntity[]) => {
       console.log('return from getMealsFromDb, invoke response.json');
+      response.json(mealEntities);
+    });
+}
+
+export function getDishes(request: Request, response: Response) {
+
+  const id: string = request.query.id as string;
+
+  return getDishesFromDb(id)
+    .then((dishEntities: BaseDishEntity[]) => {
+      console.log('return from getDishesFromDb, invoke response.json');
+      response.json(dishEntities);
+    });
+
+}
+
+export function getMainDishes(request: Request, response: Response) {
+
+  const id: string = request.query.id as string;
+
+  return getMainDishesFromDb(id)
+    .then((dishEntities: BaseDishEntity[]) => {
+      console.log('return from getDishesFromDb, invoke response.json');
+      response.json(dishEntities);
+    });
+
+}
+
+export function getAccompanimentDishes(request: Request, response: Response) {
+  const id: string = request.query.id as string;
+
+  return getAccompanimentDishesFromDb(id)
+    .then((dishEntities: BaseDishEntity[]) => {
+      console.log('return from getDishesFromDb, invoke response.json');
       response.json(dishEntities);
     });
 }
 
+export function getVegDishes(request: Request, response: Response) {
+  const id: string = request.query.id as string;
+
+  return getVegDishesFromDb(id)
+    .then((dishEntities: BaseDishEntity[]) => {
+      console.log('return from getDishesFromDb, invoke response.json');
+      response.json(dishEntities);
+    });
+}
+
+export function getSaladDishes(request: Request, response: Response) {
+  const id: string = request.query.id as string;
+
+  return getSaladDishesFromDb(id)
+    .then((dishEntities: BaseDishEntity[]) => {
+      console.log('return from getDishesFromDb, invoke response.json');
+      response.json(dishEntities);
+    });
+}
+
+export function getSideDishes(request: Request, response: Response) {
+  const id: string = request.query.id as string;
+
+  return getSideDishesFromDb(id)
+    .then((dishEntities: BaseDishEntity[]) => {
+      console.log('return from getDishesFromDb, invoke response.json');
+      response.json(dishEntities);
+    });
+}
 
 export const addMeal = (request: Request, response: Response, next: any) => {
 
@@ -265,6 +308,31 @@ export const updateMeal = (request: Request, response: Response, next: any) => {
   const { id, userId, mealId, mainDishId, accompanimentDishId, dateScheduled, status } = meal;
 
   updateMealDb(id, userId, mealId, mainDishId, accompanimentDishId, dateScheduled, status);
+
+  response.sendStatus(200);
+
+}
+
+export const addDish = (request: Request, response: Response, next: any) => {
+
+  console.log('addDish');
+  console.log(request.body);
+
+  const { dish } = request.body;
+  // createDishDocument(dish);
+
+  response.sendStatus(200);
+}
+
+export const updateDish = (request: Request, response: Response, next: any) => {
+
+  console.log('updateDish');
+  console.log(request.body);
+
+  const { dish } = request.body;
+  const { id, userId, name, type, accompaniment } = dish;
+
+  updateDishDb(id, userId, name, type, accompaniment);
 
   response.sendStatus(200);
 

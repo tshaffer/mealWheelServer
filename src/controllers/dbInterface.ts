@@ -34,31 +34,6 @@ export const createBaseDishDocument = (dishEntity: BaseDishEntity): Promise<Docu
     });
 };
 
-// export const getDishesFromDb = (userId: string): Promise<DishEntity[]> => {
-
-//   const query = Dish.find({ userId });
-//   const promise: Promise<Document[]> = query.exec();
-//   return promise.then((dishDocuments: Document[]) => {
-
-//     console.log('dishDocuments');
-
-//     const dishEntities: DishEntity[] = dishDocuments.map((dishDocument: any) => {
-
-//       console.log('dishDocument', dishDocument);
-//       const dishDocAsObj: any = dishDocument.toObject();
-//       console.log('dishDocAsObj', dishDocAsObj);
-//       const dishEntity: DishEntity = dishDocument.toObject();
-//       console.log('dishEntity', dishEntity);
-
-//       return dishEntity;
-//     });
-
-//     console.log(dishEntities);
-
-//     return Promise.resolve(dishEntities);
-//   });
-// }
-
 export const updateDishDb = (id: string, userId: string, name: string, type: DishType, accompaniment: RequiredAccompanimentFlags): void => {
   Dish.find({ id, }
     , (err, dishDocs: any) => {
@@ -101,6 +76,62 @@ export const getMealsFromDb = (userId: string): Promise<MealEntity[]> => {
   });
 }
 
+// TEDTODO - proper way to indicate either BaseDishes or MainDishes?
+const getDishesFromDbHelper = (query: any): Promise<BaseDishEntity[]> => {
+
+  const promise: Promise<Document[]> = query.exec();
+  return promise.then((dishDocuments: Document[]) => {
+
+    console.log('dishDocuments');
+
+    const dishEntities: BaseDishEntity[] = dishDocuments.map((dishDocument: any) => {
+
+      console.log('dishDocument', dishDocument);
+      const dishDocAsObj: any = dishDocument.toObject();
+      console.log('dishDocAsObj', dishDocAsObj);
+      const dishEntity: BaseDishEntity = dishDocument.toObject();
+      console.log('dishEntity', dishEntity);
+
+      return dishEntity;
+    });
+
+    console.log(dishEntities);
+
+    return Promise.resolve(dishEntities);
+  });
+
+}
+export const getDishesFromDb = (userId: string): Promise<BaseDishEntity[]> => {
+  const query = Dish.find({ userId });
+  return getDishesFromDbHelper(query);
+}
+
+export const getMainDishesFromDb = (userId: string): Promise<BaseDishEntity[]> => {
+  const query = Dish.find({ userId, type: 'main' });
+  return getDishesFromDbHelper(query);
+}
+
+
+export const getAccompanimentDishesFromDb = (userId: string): Promise<BaseDishEntity[]> => {
+  const query = Dish.find({ $and: [{ userId }, { type: { $ne: 'main' } }] });
+  return getDishesFromDbHelper(query);
+}
+
+export const getVegDishesFromDb = (userId: string): Promise<BaseDishEntity[]> => {
+  const query = Dish.find({ $and: [{ userId }, { type: { $eq: 'veg' } }] });
+  return getDishesFromDbHelper(query);
+}
+
+export const getSaladDishesFromDb = (userId: string): Promise<BaseDishEntity[]> => {
+  const query = Dish.find({ $and: [{ userId }, { type: { $eq: 'salad' } }] });
+  return getDishesFromDbHelper(query);
+}
+
+export const getSideDishesFromDb = (userId: string): Promise<BaseDishEntity[]> => {
+  const query = Dish.find({ $and: [{ userId }, { type: { $eq: 'side' } }] });
+  return getDishesFromDbHelper(query);
+}
+
 export const updateMealDb = (
   id: string,
   userId: string,
@@ -127,5 +158,3 @@ export const updateMealDb = (
   //       }
   //   });
 }
-
-
