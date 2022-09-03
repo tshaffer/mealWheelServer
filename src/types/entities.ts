@@ -11,7 +11,7 @@ export interface MainDishEntity extends BaseDishEntity {
   accompanimentRequired: RequiredAccompanimentFlags;
 }
 
-export interface MealEntity {
+export interface DefinedMealEntity {
   id: string;
   userId: string;
   name: string;
@@ -21,6 +21,15 @@ export interface MealEntity {
   veggieName: string;
   saladName: string;
   sideName: string;
+}
+
+export interface ScheduledMealEntity {
+  id: string;
+  userId: string;
+  mainDishId: string;
+  accompanimentDishIds: string[];
+  dateScheduled: Date;
+  status: MealStatus;
 }
 
 export interface UserEntity {

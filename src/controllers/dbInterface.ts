@@ -1,21 +1,31 @@
 import { isArray } from 'lodash';
 import { Document } from 'mongoose';
-import Meal from '../models/Meal';
+import DefinedMeal from '../models/DefinedMeal';
+import ScheduledMeal from '../models/ScheduledMeal';
 import Dish from '../models/Dish';
 import {
   BaseDishEntity,
   // DishEntity,
   DishType,
   MainDishEntity,
-  MealEntity,
+  ScheduledMealEntity,
   MealStatus,
   RequiredAccompanimentFlags,
+  DefinedMealEntity,
 } from '../types';
 
-export const createMealDocument = (mealEntity: MealEntity): Promise<Document> => {
-  return Meal.create(mealEntity)
-    .then((meal: Document) => {
-      return Promise.resolve(meal);
+export const createDefinedMealDocument = (definedMealEntity: DefinedMealEntity): Promise<Document> => {
+  return DefinedMeal.create(definedMealEntity)
+    .then((definedMeal: Document) => {
+      return Promise.resolve(definedMeal);
+    });
+}
+
+
+export const createScheduledMealDocument = (scheduledMealEntity: ScheduledMealEntity): Promise<Document> => {
+  return ScheduledMeal.create(scheduledMealEntity)
+    .then((scheduledMeal: Document) => {
+      return Promise.resolve(scheduledMeal);
     });
 }
 
@@ -51,28 +61,28 @@ export const updateDishDb = (id: string, userId: string, name: string, type: Dis
     });
 }
 
-export const getMealsFromDb = (userId: string): Promise<MealEntity[]> => {
+export const getScheduledMealsFromDb = (userId: string): Promise<ScheduledMealEntity[]> => {
 
-  const query = Meal.find({ userId });
+  const query = ScheduledMeal.find({ userId });
   const promise: Promise<Document[]> = query.exec();
-  return promise.then((mealDocuments: Document[]) => {
+  return promise.then((scheduledMealDocuments: Document[]) => {
 
-    console.log('mealDocuments');
+    console.log('scheduledMealDocuments');
 
-    const mealEntities: MealEntity[] = mealDocuments.map((mealDocument: any) => {
+    const scheduledMealEntities: ScheduledMealEntity[] = scheduledMealDocuments.map((scheduledMealDocument: any) => {
 
-      console.log('mealDocument', mealDocument);
-      const mealDocAsObj: any = mealDocument.toObject();
-      console.log('mealDocAsObj', mealDocAsObj);
-      const mealEntity: MealEntity = mealDocument.toObject();
-      console.log('mealEntity', mealEntity);
+      console.log('scheduledMealDocument', scheduledMealDocument);
+      const scheduledMealDocAsObj: any = scheduledMealDocument.toObject();
+      console.log('scheduledMealDocAsObj', scheduledMealDocAsObj);
+      const scheduledMealEntity: ScheduledMealEntity = scheduledMealDocument.toObject();
+      console.log('scheduledMealEntity', scheduledMealEntity);
 
-      return mealEntity;
+      return scheduledMealEntity;
     });
 
-    console.log(mealEntities);
+    console.log(scheduledMealEntities);
 
-    return Promise.resolve(mealEntities);
+    return Promise.resolve(scheduledMealEntities);
   });
 }
 

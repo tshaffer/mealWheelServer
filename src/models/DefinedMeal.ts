@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 mongoose.Schema.Types.String.checkRequired(v => typeof v === 'string');
 
-const MealSchema = new Schema(
+const DefinedMealSchema = new Schema(
   {
     id: { type: String, required: true },
     userId: { type: String, required: true },
@@ -17,4 +17,4 @@ const MealSchema = new Schema(
   },
 );
 
-export default mongoose.model('Meal', MealSchema);
+export default mongoose.model('DefinedMeal', DefinedMealSchema);

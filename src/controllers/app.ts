@@ -9,29 +9,31 @@ import {
   BaseDishEntity,
   DishType,
   MainDishEntity,
-  MealWheelEntityType
+  MealWheelEntityType,
+  ScheduledMealEntity
 } from '../types';
 
 import {
   createBaseDishDocument,
   createMainDishDocument,
-  createMealDocument,
+  createScheduledMealDocument,
   getAccompanimentDishesFromDb,
   getDishesFromDb,
   getMainDishesFromDb,
-  getMealsFromDb,
+  getScheduledMealsFromDb,
   getSaladDishesFromDb,
   getSideDishesFromDb,
   getVegDishesFromDb,
   updateDishDb,
-  updateMealDb
+  updateMealDb,
+  createDefinedMealDocument
 } from './dbInterface';
 
 import { version } from '../version';
 import {
   // ConvertedCSVDish,
   // DishEntity,
-  MealEntity,
+  DefinedMealEntity,
   RequiredAccompanimentFlags
 } from '../types';
 import { isBoolean, isNil, isString } from 'lodash';
@@ -90,7 +92,7 @@ export const uploadMealWheelSpec = (request: Request, response: Response, next: 
 
 const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
 
-  const mealEntities: MealEntity[] = [];
+  const mealEntities: DefinedMealEntity[] = [];
   let dishesByName: { [id: string]: BaseDishEntity; } = {};  // id is dish name
 
   for (let i = 0; i < convertedMealWheelSpecItems.length; i++) {
@@ -108,7 +110,7 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
       enteredVeggieName,
       enteredSaladName,
       enteredSideName
-     ] = propsAsArray;
+    ] = propsAsArray;
 
     if (isNil(enteredEntityType) || isBoolean(enteredEntityType)) {
       continue;
@@ -144,7 +146,7 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
 
     if (entityType === MealWheelEntityType.Meal) {
 
-      const mealEntity: MealEntity = {
+      const mealEntity: DefinedMealEntity = {
         id: uuidv4(),
         userId: '',                   // TEDTODO
         name: enteredMealName,
@@ -219,7 +221,7 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
     if (mealEntity.sideName !== '') {
       mealEntity.accompanimentDishIds.push(dishesByName[mealEntity.sideName].id);
     }
-    createMealDocument(mealEntity);
+    createDefinedMealDocument(mealEntity);
   }
 
   console.log('upload complete');
@@ -233,14 +235,15 @@ const transform = (arg1: any, arg2: any) => {
   }
 }
 
-export function getMeals(request: Request, response: Response) {
+// TEDTODO - scheduled meal entities or defined meal entities
+export function getScheduledMeals(request: Request, response: Response) {
 
   const id: string = request.query.id as string;
 
-  return getMealsFromDb(id)
-    .then((mealEntities: MealEntity[]) => {
+  return getScheduledMealsFromDb(id)
+    .then((scheduledMealEntities: ScheduledMealEntity[]) => {
       console.log('return from getMealsFromDb, invoke response.json');
-      response.json(mealEntities);
+      response.json(scheduledMealEntities);
     });
 }
 
@@ -308,13 +311,13 @@ export function getSideDishes(request: Request, response: Response) {
     });
 }
 
-export const addMeal = (request: Request, response: Response, next: any) => {
+export const addScheduledMeal = (request: Request, response: Response, next: any) => {
 
   console.log('addMeal');
   console.log(request.body);
 
-  const { meal } = request.body;
-  createMealDocument(meal);
+  const { meal: scheduledMeal } = request.body;
+  createScheduledMealDocument(scheduledMeal);
 
   response.sendStatus(200);
 }

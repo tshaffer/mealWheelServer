@@ -1,3 +1,4 @@
+export * from './DefinedMeal';
 export * from './Dish';
-export * from './Meal';
+export * from './ScheduledMeal';
 export * from './User';

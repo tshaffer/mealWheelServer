@@ -10,8 +10,9 @@ const bodyParser = require('body-parser');
 import { Routes } from './routes/routes';
 
 import {
+  addScheduledMeal,
   getDishes,
-  getMeals,
+  getScheduledMeals,
   // addDish,
   // addMeal,
   // getMeals,
@@ -57,8 +58,8 @@ class App {
     // this.app.post('/api/v1/addDish', addDish);
     // this.app.post('/api/v1/updateDish', updateDish);
 
-    this.app.get('/api/v1/meals', getMeals);
-    // this.app.post('/api/v1/addMeal', addMeal);
+    this.app.get('/api/v1/scheduledMeals', getScheduledMeals);
+    this.app.post('/api/v1/addScheduledMeal', addScheduledMeal);
     // this.app.post('/api/v1/updateMeal', updateMeal);
   }
 
