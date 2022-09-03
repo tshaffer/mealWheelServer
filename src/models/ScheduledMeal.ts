@@ -19,4 +19,4 @@ const ScheduledMealSchema = new Schema(
   },
 );
 
-export default mongoose.model('Meal', ScheduledMealSchema);
+export default mongoose.model('ScheduledMeal', ScheduledMealSchema);

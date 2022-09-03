@@ -86,6 +86,31 @@ export const getScheduledMealsFromDb = (userId: string): Promise<ScheduledMealEn
   });
 }
 
+export const getDefinedMealsFromDb = (userId: string): Promise<DefinedMealEntity[]> => {
+
+  const query = DefinedMeal.find({ userId });
+  const promise: Promise<Document[]> = query.exec();
+  return promise.then((definedMealDocuments: Document[]) => {
+
+    console.log('definedMealDocuments');
+
+    const definedMealEntities: DefinedMealEntity[] = definedMealDocuments.map((definedMealDocument: any) => {
+
+      console.log('definedMealDocument', definedMealDocument);
+      const definedMealDocAsObj: any = definedMealDocument.toObject();
+      console.log('definedMealDocAsObj', definedMealDocAsObj);
+      const definedMealEntity: DefinedMealEntity = definedMealDocument.toObject();
+      console.log('definedMealEntity', definedMealEntity);
+
+      return definedMealEntity;
+    });
+
+    console.log(definedMealEntities);
+
+    return Promise.resolve(definedMealEntities);
+  });
+}
+
 // TEDTODO - proper way to indicate either BaseDishes or MainDishes?
 const getDishesFromDbHelper = (query: any): Promise<BaseDishEntity[]> => {
 

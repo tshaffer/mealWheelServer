@@ -26,7 +26,8 @@ import {
   getVegDishesFromDb,
   updateDishDb,
   updateMealDb,
-  createDefinedMealDocument
+  createDefinedMealDocument,
+  getDefinedMealsFromDb
 } from './dbInterface';
 
 import { version } from '../version';
@@ -242,8 +243,19 @@ export function getScheduledMeals(request: Request, response: Response) {
 
   return getScheduledMealsFromDb(id)
     .then((scheduledMealEntities: ScheduledMealEntity[]) => {
-      console.log('return from getMealsFromDb, invoke response.json');
+      console.log('return from getScheduledMealsFromDb, invoke response.json');
       response.json(scheduledMealEntities);
+    });
+}
+
+export function getDefinedMeals(request: Request, response: Response) {
+
+  const id: string = request.query.id as string;
+
+  return getDefinedMealsFromDb(id)
+    .then((definedMealEntities: DefinedMealEntity[]) => {
+      console.log('return from getDefinedMealsFromDb, invoke response.json');
+      response.json(definedMealEntities);
     });
 }
 
