@@ -1,48 +1,35 @@
-﻿entitytype,dishtype,name,veg,salad,side,requires veg,requires salad,requires side
-meal,,BBQ Chicken,Riced Cauliflower,,Couscous,,,
-meal,,Ground turkey with pesto pasta,,,,,,
-dish,main,BBQ Chicken,,,,,,
-dish,main,Ground turkey with pesto pasta,,,,,,
-dish,main,Wings,,,,TRUE,TRUE,TRUE
-dish,main,Mediterranean salad,,,,,,
-dish,main,Carbonara,,,,TRUE,TRUE,
-dish,main,Burrito bowls,,,,,,
-dish,main,Street tacos,,,,,,
-dish,main,Ginger salmon,,,,,,
-dish,main,Asian noodle salad,,,,,,
-dish,main,Cauliflower enchiladas,,,,,,
-dish,main,Turkey tacos,,,,,,
-dish,main,Cauliflower tacos,,,,,,
-dish,main,Buffalo sliders,,,,TRUE,TRUE,
-dish,main,Buffalo quesadilla,,,,TRUE,TRUE,
-dish,main,BBQ sliders,,,,TRUE,TRUE,
-dish,main,Detroit pizza,,,,,,
-dish,main,Paprika Chicken,,,,TRUE,TRUE,TRUE
-dish,main,French onion soup,,,,TRUE,TRUE,TRUE
-dish,main,Duck,,,,TRUE,TRUE,TRUE
-dish,main,Steak,,,,TRUE,TRUE,TRUE
-dish,main,Ribs,,,,TRUE,TRUE,TRUE
-dish,main,Burgers,,,,TRUE,TRUE,TRUE
-dish,main,Lasagna,,,,TRUE,TRUE,
-dish,main,Sausage pasta bake,,,,TRUE,TRUE,
-dish,main,Jambalaya,,,,,,
-dish,main,Stuffed shells,,,,TRUE,TRUE,
-dish,main,Whole roast chicken ,,,,TRUE,TRUE,TRUE
-dish,main,Spring rolls,,,,,,TRUE
-dish,main,Homemade dumplings,,,,,,TRUE
-dish,main,Pad Thai,,,,,,
-dish,main,Pad see eww,,,,,,
-dish,main,Risotto,,,,TRUE,TRUE,
-dish,main,Shrimp and grits,,,,TRUE,TRUE,
-dish,main,Chicken Caesar wraps,,,,,,
-dish,veg,,asparagus,,,,,
-dish,veg,,roast carrots,,,,,
-dish,veg,,brocolli,,,,,
-dish,veg,,Riced Cauliflower,,,,,
-dish,salad,,,Caprese salad,,,,
-dish,salad,,,Beet salad,,,,
-dish,salad,,,Feta orzo tomato salad,,,,
-dish,side,,,,Potatoes au gratin,,,
-dish,side,,,,cauliflower au gratin,,,
-dish,side,,,,Rice pilaf,,,
-dish,side,,,,Couscous,,,
+﻿entityType,dishType,mealName,mainName,requiresVeggie,requiresSalad,requiresSide,veggieName,saladName,sideName
+,,,,,,,,,
+meal,,BBQ Chicken,BBQ Chicken,,,,Riced Cauliflower,,Couscous
+meal,,Ground Turkey with Pesto Pasta,Ground Turkey,,,,,,Pesto Pasta
+meal,,Tortellini,Tortellini,,,,,,
+meal,,Ooni Pizza,Ooni Pizza,,,,,,
+meal,,Detroit Pizza,Detroit Pizza,,,,,Spinach,
+meal,,Shrimp Tacos,Shrimp Tacos,,,,,,
+meal,,Enchiladas,Enchiladas,,,,,,Chips
+meal,,Spaghetti with Rao's and Turkey Meatballs,Spaghetti with Rao's and Turkey Meatballs,,,,,,
+meal,,Jambalaya,Jambalaya,,,,,,
+,,,,,,,,,
+dish,main,,BBQ Chicken,,,,,,
+dish,main,,Ground Turkey,,,,,,
+dish,main,,Tortellini,,,,,,
+dish,main,,Ooni Pizza,,,,,,
+dish,main,,Detroit Pizza,,TRUE,,,,
+dish,main,,Shrimp Tacos,,,,,,
+dish,main,,Enchiladas,,,,,,
+dish,main,,Spaghetti with Rao's and Turkey Meatballs,,,,,,
+dish,main,,Jambalaya,,,,,,
+dish,main,,Turkey tacos,,,,,,
+dish,main,,Burgers,TRUE,TRUE,TRUE,,,
+dish,main,,Sausage pasta bake,TRUE,TRUE,,,,
+dish,main,,Paprika Chicken,,,,,,
+,,,,,,,,,
+dish,veg,,,,,,Riced Cauliflower,,
+dish,veg,,,,,,Broccoli,,
+,,,,,,,,,
+dish,salad,,,,,,,Spinach,
+dish,salad,,,,,,,Caesar,
+,,,,,,,,,
+dish,side,,,,,,,,Couscous
+dish,side,,,,,,,,Pesto Pasta
+dish,side,,,,,,,,Chips

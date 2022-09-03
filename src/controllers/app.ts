@@ -29,12 +29,12 @@ import {
 
 import { version } from '../version';
 import {
-  ConvertedCSVDish,
+  // ConvertedCSVDish,
   // DishEntity,
   MealEntity,
   RequiredAccompanimentFlags
 } from '../types';
-import { isString } from 'lodash';
+import { isBoolean, isNil, isString } from 'lodash';
 // import {
 //   createDishDocument
 // } from './dbInterface';
@@ -95,16 +95,32 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
 
   for (let i = 0; i < convertedMealWheelSpecItems.length; i++) {
 
-    const convertedMealWheelSpecItemProperties = Object.values(convertedMealWheelSpecItems[i]);
-    console.log(convertedMealWheelSpecItemProperties);
+    const propsAsArray: any[] = Object.values(convertedMealWheelSpecItems[i]);
 
-    const entityType: MealWheelEntityType = convertedMealWheelSpecItemProperties[0] === 'meal' ? MealWheelEntityType.Meal : MealWheelEntityType.Dish;
+    const [
+      enteredEntityType,
+      enteredDishType,
+      enteredMealName,
+      enteredMainName,
+      enteredRequiresVeggie,
+      enteredRequiresSalad,
+      enteredRequiresSide,
+      enteredVeggieName,
+      enteredSaladName,
+      enteredSideName
+     ] = propsAsArray;
+
+    if (isNil(enteredEntityType) || isBoolean(enteredEntityType)) {
+      continue;
+    }
+
+    const entityType: MealWheelEntityType = enteredEntityType === 'meal' ? MealWheelEntityType.Meal : MealWheelEntityType.Dish;
 
     let dishType: DishType = DishType.Main;
     if (entityType === MealWheelEntityType.Dish) {
-      switch (convertedMealWheelSpecItemProperties[1]) {
+      switch (enteredDishType) {
         case 'veg':
-          dishType = DishType.Veg;
+          dishType = DishType.Veggie;
           break;
         case 'salad':
           dishType = DishType.Salad;
@@ -117,26 +133,27 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
       }
     }
 
-    let name: string = isString(convertedMealWheelSpecItemProperties[2]) ? convertedMealWheelSpecItemProperties[2] : '';
-    const veg: string = isString(convertedMealWheelSpecItemProperties[3]) ? convertedMealWheelSpecItemProperties[3] : '';
-    const salad: string = isString(convertedMealWheelSpecItemProperties[4]) ? convertedMealWheelSpecItemProperties[4] : '';
-    const side: string = isString(convertedMealWheelSpecItemProperties[5]) ? convertedMealWheelSpecItemProperties[5] : '';
+    let mainName: string = isString(enteredMainName) ? enteredMainName : '';
+    const veggieName: string = isString(enteredVeggieName) ? enteredVeggieName : '';
+    const saladName: string = isString(enteredSaladName) ? enteredSaladName : '';
+    const sideName: string = isString(enteredSideName) ? enteredSideName : '';
 
-    const requiresVeg: boolean = convertedMealWheelSpecItemProperties[6] as boolean;
-    const requiresSalad: boolean = convertedMealWheelSpecItemProperties[7] as boolean;
-    const requiresSide: boolean = convertedMealWheelSpecItemProperties[8] as boolean;
+    const requiresVeggie: boolean = enteredRequiresVeggie as boolean;
+    const requiresSalad: boolean = enteredRequiresSalad as boolean;
+    const requiresSide: boolean = enteredRequiresSide as boolean;
 
     if (entityType === MealWheelEntityType.Meal) {
 
       const mealEntity: MealEntity = {
         id: uuidv4(),
         userId: '',                   // TEDTODO
+        name: enteredMealName,
         mainDishId: '',               // fill in after parsing dishes
         accompanimentDishIds: [],     // fill in after parsing dishes
-        mainName: name,
-        vegName: veg,
-        saladName: salad,
-        sideName: side,
+        mainName: mainName,
+        veggieName: veggieName,
+        saladName: saladName,
+        sideName: sideName,
       }
       mealEntities.push(mealEntity);
     } else {
@@ -144,11 +161,11 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
         const mainDish: MainDishEntity = {
           id: uuidv4(),
           userId: '',
-          name,
+          name: mainName,
           type: DishType.Main,
           accompanimentRequired: RequiredAccompanimentFlags.None
         }
-        if (requiresVeg) {
+        if (requiresVeggie) {
           mainDish.accompanimentRequired = RequiredAccompanimentFlags.Veg;
         }
         if (requiresSalad) {
@@ -157,29 +174,32 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
         if (requiresSide) {
           mainDish.accompanimentRequired += RequiredAccompanimentFlags.Side;
         }
-        dishesByName[name] = mainDish;
+        dishesByName[mainName] = mainDish;
 
         createMainDishDocument(mainDish);
 
       } else {
+        let dishName = '';
         switch (dishType) {
-          case DishType.Veg:
-            name = veg;
+          case DishType.Veggie:
+            dishName = veggieName;
             break;
           case DishType.Salad:
-            name = salad;
+            dishName = saladName;
             break;
           case DishType.Side:
-            name = side;
+            dishName = sideName;
             break;
+          default:
+            debugger;
         }
         const baseDish: BaseDishEntity = {
           id: uuidv4(),
           userId: '',
-          name,
+          name: dishName,
           type: dishType
         }
-        dishesByName[name] = baseDish;
+        dishesByName[dishName] = baseDish;
 
         createBaseDishDocument(baseDish);
       }
@@ -190,8 +210,8 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
   // return to meals and fill in the accompaniment id's
   for (const mealEntity of mealEntities) {
     mealEntity.mainDishId = dishesByName[mealEntity.mainName].id;
-    if (mealEntity.vegName !== '') {
-      mealEntity.accompanimentDishIds.push(dishesByName[mealEntity.vegName].id);
+    if (mealEntity.veggieName !== '') {
+      mealEntity.accompanimentDishIds.push(dishesByName[mealEntity.veggieName].id);
     }
     if (mealEntity.saladName !== '') {
       mealEntity.accompanimentDishIds.push(dishesByName[mealEntity.saladName].id);

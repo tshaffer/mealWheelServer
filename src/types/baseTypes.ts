@@ -12,7 +12,7 @@ export enum DishType {
   Main = 'main',
   Side = 'side',
   Salad = 'salad',
-  Veg = 'veg',
+  Veggie = 'veggie',
 }
 
 export enum RequiredAccompanimentFlags {
@@ -25,13 +25,13 @@ export enum RequiredAccompanimentFlags {
 // export interface ConvertMealWheelSpecItem {
 
 // }
-export interface ConvertedCSVDish {
-  name: string;
-  type: string;
-  side: boolean;
-  salad: boolean;
-  veg: boolean;
-}
+// export interface ConvertedCSVDish {
+//   name: string;
+//   type: string;
+//   side: boolean;
+//   salad: boolean;
+//   veg: boolean;
+// }
 
 export enum MealStatus {
   pending = 0,
