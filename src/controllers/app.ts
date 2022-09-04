@@ -328,7 +328,7 @@ export const addScheduledMeal = (request: Request, response: Response, next: any
   console.log('addMeal');
   console.log(request.body);
 
-  const { meal: scheduledMeal } = request.body;
+  const { scheduledMeal } = request.body;
   createScheduledMealDocument(scheduledMeal);
 
   response.sendStatus(200);
@@ -336,13 +336,13 @@ export const addScheduledMeal = (request: Request, response: Response, next: any
 
 export const updateMeal = (request: Request, response: Response, next: any) => {
 
-  console.log('updateMeal');
-  console.log(request.body);
+  // console.log('updateMeal');
+  // console.log(request.body);
 
-  const { meal } = request.body;
-  const { id, userId, mealId, mainDishId, accompanimentDishId, dateScheduled, status } = meal;
+  // const { meal } = request.body;
+  // const { id, userId, mealId, mainDishId, accompanimentDishId, dateScheduled, status } = meal;
 
-  updateMealDb(id, userId, mealId, mainDishId, accompanimentDishId, dateScheduled, status);
+  // updateMealDb(id, userId, mealId, mainDishId, accompanimentDishId, dateScheduled, status);
 
   response.sendStatus(200);
 

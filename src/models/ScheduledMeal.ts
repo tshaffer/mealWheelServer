@@ -10,10 +10,6 @@ const ScheduledMealSchema = new Schema(
     userId: { type: String, required: true },
     accompanimentDishIds: [],
     mainDishId: { type: String, required: true },
-    mainName: { type: String, required: true },
-    veggieName: { type: String, required: true },
-    saladName: { type: String, required: true },
-    sideName: { type: String, required: true },
     dateScheduled: { type: Date, required: true },  // https://mongoosejs.com/docs/schematypes.html#dates
     status: { type: Number, required: true },
   },
