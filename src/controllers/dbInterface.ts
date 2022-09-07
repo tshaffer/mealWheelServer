@@ -172,24 +172,23 @@ export const updateMealDb = (
   userId: string,
   mealId: string,
   mainDishId: string,
-  accompanimentDishId: string | null,
+  accompanimentDishIds: string[],
   dateScheduled: Date,
   status: MealStatus,
 ): void => {
-  // Meal.find({ id, }
-  //   , (err, mealsDocs: any) => {
-  //     if (err) {
-  //       console.log(err);
-  //     } else
-  //       if (isArray(mealsDocs) && mealsDocs.length === 1) {
-  //         const mealDoc: any = mealsDocs[0];
-  //         (mealDoc as MealEntity).userId = userId;
-  //         (mealDoc as MealEntity).mealId = mealId;
-  //         (mealDoc as MealEntity).mainDishId = mainDishId;
-  //         (mealDoc as MealEntity).accompanimentDishId = accompanimentDishId;
-  //         (mealDoc as MealEntity).dateScheduled = dateScheduled;
-  //         (mealDoc as MealEntity).status = status;
-  //         mealDoc.save();
-  //       }
-  //   });
+  ScheduledMeal.find({ id, }
+    , (err, mealsDocs: any) => {
+      if (err) {
+        console.log(err);
+      } else
+        if (isArray(mealsDocs) && mealsDocs.length === 1) {
+          const mealDoc: any = mealsDocs[0];
+          (mealDoc as ScheduledMealEntity).userId = userId;
+          (mealDoc as ScheduledMealEntity).mainDishId = mainDishId;
+          (mealDoc as ScheduledMealEntity).accompanimentDishIds = accompanimentDishIds;
+          (mealDoc as ScheduledMealEntity).dateScheduled = dateScheduled;
+          (mealDoc as ScheduledMealEntity).status = status;
+          mealDoc.save();
+        }
+    });
 }

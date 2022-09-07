@@ -21,7 +21,7 @@ import {
   getVersion,
   uploadMealWheelSpec,
   // updateDish,
-  // updateMeal,
+  updateMeal,
   // uploadDishSpec,
 } from './controllers';
 
@@ -63,7 +63,7 @@ class App {
 
     this.app.get('/api/v1/scheduledMeals', getScheduledMeals);
     this.app.post('/api/v1/addScheduledMeal', addScheduledMeal);
-    // this.app.post('/api/v1/updateMeal', updateMeal);
+    this.app.post('/api/v1/updateMeal', updateMeal);
   }
 
   private config(): void {

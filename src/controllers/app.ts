@@ -336,13 +336,15 @@ export const addScheduledMeal = (request: Request, response: Response, next: any
 
 export const updateMeal = (request: Request, response: Response, next: any) => {
 
-  // console.log('updateMeal');
-  // console.log(request.body);
+  console.log('updateMeal');
+  console.log(request.body);
 
-  // const { meal } = request.body;
-  // const { id, userId, mealId, mainDishId, accompanimentDishId, dateScheduled, status } = meal;
+  const { meal } = request.body;
+  const { id, userId, mealId, mainDishId, accompanimentDishIds, dateScheduled, status } = meal;
 
-  // updateMealDb(id, userId, mealId, mainDishId, accompanimentDishId, dateScheduled, status);
+  console.log(accompanimentDishIds);
+
+  updateMealDb(id, userId, mealId, mainDishId, accompanimentDishIds, dateScheduled, status);
 
   response.sendStatus(200);
 
