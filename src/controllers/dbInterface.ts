@@ -170,9 +170,10 @@ export const getSideDishesFromDb = (userId: string): Promise<BaseDishEntity[]> =
 export const updateMealDb = (
   id: string,
   userId: string,
-  mealId: string,
   mainDishId: string,
-  accompanimentDishIds: string[],
+  saladId: string,
+  veggieId: string,
+  sideId: string,
   dateScheduled: Date,
   status: MealStatus,
 ): void => {
@@ -185,7 +186,9 @@ export const updateMealDb = (
           const mealDoc: any = mealsDocs[0];
           (mealDoc as ScheduledMealEntity).userId = userId;
           (mealDoc as ScheduledMealEntity).mainDishId = mainDishId;
-          (mealDoc as ScheduledMealEntity).accompanimentDishIds = accompanimentDishIds;
+          (mealDoc as ScheduledMealEntity).saladId = saladId;
+          (mealDoc as ScheduledMealEntity).veggieId = veggieId;
+          (mealDoc as ScheduledMealEntity).sideId = sideId;
           (mealDoc as ScheduledMealEntity).dateScheduled = dateScheduled;
           (mealDoc as ScheduledMealEntity).status = status;
           mealDoc.save();

@@ -151,8 +151,10 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
         id: uuidv4(),
         userId: '',                   // TEDTODO
         name: enteredMealName,
-        mainDishId: '',               // fill in after parsing dishes
-        accompanimentDishIds: [],     // fill in after parsing dishes
+        mainDishId: '',               // fill in the following after parsing dishes
+        saladId: '',
+        veggieId: '',
+        sideId: '',
         mainName: mainName,
         veggieName: veggieName,
         saladName: saladName,
@@ -214,13 +216,13 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
   for (const mealEntity of mealEntities) {
     mealEntity.mainDishId = dishesByName[mealEntity.mainName].id;
     if (mealEntity.veggieName !== '') {
-      mealEntity.accompanimentDishIds.push(dishesByName[mealEntity.veggieName].id);
+      mealEntity.veggieId = dishesByName[mealEntity.veggieName].id;
     }
     if (mealEntity.saladName !== '') {
-      mealEntity.accompanimentDishIds.push(dishesByName[mealEntity.saladName].id);
+      mealEntity.saladId = dishesByName[mealEntity.saladName].id;
     }
     if (mealEntity.sideName !== '') {
-      mealEntity.accompanimentDishIds.push(dishesByName[mealEntity.sideName].id);
+      mealEntity.sideId = dishesByName[mealEntity.sideName].id;
     }
     createDefinedMealDocument(mealEntity);
   }
@@ -340,11 +342,9 @@ export const updateMeal = (request: Request, response: Response, next: any) => {
   console.log(request.body);
 
   const { meal } = request.body;
-  const { id, userId, mealId, mainDishId, accompanimentDishIds, dateScheduled, status } = meal;
+  const { id, userId, mainDishId, saladId, veggieId, sideId, dateScheduled, status } = meal;
 
-  console.log(accompanimentDishIds);
-
-  updateMealDb(id, userId, mealId, mainDishId, accompanimentDishIds, dateScheduled, status);
+  updateMealDb(id, userId, mainDishId, saladId, veggieId, sideId, dateScheduled, status);
 
   response.sendStatus(200);
 
