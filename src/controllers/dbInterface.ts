@@ -71,16 +71,16 @@ export const getScheduledMealsFromDb = (userId: string): Promise<ScheduledMealEn
 
     const scheduledMealEntities: ScheduledMealEntity[] = scheduledMealDocuments.map((scheduledMealDocument: any) => {
 
-      console.log('scheduledMealDocument', scheduledMealDocument);
+      // console.log('scheduledMealDocument', scheduledMealDocument);
       const scheduledMealDocAsObj: any = scheduledMealDocument.toObject();
-      console.log('scheduledMealDocAsObj', scheduledMealDocAsObj);
+      // console.log('scheduledMealDocAsObj', scheduledMealDocAsObj);
       const scheduledMealEntity: ScheduledMealEntity = scheduledMealDocument.toObject();
-      console.log('scheduledMealEntity', scheduledMealEntity);
+      // console.log('scheduledMealEntity', scheduledMealEntity);
 
       return scheduledMealEntity;
     });
 
-    console.log(scheduledMealEntities);
+    // console.log(scheduledMealEntities);
 
     return Promise.resolve(scheduledMealEntities);
   });
@@ -96,16 +96,16 @@ export const getDefinedMealsFromDb = (userId: string): Promise<DefinedMealEntity
 
     const definedMealEntities: DefinedMealEntity[] = definedMealDocuments.map((definedMealDocument: any) => {
 
-      console.log('definedMealDocument', definedMealDocument);
+      // console.log('definedMealDocument', definedMealDocument);
       const definedMealDocAsObj: any = definedMealDocument.toObject();
-      console.log('definedMealDocAsObj', definedMealDocAsObj);
+      // console.log('definedMealDocAsObj', definedMealDocAsObj);
       const definedMealEntity: DefinedMealEntity = definedMealDocument.toObject();
-      console.log('definedMealEntity', definedMealEntity);
+      // console.log('definedMealEntity', definedMealEntity);
 
       return definedMealEntity;
     });
 
-    console.log(definedMealEntities);
+    // console.log(definedMealEntities);
 
     return Promise.resolve(definedMealEntities);
   });
@@ -121,16 +121,16 @@ const getDishesFromDbHelper = (query: any): Promise<BaseDishEntity[]> => {
 
     const dishEntities: BaseDishEntity[] = dishDocuments.map((dishDocument: any) => {
 
-      console.log('dishDocument', dishDocument);
+      // console.log('dishDocument', dishDocument);
       const dishDocAsObj: any = dishDocument.toObject();
-      console.log('dishDocAsObj', dishDocAsObj);
+      // console.log('dishDocAsObj', dishDocAsObj);
       const dishEntity: BaseDishEntity = dishDocument.toObject();
-      console.log('dishEntity', dishEntity);
+      // console.log('dishEntity', dishEntity);
 
       return dishEntity;
     });
 
-    console.log(dishEntities);
+    // console.log(dishEntities);
 
     return Promise.resolve(dishEntities);
   });
@@ -153,7 +153,7 @@ export const getAccompanimentDishesFromDb = (userId: string): Promise<BaseDishEn
 }
 
 export const getVegDishesFromDb = (userId: string): Promise<BaseDishEntity[]> => {
-  const query = Dish.find({ $and: [{ userId }, { type: { $eq: 'veg' } }] });
+  const query = Dish.find({ $and: [{ userId }, { type: { $eq: 'veggie' } }] });
   return getDishesFromDbHelper(query);
 }
 
@@ -194,4 +194,39 @@ export const updateMealDb = (
           mealDoc.save();
         }
     });
+}
+
+
+export const validateDb = () => {
+  const userId = '0';
+  getDishesFromDb(userId)
+    .then((dishes: BaseDishEntity[]) => {
+      const allDishes = dishes;
+      return getMainDishesFromDb(userId)
+        .then((dishes: BaseDishEntity[]) => {
+          const mainDishes = dishes;
+          return getSaladDishesFromDb(userId)
+            .then((dishes: BaseDishEntity[]) => {
+              const saladDishes = dishes;
+              return getVegDishesFromDb(userId)
+                .then((dishes: BaseDishEntity[]) => {
+                  const veggieDishes = dishes;
+                  return getSideDishesFromDb(userId)
+                    .then((dishes: BaseDishEntity[]) => {
+                      const sideDishes = dishes;
+                      console.log('MAINS');
+                      console.log(mainDishes);
+                      console.log('SALADS');
+                      console.log(saladDishes);
+                      console.log('VEGGIES');
+                      console.log(veggieDishes);
+                      console.log('SIDES');
+                      console.log(sideDishes);
+                    })
+                })
+            })
+        })
+      // export const getDefinedMealsFromDb = (userId: string): Promise<DefinedMealEntity[]> => {
+
+    })
 }

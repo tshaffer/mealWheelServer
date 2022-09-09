@@ -19,7 +19,7 @@ export enum RequiredAccompanimentFlags {
   None = 0,
   Side = 1,
   Salad = 2,
-  Veg = 4,
+  Veggie = 4,
 }
 
 // export interface ConvertMealWheelSpecItem {

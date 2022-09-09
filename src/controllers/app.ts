@@ -27,7 +27,8 @@ import {
   updateDishDb,
   updateMealDb,
   createDefinedMealDocument,
-  getDefinedMealsFromDb
+  getDefinedMealsFromDb,
+  validateDb
 } from './dbInterface';
 
 import { version } from '../version';
@@ -37,7 +38,7 @@ import {
   DefinedMealEntity,
   RequiredAccompanimentFlags
 } from '../types';
-import { isBoolean, isNil, isString } from 'lodash';
+import _, { isBoolean, isNil, isString } from 'lodash';
 // import {
 //   createDishDocument
 // } from './dbInterface';
@@ -73,7 +74,7 @@ export const uploadMealWheelSpec = (request: Request, response: Response, next: 
 
     const filePath = path.join('public', 'mealWheelSpec.csv');
     const content: string = fs.readFileSync(filePath).toString();
-    console.log(content);
+    // console.log(content);
 
     const result = Papa.parse(content,
       {
@@ -81,7 +82,7 @@ export const uploadMealWheelSpec = (request: Request, response: Response, next: 
         dynamicTyping: true,
         transform,
       });
-    console.log(result);
+    // console.log(result);
     processMealWheelSpec(result.data as any[]);
 
     const responseData = {
@@ -122,7 +123,7 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
     let dishType: DishType = DishType.Main;
     if (entityType === MealWheelEntityType.Dish) {
       switch (enteredDishType) {
-        case 'veg':
+        case 'veggie':
           dishType = DishType.Veggie;
           break;
         case 'salad':
@@ -171,7 +172,7 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
           accompanimentRequired: RequiredAccompanimentFlags.None
         }
         if (requiresVeggie) {
-          mainDish.accompanimentRequired = RequiredAccompanimentFlags.Veg;
+          mainDish.accompanimentRequired = RequiredAccompanimentFlags.Veggie;
         }
         if (requiresSalad) {
           mainDish.accompanimentRequired += RequiredAccompanimentFlags.Salad;
@@ -328,7 +329,7 @@ export function getSideDishes(request: Request, response: Response) {
 export const addScheduledMeal = (request: Request, response: Response, next: any) => {
 
   console.log('addMeal');
-  console.log(request.body);
+  // console.log(request.body);
 
   const { scheduledMeal } = request.body;
   createScheduledMealDocument(scheduledMeal);
@@ -339,7 +340,7 @@ export const addScheduledMeal = (request: Request, response: Response, next: any
 export const updateMeal = (request: Request, response: Response, next: any) => {
 
   console.log('updateMeal');
-  console.log(request.body);
+  // console.log(request.body);
 
   const { meal } = request.body;
   const { id, userId, mainDishId, saladId, veggieId, sideId, dateScheduled, status } = meal;
@@ -364,7 +365,7 @@ export const addDish = (request: Request, response: Response, next: any) => {
 export const updateDish = (request: Request, response: Response, next: any) => {
 
   console.log('updateDish');
-  console.log(request.body);
+  // console.log(request.body);
 
   const { dish } = request.body;
   const { id, userId, name, type, accompaniment } = dish;
@@ -375,3 +376,7 @@ export const updateDish = (request: Request, response: Response, next: any) => {
 
 }
 
+export const validate = (request: Request, response: Response, next: any) => {
+  validateDb();
+  response.sendStatus(200);
+}

@@ -22,7 +22,9 @@ import {
   uploadMealWheelSpec,
   // updateDish,
   updateMeal,
+  // validateDb,
   // uploadDishSpec,
+  validate,
 } from './controllers';
 
 class App {
@@ -64,6 +66,9 @@ class App {
     this.app.get('/api/v1/scheduledMeals', getScheduledMeals);
     this.app.post('/api/v1/addScheduledMeal', addScheduledMeal);
     this.app.post('/api/v1/updateMeal', updateMeal);
+
+    this.app.get('/api/v1/validate', validate);
+
   }
 
   private config(): void {
