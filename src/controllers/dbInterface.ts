@@ -1,4 +1,4 @@
-import { isArray } from 'lodash';
+import { isArray, isNil, isString } from 'lodash';
 import { Document } from 'mongoose';
 import DefinedMeal from '../models/DefinedMeal';
 import ScheduledMeal from '../models/ScheduledMeal';
@@ -197,6 +197,10 @@ export const updateMealDb = (
 }
 
 
+interface MainDishMap {
+  [key: string]: MainDishEntity; // id or name
+}
+
 export const validateDb = () => {
   const userId = '0';
   getDishesFromDb(userId)
@@ -204,7 +208,7 @@ export const validateDb = () => {
       const allDishes = dishes;
       return getMainDishesFromDb(userId)
         .then((dishes: BaseDishEntity[]) => {
-          const mainDishes = dishes;
+          const mainDishes = dishes as MainDishEntity[];
           return getSaladDishesFromDb(userId)
             .then((dishes: BaseDishEntity[]) => {
               const saladDishes = dishes;
@@ -222,11 +226,64 @@ export const validateDb = () => {
                       console.log(veggieDishes);
                       console.log('SIDES');
                       console.log(sideDishes);
-                    })
-                })
-            })
-        })
-      // export const getDefinedMealsFromDb = (userId: string): Promise<DefinedMealEntity[]> => {
+                      return getDefinedMealsFromDb(userId)
+                        .then((meals: DefinedMealEntity[]) => {
+                          const definedMeals = meals;
+                          return getScheduledMealsFromDb(userId)
+                            .then((meals: ScheduledMealEntity[]) => {
+                              const scheduledMeals = meals;
 
-    })
-}
+                              // data structures available at this point
+                              /*
+                                allDishes
+                                mainDishes
+                                saladDishes
+                                veggieDishes
+                                sideDishes
+                                definedMeals
+                                scheduledMeals
+                              */
+                              const mainDishById: MainDishMap = {};
+                              const mainDishByName: MainDishMap = {};
+                              for (const mainDish of mainDishes) {
+                                mainDishById[mainDish.id] = mainDish;
+                                mainDishByName[mainDish.name] = mainDish;
+                              }
+
+                              // validate existence of main dishes in defined meals and scheduled meals
+                              for (const definedMeal of definedMeals) {
+                                if (!isString(definedMeal.mainDishId) || definedMeal.mainDishId === '') {
+                                  console.log('Defined meal has no mainDishId');
+                                  debugger;
+                                }
+                                if (isNil(mainDishById[definedMeal.mainDishId])) {
+                                  console.log('Main in defined meal does not exist in mainDishById');
+                                  debugger;
+                                }
+                                if (isNil(mainDishByName[definedMeal.mainName])) {
+                                  console.log('Main in defined meal does not exist in mainDishByName');
+                                  debugger;
+                                }
+                              }
+
+                              for (const scheduledMeal of scheduledMeals) {
+                                if (!isString(scheduledMeal.mainDishId) || scheduledMeal.mainDishId === '') {
+                                  console.log('Scheduled meal has no mainDishId');
+                                  debugger;
+                                }
+                                if (isNil(mainDishById[scheduledMeal.mainDishId])) {
+                                  console.log('Main in scheduled meal does not exist in mainDishById');
+                                  debugger;
+                                }
+                              }
+
+                              console.log('Defined meal and scheduled meal main dishes valid');
+
+                            });
+                        });
+                    });
+                });
+            });
+          });
+        });
+    };
