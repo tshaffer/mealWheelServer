@@ -38,7 +38,7 @@ import {
   DefinedMealEntity,
   RequiredAccompanimentFlags
 } from '../types';
-import _, { isBoolean, isNil, isString } from 'lodash';
+import _, { isBoolean, isDate, isNil, isString } from 'lodash';
 // import {
 //   createDishDocument
 // } from './dbInterface';
@@ -111,7 +111,9 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
       enteredRequiresSide,
       enteredVeggieName,
       enteredSaladName,
-      enteredSideName
+      enteredSideName,
+      enteredInterval,
+      enteredLast,
     ] = propsAsArray;
 
     if (isNil(enteredEntityType) || isBoolean(enteredEntityType)) {
@@ -141,7 +143,8 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
     const veggieName: string = isString(enteredVeggieName) ? enteredVeggieName : '';
     const saladName: string = isString(enteredSaladName) ? enteredSaladName : '';
     const sideName: string = isString(enteredSideName) ? enteredSideName : '';
-
+    const interval: number = enteredInterval as number;
+    const last: Date | null = isDate(enteredLast) ? enteredLast : null;
     const requiresVeggie: boolean = enteredRequiresVeggie as boolean;
     const requiresSalad: boolean = enteredRequiresSalad as boolean;
     const requiresSide: boolean = enteredRequiresSide as boolean;
@@ -156,10 +159,12 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
         saladId: '',
         veggieId: '',
         sideId: '',
-        mainName: mainName,
-        veggieName: veggieName,
-        saladName: saladName,
-        sideName: sideName,
+        mainName,
+        veggieName,
+        saladName,
+        sideName,
+        interval,
+        last,
       }
       mealEntities.push(mealEntity);
     } else {
@@ -169,7 +174,9 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
           userId: '',
           name: mainName,
           type: DishType.Main,
-          accompanimentRequired: RequiredAccompanimentFlags.None
+          accompanimentRequired: RequiredAccompanimentFlags.None,
+          interval,
+          last,
         }
         if (requiresVeggie) {
           mainDish.accompanimentRequired = RequiredAccompanimentFlags.Veggie;
@@ -203,7 +210,9 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
           id: uuidv4(),
           userId: '',
           name: dishName,
-          type: dishType
+          type: dishType,
+          interval,
+          last,
         }
         dishesByName[dishName] = baseDish;
 
