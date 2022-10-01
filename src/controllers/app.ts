@@ -71,10 +71,9 @@ export const uploadMealWheelSpec = (request: Request, response: Response, next: 
       return response.status(500).json(err);
     }
     console.log('return from upload: ', request.file);
-
-    const filePath = path.join('public', 'mealWheelSpec.csv');
+    const userId: string = request.body.userId;
+    const filePath: string = path.join('public', 'mealWheelSpec.csv');
     const content: string = fs.readFileSync(filePath).toString();
-    // console.log(content);
 
     const result = Papa.parse(content,
       {
@@ -82,8 +81,7 @@ export const uploadMealWheelSpec = (request: Request, response: Response, next: 
         dynamicTyping: true,
         transform,
       });
-    // console.log(result);
-    processMealWheelSpec(result.data as any[]);
+    processMealWheelSpec(userId, result.data as any[]);
 
     const responseData = {
       uploadStatus: 'success',
@@ -92,7 +90,7 @@ export const uploadMealWheelSpec = (request: Request, response: Response, next: 
   });
 };
 
-const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
+const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]) => {
 
   const mealEntities: DefinedMealEntity[] = [];
   let dishesByName: { [id: string]: BaseDishEntity; } = {};  // id is dish name
@@ -153,7 +151,7 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
 
       const mealEntity: DefinedMealEntity = {
         id: uuidv4(),
-        userId: '',                   // TEDTODO
+        userId,
         name: enteredMealName,
         mainDishId: '',               // fill in the following after parsing dishes
         saladId: '',
@@ -171,7 +169,7 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
       if (dishType === DishType.Main) {
         const mainDish: MainDishEntity = {
           id: uuidv4(),
-          userId: '',
+          userId,
           name: mainName,
           type: DishType.Main,
           accompanimentRequired: RequiredAccompanimentFlags.None,
@@ -208,7 +206,7 @@ const processMealWheelSpec = (convertedMealWheelSpecItems: any[]) => {
         }
         const baseDish: BaseDishEntity = {
           id: uuidv4(),
-          userId: '',
+          userId,
           name: dishName,
           type: dishType,
           interval,
