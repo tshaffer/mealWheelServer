@@ -110,8 +110,8 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
       enteredVeggieName,
       enteredSaladName,
       enteredSideName,
-      enteredInterval,
-      enteredLast,
+      // enteredInterval,
+      // enteredLast,
     ] = propsAsArray;
 
     if (isNil(enteredEntityType) || isBoolean(enteredEntityType)) {
@@ -141,8 +141,8 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
     const veggieName: string = isString(enteredVeggieName) ? enteredVeggieName : '';
     const saladName: string = isString(enteredSaladName) ? enteredSaladName : '';
     const sideName: string = isString(enteredSideName) ? enteredSideName : '';
-    const interval: number = enteredInterval as number;
-    const last: Date | null = isDate(enteredLast) ? enteredLast : null;
+    // const interval: number = enteredInterval as number;
+    // const last: Date | null = isDate(enteredLast) ? enteredLast : null;
     const requiresVeggie: boolean = enteredRequiresVeggie as boolean;
     const requiresSalad: boolean = enteredRequiresSalad as boolean;
     const requiresSide: boolean = enteredRequiresSide as boolean;

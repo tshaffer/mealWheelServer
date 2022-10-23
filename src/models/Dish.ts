@@ -11,8 +11,8 @@ const DishSchema = new Schema(
     name: { type: String, required: true, unique: true },
     type: { type: String, required: true },
     accompanimentRequired: { type: Number, required: true },
-    interval: { type: Number, required: true },
-    last: { type: Date }
+    // interval: { type: Number, required: true },
+    // last: { type: Date }
   },
 );
 

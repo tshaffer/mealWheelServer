@@ -16,8 +16,8 @@ const DefinedMealSchema = new Schema(
     veggieName: { type: String, required: true },
     saladName: { type: String, required: true },
     sideName: { type: String, required: true },
-    interval: { type: Number, required: true },
-    last: { type: Date }
+    // interval: { type: Number, required: true },
+    // last: { type: Date }
   },
 );
 
