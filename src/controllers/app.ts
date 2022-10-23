@@ -161,8 +161,8 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
         veggieName,
         saladName,
         sideName,
-        interval,
-        last,
+        // interval,
+        // last,
       }
       mealEntities.push(mealEntity);
     } else {
@@ -173,8 +173,8 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
           name: mainName,
           type: DishType.Main,
           accompanimentRequired: RequiredAccompanimentFlags.None,
-          interval,
-          last,
+          // interval,
+          // last,
         }
         if (requiresVeggie) {
           mainDish.accompanimentRequired = RequiredAccompanimentFlags.Veggie;
@@ -209,8 +209,8 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
           userId,
           name: dishName,
           type: dishType,
-          interval,
-          last,
+          // interval,
+          // last,
         }
         dishesByName[dishName] = baseDish;
 
