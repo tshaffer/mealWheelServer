@@ -5,8 +5,6 @@ export interface BaseDishEntity {
   userId: string;
   name: string;
   type: DishType;
-  interval: number;
-  last: Date | null;
 }
 
 export interface MainDishEntity extends BaseDishEntity {
@@ -25,8 +23,6 @@ export interface DefinedMealEntity {
   veggieName: string;
   saladName: string;
   sideName: string;
-  interval: number;
-  last: Date | null;
 }
 
 export interface ScheduledMealEntity {

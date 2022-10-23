@@ -41,6 +41,11 @@ class App {
 
     connectDB();
 
+    console.log('port environment variable: ', process.env.PORT);
+    console.log('mongo environment variable: ', process.env.MONGO_URI);
+
+    connectDB();
+
     this.app = express();
     this.config();
 
@@ -68,7 +73,6 @@ class App {
     this.app.post('/api/v1/updateMeal', updateMeal);
 
     this.app.get('/api/v1/validate', validate);
-
   }
 
   private config(): void {
