@@ -137,7 +137,6 @@ const getDishesFromDbHelper = (query: any): Promise<BaseDishEntity[]> => {
 
 }
 export const getDishesFromDb = (userId: string): Promise<BaseDishEntity[]> => {
-  console.log('getDishesFromDb: ', userId);
   const query = Dish.find({ userId });
   return getDishesFromDbHelper(query);
 }

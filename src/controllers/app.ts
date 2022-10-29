@@ -72,6 +72,7 @@ export const uploadMealWheelSpec = (request: Request, response: Response, next: 
     }
     console.log('return from upload: ', request.file);
     const userId: string = request.body.userId;
+    console.log('userId: ', userId);
     const filePath: string = path.join('public', 'mealWheelSpec.csv');
     const content: string = fs.readFileSync(filePath).toString();
 
