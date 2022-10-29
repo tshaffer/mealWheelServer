@@ -42,6 +42,13 @@ export const createScheduledMealDocument = (scheduledMealEntity: ScheduledMealEn
 }
 
 export const createMainDishDocument = (dishEntity: MainDishEntity): Promise<Document | void> => {
+  const getExistingDishesPromise: Promise<any> = getDishByNameFromDb(dishEntity.userId, dishEntity.name);
+  getExistingDishesPromise
+    .then((existingDishes: any) => {
+      console.log('existingDishes: ', existingDishes);
+    }).catch((err: any) => {
+      console.log('getExistingDishes error: ', err);
+    });
   return Dish.create(dishEntity)
     .then((dish: Document) => {
       return Promise.resolve(dish);
@@ -170,6 +177,10 @@ export const getMainDishesFromDb = (userId: string): Promise<BaseDishEntity[]> =
   return getDishesFromDbHelper(query);
 }
 
+const getDishByNameFromDb = (userId: string, name: string): Promise<BaseDishEntity[]> => {
+  const query = Dish.find({ userId, name, type: 'main' });
+  return getDishesFromDbHelper(query);
+}
 
 export const getAccompanimentDishesFromDb = (userId: string): Promise<BaseDishEntity[]> => {
   const query = Dish.find({ $and: [{ userId }, { type: { $ne: 'main' } }] });
