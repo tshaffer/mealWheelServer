@@ -14,33 +14,57 @@ import {
   DefinedMealEntity,
 } from '../types';
 
-export const createDefinedMealDocument = (definedMealEntity: DefinedMealEntity): Promise<Document> => {
+export const createDefinedMealDocument = (definedMealEntity: DefinedMealEntity): Promise<Document | void> => {
   return DefinedMeal.create(definedMealEntity)
     .then((definedMeal: Document) => {
       return Promise.resolve(definedMeal);
+    }).catch((err: any) => {
+      if (err.name === 'MongoError' && err.code === 11000) {
+        console.log('Duplicate key error in createScheduledMealDocument: ', definedMealEntity);
+      }
+      // return Promise.reject(err);
+      return Promise.resolve();
     });
 }
 
 
-export const createScheduledMealDocument = (scheduledMealEntity: ScheduledMealEntity): Promise<Document> => {
+export const createScheduledMealDocument = (scheduledMealEntity: ScheduledMealEntity): Promise<Document | void> => {
   return ScheduledMeal.create(scheduledMealEntity)
     .then((scheduledMeal: Document) => {
       return Promise.resolve(scheduledMeal);
+    }).catch((err: any) => {
+      if (err.name === 'MongoError' && err.code === 11000) {
+        console.log('Duplicate key error in createScheduledMealDocument: ', scheduledMealEntity);
+      }
+      // return Promise.reject(err);
+      return Promise.resolve();
     });
 }
 
-export const createMainDishDocument = (dishEntity: MainDishEntity): Promise<Document> => {
+export const createMainDishDocument = (dishEntity: MainDishEntity): Promise<Document | void> => {
   return Dish.create(dishEntity)
     .then((dish: Document) => {
       return Promise.resolve(dish);
+    }).catch((err: any) => {
+      if (err.name === 'MongoError' && err.code === 11000) {
+        console.log('Duplicate key error in createMainDishDocument: ', dishEntity);
+      }
+      // return Promise.reject(err);
+      return Promise.resolve();
     });
 };
 
-export const createBaseDishDocument = (dishEntity: BaseDishEntity): Promise<Document> => {
+export const createBaseDishDocument = (dishEntity: BaseDishEntity): Promise<Document | void> => {
   (dishEntity as MainDishEntity).accompanimentRequired = RequiredAccompanimentFlags.None;
   return Dish.create(dishEntity)
     .then((dish: Document) => {
       return Promise.resolve(dish);
+    }).catch((err: any) => {
+      if (err.name === 'MongoError' && err.code === 11000) {
+        console.log('Duplicate key error in createBaseDishDocument: ', dishEntity);
+      }
+      // return Promise.reject(err);
+      return Promise.resolve();
     });
 };
 
