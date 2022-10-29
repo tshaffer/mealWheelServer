@@ -38,7 +38,7 @@ import {
   DefinedMealEntity,
   RequiredAccompanimentFlags
 } from '../types';
-import _, { isBoolean, isDate, isNil, isString } from 'lodash';
+import _, { isBoolean, isDate, isNil, isNumber, isString } from 'lodash';
 // import {
 //   createDishDocument
 // } from './dbInterface';
@@ -93,6 +93,16 @@ export const uploadMealWheelSpec = (request: Request, response: Response, next: 
 
 const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]) => {
 
+  console.log('processMealWheelSpec: ', userId);
+  console.log(userId);
+  if (isString(userId)) {
+    console.log('userId is string');
+  } else if (isNumber(userId)) {
+    console.log('userId is number');
+  } else {
+    console.log('userId is neither string nor number');
+  }
+  
   const mealEntities: DefinedMealEntity[] = [];
   let dishesByName: { [id: string]: BaseDishEntity; } = {};  // id is dish name
 
