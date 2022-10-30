@@ -28,7 +28,8 @@ import {
   updateMealDb,
   createDefinedMealDocument,
   getDefinedMealsFromDb,
-  validateDb
+  validateDb,
+  deleteScheduledMealDb
 } from './dbInterface';
 
 import { version } from '../version';
@@ -102,7 +103,7 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
   } else {
     console.log('userId is neither string nor number');
   }
-  
+
   const mealEntities: DefinedMealEntity[] = [];
   let dishesByName: { [id: string]: BaseDishEntity; } = {};  // id is dish name
 
@@ -365,6 +366,14 @@ export const updateMeal = (request: Request, response: Response, next: any) => {
 
   updateMealDb(id, userId, mainDishId, saladId, veggieId, sideId, dateScheduled, status);
 
+  response.sendStatus(200);
+
+}
+
+export const deleteScheduledMeal = (request: Request, response: Response, next: any) => {
+
+  const { id } = request.body;
+  deleteScheduledMealDb(id);
   response.sendStatus(200);
 
 }

@@ -232,6 +232,16 @@ export const updateMealDb = (
 }
 
 
+export const deleteScheduledMealDb = (
+  id: string,
+): void => {
+  ScheduledMeal.deleteOne({ id }).then(() => {
+    console.log('Meal deleted');
+  }).catch((error: any) => {
+    console.log('Meal deletion failed: ', error);
+  });
+}
+
 interface MainDishMap {
   [key: string]: MainDishEntity; // id or name
 }
