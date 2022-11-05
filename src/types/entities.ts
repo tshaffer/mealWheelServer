@@ -1,5 +1,13 @@
 import { DishType, MealStatus, RequiredAccompanimentFlags } from '../types';
 
+export interface DishEntity {
+  id: string;
+  userId: string;
+  name: string;
+  type: DishType;
+  accompanimentRequired?: RequiredAccompanimentFlags;   // only applies when dishType === DishType.Main
+}
+
 export interface BaseDishEntity {
   id: string;
   userId: string;

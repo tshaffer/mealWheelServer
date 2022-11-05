@@ -29,7 +29,8 @@ import {
   createDefinedMealDocument,
   getDefinedMealsFromDb,
   validateDb,
-  deleteScheduledMealDb
+  deleteScheduledMealDb,
+  createDishDocument
 } from './dbInterface';
 
 import { version } from '../version';
@@ -383,8 +384,10 @@ export const addDish = (request: Request, response: Response, next: any) => {
   console.log('addDish');
   console.log(request.body);
 
-  const { dish } = request.body;
-  // createDishDocument(dish);
+  const { dish, userId } = request.body;
+
+  dish.userId = userId;
+  createDishDocument(dish);
 
   response.sendStatus(200);
 }

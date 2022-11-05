@@ -14,7 +14,7 @@ import {
   getDefinedMeals,
   getDishes,
   getScheduledMeals,
-  // addDish,
+  addDish,
   // addMeal,
   // getMeals,
   getUsers,
@@ -67,7 +67,7 @@ class App {
 
     this.app.get('/api/v1/dishes', getDishes);
     // this.app.post('/api/v1/dishSpec', uploadDishSpec);
-    // this.app.post('/api/v1/addDish', addDish);
+    this.app.post('/api/v1/addDish', addDish);
     // this.app.post('/api/v1/updateDish', updateDish);
 
     this.app.get('/api/v1/definedMeals', getDefinedMeals);

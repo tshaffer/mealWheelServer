@@ -12,7 +12,9 @@ import {
   MealStatus,
   RequiredAccompanimentFlags,
   DefinedMealEntity,
+  DishEntity,
 } from '../types';
+
 
 export const createDefinedMealDocument = (definedMealEntity: DefinedMealEntity): Promise<Document | void> => {
   return DefinedMeal.create(definedMealEntity)
@@ -40,6 +42,16 @@ export const createScheduledMealDocument = (scheduledMealEntity: ScheduledMealEn
       return Promise.resolve();
     });
 }
+
+export const createDishDocument = (dishEntity: DishEntity): Promise<Document> => {
+  if (isNil(dishEntity.accompanimentRequired)) {
+    dishEntity.accompanimentRequired = RequiredAccompanimentFlags.None;
+  }
+  return Dish.create(dishEntity)
+    .then((dish: Document) => {
+      return Promise.resolve(dish);
+    });
+};
 
 export const createMainDishDocument = (dishEntity: MainDishEntity): Promise<Document | void> => {
   const getExistingDishesPromise: Promise<any> = getDishByNameFromDb(dishEntity.userId, dishEntity.name);
