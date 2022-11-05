@@ -51,3 +51,9 @@ export interface UserEntity {
   email: string;
 }
 
+export interface IngredientEntity {
+  id: string;
+  name: string;
+  ingredients: IngredientEntity[];
+}
+

@@ -1,6 +1,7 @@
 import { isArray, isNil, isString } from 'lodash';
 import { Document } from 'mongoose';
 import DefinedMeal from '../models/DefinedMeal';
+import Ingredient from '../models/Ingredient';
 import ScheduledMeal from '../models/ScheduledMeal';
 import Dish from '../models/Dish';
 import {
@@ -13,6 +14,7 @@ import {
   RequiredAccompanimentFlags,
   DefinedMealEntity,
   DishEntity,
+  IngredientEntity,
 } from '../types';
 
 
@@ -344,3 +346,17 @@ export const validateDb = () => {
         });
     });
 };
+
+export const createIngredientDocument = (ingredientEntity: IngredientEntity): Promise<Document | void> => {
+  return Ingredient.create(ingredientEntity)
+    .then((ingredient: Document) => {
+      return Promise.resolve(ingredient);
+    }).catch((err: any) => {
+      if (err.name === 'MongoError' && err.code === 11000) {
+        console.log('Duplicate key error in createIngredientDocument: ', ingredientEntity);
+      }
+      // return Promise.reject(err);
+      return Promise.resolve();
+    });
+};
+

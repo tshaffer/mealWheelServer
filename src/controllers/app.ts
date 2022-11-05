@@ -8,6 +8,7 @@ import Papa from 'papaparse';
 import {
   BaseDishEntity,
   DishType,
+  IngredientEntity,
   MainDishEntity,
   MealWheelEntityType,
   ScheduledMealEntity
@@ -27,6 +28,7 @@ import {
   updateDishDb,
   updateMealDb,
   createDefinedMealDocument,
+  createIngredientDocument,
   getDefinedMealsFromDb,
   validateDb,
   deleteScheduledMealDb,
@@ -40,7 +42,7 @@ import {
   DefinedMealEntity,
   RequiredAccompanimentFlags
 } from '../types';
-import _, { isBoolean, isDate, isNil, isNumber, isString } from 'lodash';
+import { isBoolean, isDate, isNil, isNumber, isString } from 'lodash';
 // import {
 //   createDishDocument
 // } from './dbInterface';
@@ -84,6 +86,7 @@ export const uploadMealWheelSpec = (request: Request, response: Response, next: 
         dynamicTyping: true,
         transform,
       });
+
     processMealWheelSpec(userId, result.data as any[]);
 
     const responseData = {
@@ -105,6 +108,9 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
     console.log('userId is neither string nor number');
   }
 
+  console.log('convertedMealWheelSpecItems');
+  console.log(convertedMealWheelSpecItems);
+
   const mealEntities: DefinedMealEntity[] = [];
   let dishesByName: { [id: string]: BaseDishEntity; } = {};  // id is dish name
 
@@ -123,15 +129,27 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
       enteredVeggieName,
       enteredSaladName,
       enteredSideName,
-      // enteredInterval,
-      // enteredLast,
+      enteredIngredientName,
     ] = propsAsArray;
 
     if (isNil(enteredEntityType) || isBoolean(enteredEntityType)) {
       continue;
     }
 
-    const entityType: MealWheelEntityType = enteredEntityType === 'meal' ? MealWheelEntityType.Meal : MealWheelEntityType.Dish;
+    let entityType: MealWheelEntityType = MealWheelEntityType.Dish;
+    switch (enteredEntityType) {
+      case 'meal':
+        entityType = MealWheelEntityType.Meal
+        break;
+      case 'dish':
+      default:
+        entityType = MealWheelEntityType.Dish;
+        break;
+      case 'ingredient':
+        entityType = MealWheelEntityType.Ingredient;
+        break;
+    }
+    // const entityType: MealWheelEntityType = enteredEntityType === 'meal' ? MealWheelEntityType.Meal : MealWheelEntityType.Dish;
 
     let dishType: DishType = DishType.Main;
     if (entityType === MealWheelEntityType.Dish) {
@@ -154,11 +172,10 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
     const veggieName: string = isString(enteredVeggieName) ? enteredVeggieName : '';
     const saladName: string = isString(enteredSaladName) ? enteredSaladName : '';
     const sideName: string = isString(enteredSideName) ? enteredSideName : '';
-    // const interval: number = enteredInterval as number;
-    // const last: Date | null = isDate(enteredLast) ? enteredLast : null;
     const requiresVeggie: boolean = enteredRequiresVeggie as boolean;
     const requiresSalad: boolean = enteredRequiresSalad as boolean;
     const requiresSide: boolean = enteredRequiresSide as boolean;
+    const ingredientName: string = isString(enteredIngredientName) ? enteredIngredientName : '';
 
     if (entityType === MealWheelEntityType.Meal) {
 
@@ -174,11 +191,9 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
         veggieName,
         saladName,
         sideName,
-        // interval,
-        // last,
       }
       mealEntities.push(mealEntity);
-    } else {
+    } else if (entityType === MealWheelEntityType.Dish) {
       if (dishType === DishType.Main) {
         const mainDish: MainDishEntity = {
           id: uuidv4(),
@@ -222,13 +237,18 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
           userId,
           name: dishName,
           type: dishType,
-          // interval,
-          // last,
         }
         dishesByName[dishName] = baseDish;
 
         createBaseDishDocument(baseDish);
       }
+    } else if (entityType === MealWheelEntityType.Ingredient) {
+      const ingredientEntity: IngredientEntity = {
+        id: uuidv4(),
+        name: ingredientName,
+        ingredients: []
+      };
+      createIngredientDocument(ingredientEntity);
     }
 
   }
@@ -410,3 +430,21 @@ export const validate = (request: Request, response: Response, next: any) => {
   validateDb();
   response.sendStatus(200);
 }
+
+export const addIngredient = (request: Request, response: Response, next: any) => {
+
+  console.log('addIngredient');
+  console.log(request.body);
+
+  const { id, name, ingredients } = request.body;
+
+  const ingredientEntity: IngredientEntity = {
+    id,
+    name,
+    ingredients,
+  };
+  createIngredientDocument(ingredientEntity);
+
+  response.sendStatus(200);
+}
+

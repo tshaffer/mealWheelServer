@@ -6,6 +6,7 @@ export interface MealWheelConfiguration {
 export enum MealWheelEntityType {
   Meal = 'meal',
   Dish = 'dish',
+  Ingredient = 'ingredient',
 };
 
 export enum DishType {

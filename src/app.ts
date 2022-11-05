@@ -26,6 +26,7 @@ import {
   // uploadDishSpec,
   validate,
   deleteScheduledMeal,
+  addIngredient,
 } from './controllers';
 
 class App {
@@ -69,9 +70,9 @@ class App {
     // this.app.post('/api/v1/dishSpec', uploadDishSpec);
     this.app.post('/api/v1/addDish', addDish);
     // this.app.post('/api/v1/updateDish', updateDish);
+    this.app.post('/api/v1/addIngredient', addIngredient)
 
     this.app.get('/api/v1/definedMeals', getDefinedMeals);
-
     this.app.get('/api/v1/scheduledMeals', getScheduledMeals);
     this.app.post('/api/v1/addScheduledMeal', addScheduledMeal);
     this.app.post('/api/v1/updateMeal', updateMeal);
