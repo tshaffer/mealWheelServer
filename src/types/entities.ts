@@ -1,4 +1,4 @@
-import { DishType, MealStatus, RequiredAccompanimentFlags, UnitQuantityType } from '../types';
+import { DishType, MealStatus, RequiredAccompanimentFlags } from '../types';
 
 export interface DishEntity {
   id: string;
@@ -6,7 +6,7 @@ export interface DishEntity {
   name: string;
   type: DishType;
   accompanimentRequired?: RequiredAccompanimentFlags;   // only applies when dishType === DishType.Main
-  ingredients: IngredientInRecipe[];
+  ingredients: IngredientInDish[];
 }
 
 export interface BaseDishEntity {
@@ -14,7 +14,7 @@ export interface BaseDishEntity {
   userId: string;
   name: string;
   type: DishType;
-  ingredients: IngredientInRecipe[];
+  ingredients: IngredientInDish[];
 }
 
 export interface MainDishEntity extends BaseDishEntity {
@@ -59,8 +59,7 @@ export interface IngredientEntity {
   ingredients: IngredientEntity[];
 }
 
-export interface IngredientInRecipe {
+export interface IngredientInDish {
+  dishId: string;
   ingredientId: string;
-  quantity: number;
-  unitType: UnitQuantityType;
 }
