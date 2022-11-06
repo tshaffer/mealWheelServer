@@ -11,9 +11,7 @@ const DishSchema = new Schema(
     name: { type: String, required: true, unique: true },
     type: { type: String, required: true },
     accompanimentRequired: { type: Number, required: true },
-    ingredients: [{
-      ingredientId: { type: String, required: true },
-    }],
+    ingredientIds: { type: [String] },
   },
 );
 
