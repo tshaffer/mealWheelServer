@@ -39,3 +39,10 @@ export enum MealStatus {
   prepared = 1,
   skipped = 2,
 }
+
+export enum UnitQuantityType {
+  grams = 0,
+  ounces = 1,
+  pieces = 2,
+  cups = 3,
+}
