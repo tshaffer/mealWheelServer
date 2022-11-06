@@ -15,6 +15,7 @@ import {
   DefinedMealEntity,
   DishEntity,
   IngredientEntity,
+  IngredientInDishEntity,
 } from '../types';
 
 
@@ -354,6 +355,19 @@ export const createIngredientDocument = (ingredientEntity: IngredientEntity): Pr
     }).catch((err: any) => {
       if (err.name === 'MongoError' && err.code === 11000) {
         console.log('Duplicate key error in createIngredientDocument: ', ingredientEntity);
+      }
+      // return Promise.reject(err);
+      return Promise.resolve();
+    });
+};
+
+export const createIngredientInDishDocument = (ingredientInDishEntity: IngredientInDishEntity): Promise<Document | void> => {
+  return Ingredient.create(ingredientInDishEntity)
+    .then((ingredientInDish: Document) => {
+      return Promise.resolve(ingredientInDish);
+    }).catch((err: any) => {
+      if (err.name === 'MongoError' && err.code === 11000) {
+        console.log('Duplicate key error in createIngredientDocument: ', ingredientInDishEntity);
       }
       // return Promise.reject(err);
       return Promise.resolve();

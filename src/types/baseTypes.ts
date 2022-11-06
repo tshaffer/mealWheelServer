@@ -7,6 +7,7 @@ export enum MealWheelEntityType {
   Meal = 'meal',
   Dish = 'dish',
   Ingredient = 'ingredient',
+  IngredientInDish= 'ingredientInDish',
 };
 
 export enum DishType {

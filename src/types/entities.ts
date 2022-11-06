@@ -6,7 +6,7 @@ export interface DishEntity {
   name: string;
   type: DishType;
   accompanimentRequired?: RequiredAccompanimentFlags;   // only applies when dishType === DishType.Main
-  ingredients: IngredientInDish[];
+  ingredients: IngredientEntity[];
 }
 
 export interface BaseDishEntity {
@@ -14,7 +14,7 @@ export interface BaseDishEntity {
   userId: string;
   name: string;
   type: DishType;
-  ingredients: IngredientInDish[];
+  ingredients: IngredientEntity[];
 }
 
 export interface MainDishEntity extends BaseDishEntity {
@@ -56,10 +56,11 @@ export interface UserEntity {
 export interface IngredientEntity {
   id: string;
   name: string;
+  showInGroceryList: boolean;
   ingredients: IngredientEntity[];
 }
 
-export interface IngredientInDish {
+export interface IngredientInDishEntity {
   dishId: string;
   ingredientId: string;
 }

@@ -9,6 +9,7 @@ import {
   BaseDishEntity,
   DishType,
   IngredientEntity,
+  IngredientInDishEntity,
   MainDishEntity,
   MealWheelEntityType,
   ScheduledMealEntity
@@ -32,7 +33,8 @@ import {
   getDefinedMealsFromDb,
   validateDb,
   deleteScheduledMealDb,
-  createDishDocument
+  createDishDocument,
+  createIngredientInDishDocument
 } from './dbInterface';
 
 import { version } from '../version';
@@ -42,10 +44,7 @@ import {
   DefinedMealEntity,
   RequiredAccompanimentFlags
 } from '../types';
-import { isBoolean, isDate, isNil, isNumber, isString } from 'lodash';
-// import {
-//   createDishDocument
-// } from './dbInterface';
+import { isBoolean, isNil, isNumber, isString } from 'lodash';
 
 export const getVersion = (request: Request, response: Response, next: any) => {
   console.log('getVersion');
@@ -96,6 +95,11 @@ export const uploadMealWheelSpec = (request: Request, response: Response, next: 
   });
 };
 
+interface IngredientInDishSpec {
+  dishName: string;
+  ingredientName: string;
+}
+
 const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]) => {
 
   console.log('processMealWheelSpec: ', userId);
@@ -112,7 +116,9 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
   console.log(convertedMealWheelSpecItems);
 
   const mealEntities: DefinedMealEntity[] = [];
-  let dishesByName: { [id: string]: BaseDishEntity; } = {};  // id is dish name
+  const dishesByName: { [id: string]: BaseDishEntity; } = {};  // id is dish name
+  const ingredientsByName: { [id: string]: IngredientEntity; } = {}; // id is ingredient name
+  const ingredientsInDishSpecsByDishName: { [id: string]: IngredientInDishSpec; } = {}; // id is ingredient name
 
   for (let i = 0; i < convertedMealWheelSpecItems.length; i++) {
 
@@ -130,6 +136,7 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
       enteredSaladName,
       enteredSideName,
       enteredIngredientName,
+      enteredShowInGroceryList,
     ] = propsAsArray;
 
     if (isNil(enteredEntityType) || isBoolean(enteredEntityType)) {
@@ -148,8 +155,10 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
       case 'ingredient':
         entityType = MealWheelEntityType.Ingredient;
         break;
+      case 'ingredientInDish':
+        entityType = MealWheelEntityType.IngredientInDish;
+        break;
     }
-    // const entityType: MealWheelEntityType = enteredEntityType === 'meal' ? MealWheelEntityType.Meal : MealWheelEntityType.Dish;
 
     let dishType: DishType = DishType.Main;
     if (entityType === MealWheelEntityType.Dish) {
@@ -176,9 +185,9 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
     const requiresSalad: boolean = enteredRequiresSalad as boolean;
     const requiresSide: boolean = enteredRequiresSide as boolean;
     const ingredientName: string = isString(enteredIngredientName) ? enteredIngredientName : '';
+    const showInGroceryList: boolean = enteredShowInGroceryList as boolean;
 
     if (entityType === MealWheelEntityType.Meal) {
-
       const mealEntity: DefinedMealEntity = {
         id: uuidv4(),
         userId,
@@ -201,8 +210,7 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
           name: mainName,
           type: DishType.Main,
           accompanimentRequired: RequiredAccompanimentFlags.None,
-          // interval,
-          // last,
+          ingredients: [],
         }
         if (requiresVeggie) {
           mainDish.accompanimentRequired = RequiredAccompanimentFlags.Veggie;
@@ -215,7 +223,7 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
         }
         dishesByName[mainName] = mainDish;
 
-        createMainDishDocument(mainDish);
+        // createMainDishDocument(mainDish);
 
       } else {
         let dishName = '';
@@ -237,18 +245,27 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
           userId,
           name: dishName,
           type: dishType,
+          ingredients: [],
         }
         dishesByName[dishName] = baseDish;
 
-        createBaseDishDocument(baseDish);
+        // createBaseDishDocument(baseDish);
       }
     } else if (entityType === MealWheelEntityType.Ingredient) {
       const ingredientEntity: IngredientEntity = {
         id: uuidv4(),
         name: ingredientName,
+        showInGroceryList,
         ingredients: []
       };
+      ingredientsByName[ingredientName] = ingredientEntity;
       createIngredientDocument(ingredientEntity);
+    } else if (entityType === MealWheelEntityType.IngredientInDish) {
+      const ingredientInDishSpec: IngredientInDishSpec = {
+        dishName: mainName,
+        ingredientName,
+      };
+      ingredientsInDishSpecsByDishName[mainName] = ingredientInDishSpec;
     }
 
   }
@@ -266,6 +283,52 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
       mealEntity.sideId = dishesByName[mealEntity.sideName].id;
     }
     createDefinedMealDocument(mealEntity);
+  }
+
+  // create ingredientInDish documents
+  for (const dishName0 in ingredientsInDishSpecsByDishName) {
+    if (Object.prototype.hasOwnProperty.call(ingredientsInDishSpecsByDishName, dishName0)) {
+      const ingredientInDishSpec: IngredientInDishSpec = ingredientsInDishSpecsByDishName[dishName0];
+      const { dishName, ingredientName } = ingredientInDishSpec;
+      if (!isNil(dishesByName[dishName])) {
+        const dishId = dishesByName[dishName].id;
+        if (!isNil(ingredientsByName[ingredientName])) {
+          const ingredientId: string = ingredientsByName[ingredientName].id;
+          const ingredientInDishEntity: IngredientInDishEntity = {
+            dishId,
+            ingredientId
+          };
+          createIngredientInDishDocument(ingredientInDishEntity);
+        }
+      }
+    }
+  }
+
+  // return to dishes and fill in the ingredients
+  for (const dishName in dishesByName) {
+    if (Object.prototype.hasOwnProperty.call(dishesByName, dishName)) {
+      const dish: BaseDishEntity = dishesByName[dishName];
+
+      // given the dish, iterate through ingredientsInDishSpecsByDishName
+
+      // are there any ingredients for this dish?
+      if (!isNil(ingredientsInDishSpecsByDishName[dishName])) {
+        const ingredientInDishSpec: IngredientInDishSpec = ingredientsInDishSpecsByDishName[dishName];
+        const { ingredientName } = ingredientInDishSpec;
+        // the following should always be true - if not, there's a missing ingredient
+        if (!isNil(ingredientsByName[ingredientName])) {
+          // retrieve IngredientInDishEntity
+          const ingredientEntity: IngredientEntity = ingredientsByName[ingredientName];
+          dish.ingredients.push(ingredientEntity);
+        }
+      }
+
+      if (dish.type === DishType.Main) {
+        createMainDishDocument(dish as MainDishEntity);
+      } else {
+        createBaseDishDocument(dish);
+      }
+    }
   }
 
   console.log('upload complete');
@@ -436,12 +499,13 @@ export const addIngredient = (request: Request, response: Response, next: any) =
   console.log('addIngredient');
   console.log(request.body);
 
-  const { id, name, ingredients } = request.body;
+  const { id, name, ingredients, showInGroceryList } = request.body;
 
   const ingredientEntity: IngredientEntity = {
     id,
     name,
     ingredients,
+    showInGroceryList,
   };
   createIngredientDocument(ingredientEntity);
 
