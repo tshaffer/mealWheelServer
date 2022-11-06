@@ -217,9 +217,6 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
           mainDish.accompanimentRequired += RequiredAccompanimentFlags.Side;
         }
         dishesByName[mainName] = mainDish;
-
-        // createMainDishDocument(mainDish);
-
       } else {
         let dishName = '';
         switch (dishType) {
@@ -243,8 +240,6 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
           ingredientIds: [],
         }
         dishesByName[dishName] = baseDish;
-
-        // createBaseDishDocument(baseDish);
       }
     } else if (entityType === MealWheelEntityType.Ingredient) {
       const ingredientEntity: IngredientEntity = {
@@ -256,10 +251,6 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
       ingredientsByName[ingredientName] = ingredientEntity;
       createIngredientDocument(ingredientEntity);
     } else if (entityType === MealWheelEntityType.IngredientInDish) {
-      // const ingredientInDishSpec: IngredientInDishSpec = {
-      //   dishName: enteredDishType,
-      //   ingredientName: enteredMealName,
-      // };
       const dishName = enteredDishType;
       const ingredientName = enteredMealName;
       if (isNil(ingredientNamesInDishSpecByDishName[dishName])) {
@@ -285,11 +276,11 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
   }
 
   // create ingredientInDish documents
-  for (const dishName0 in ingredientNamesInDishSpecByDishName) {
-    if (Object.prototype.hasOwnProperty.call(ingredientNamesInDishSpecByDishName, dishName0)) {
-      const ingredientNamesInDishSpec: string[] = ingredientNamesInDishSpecByDishName[dishName0];
+  for (const dishName in ingredientNamesInDishSpecByDishName) {
+    if (Object.prototype.hasOwnProperty.call(ingredientNamesInDishSpecByDishName, dishName)) {
+      const ingredientNamesInDishSpec: string[] = ingredientNamesInDishSpecByDishName[dishName];
       for (const ingredientInDishName of ingredientNamesInDishSpec) {
-        const dishId = dishesByName[dishName0].id;
+        const dishId = dishesByName[dishName].id;
         const ingredientId: string = ingredientsByName[ingredientInDishName].id;
         const ingredientInDishEntity: IngredientInDishEntity = {
           dishId,

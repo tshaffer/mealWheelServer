@@ -2,6 +2,7 @@ import { isArray, isNil, isString } from 'lodash';
 import { Document } from 'mongoose';
 import DefinedMeal from '../models/DefinedMeal';
 import Ingredient from '../models/Ingredient';
+import IngredientInDish from '../models/IngredientInDish';
 import ScheduledMeal from '../models/ScheduledMeal';
 import Dish from '../models/Dish';
 import {
@@ -362,7 +363,7 @@ export const createIngredientDocument = (ingredientEntity: IngredientEntity): Pr
 };
 
 export const createIngredientInDishDocument = (ingredientInDishEntity: IngredientInDishEntity): Promise<Document | void> => {
-  return Ingredient.create(ingredientInDishEntity)
+  return IngredientInDish.create(ingredientInDishEntity)
     .then((ingredientInDish: Document) => {
       return Promise.resolve(ingredientInDish);
     }).catch((err: any) => {
