@@ -95,11 +95,6 @@ export const uploadMealWheelSpec = (request: Request, response: Response, next: 
   });
 };
 
-interface IngredientInDishSpec {
-  dishName: string;
-  ingredientName: string;
-}
-
 const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]) => {
 
   console.log('processMealWheelSpec: ', userId);
@@ -118,7 +113,7 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
   const mealEntities: DefinedMealEntity[] = [];
   const dishesByName: { [id: string]: BaseDishEntity; } = {};  // id is dish name
   const ingredientsByName: { [id: string]: IngredientEntity; } = {}; // id is ingredient name
-  const ingredientsInDishSpecsByDishName: { [id: string]: IngredientInDishSpec; } = {}; // id is ingredient name
+  const ingredientNamesInDishSpecByDishName: { [id: string]: string[]; } = {}; // id is dishName, value is list of ingredient names
 
   for (let i = 0; i < convertedMealWheelSpecItems.length; i++) {
 
@@ -210,7 +205,7 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
           name: mainName,
           type: DishType.Main,
           accompanimentRequired: RequiredAccompanimentFlags.None,
-          ingredients: [],
+          ingredientIds: [],
         }
         if (requiresVeggie) {
           mainDish.accompanimentRequired = RequiredAccompanimentFlags.Veggie;
@@ -245,7 +240,7 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
           userId,
           name: dishName,
           type: dishType,
-          ingredients: [],
+          ingredientIds: [],
         }
         dishesByName[dishName] = baseDish;
 
@@ -261,13 +256,17 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
       ingredientsByName[ingredientName] = ingredientEntity;
       createIngredientDocument(ingredientEntity);
     } else if (entityType === MealWheelEntityType.IngredientInDish) {
-      const ingredientInDishSpec: IngredientInDishSpec = {
-        dishName: mainName,
-        ingredientName,
-      };
-      ingredientsInDishSpecsByDishName[mainName] = ingredientInDishSpec;
+      // const ingredientInDishSpec: IngredientInDishSpec = {
+      //   dishName: enteredDishType,
+      //   ingredientName: enteredMealName,
+      // };
+      const dishName = enteredDishType;
+      const ingredientName = enteredMealName;
+      if (isNil(ingredientNamesInDishSpecByDishName[dishName])) {
+        ingredientNamesInDishSpecByDishName[dishName] = [];
+      }
+      ingredientNamesInDishSpecByDishName[dishName].push(ingredientName);
     }
-
   }
 
   // return to meals and fill in the accompaniment id's
@@ -286,20 +285,17 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
   }
 
   // create ingredientInDish documents
-  for (const dishName0 in ingredientsInDishSpecsByDishName) {
-    if (Object.prototype.hasOwnProperty.call(ingredientsInDishSpecsByDishName, dishName0)) {
-      const ingredientInDishSpec: IngredientInDishSpec = ingredientsInDishSpecsByDishName[dishName0];
-      const { dishName, ingredientName } = ingredientInDishSpec;
-      if (!isNil(dishesByName[dishName])) {
-        const dishId = dishesByName[dishName].id;
-        if (!isNil(ingredientsByName[ingredientName])) {
-          const ingredientId: string = ingredientsByName[ingredientName].id;
-          const ingredientInDishEntity: IngredientInDishEntity = {
-            dishId,
-            ingredientId
-          };
-          createIngredientInDishDocument(ingredientInDishEntity);
-        }
+  for (const dishName0 in ingredientNamesInDishSpecByDishName) {
+    if (Object.prototype.hasOwnProperty.call(ingredientNamesInDishSpecByDishName, dishName0)) {
+      const ingredientNamesInDishSpec: string[] = ingredientNamesInDishSpecByDishName[dishName0];
+      for (const ingredientInDishName of ingredientNamesInDishSpec) {
+        const dishId = dishesByName[dishName0].id;
+        const ingredientId: string = ingredientsByName[ingredientInDishName].id;
+        const ingredientInDishEntity: IngredientInDishEntity = {
+          dishId,
+          ingredientId
+        };
+        createIngredientInDishDocument(ingredientInDishEntity);
       }
     }
   }
@@ -312,14 +308,14 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
       // given the dish, iterate through ingredientsInDishSpecsByDishName
 
       // are there any ingredients for this dish?
-      if (!isNil(ingredientsInDishSpecsByDishName[dishName])) {
-        const ingredientInDishSpec: IngredientInDishSpec = ingredientsInDishSpecsByDishName[dishName];
-        const { ingredientName } = ingredientInDishSpec;
-        // the following should always be true - if not, there's a missing ingredient
-        if (!isNil(ingredientsByName[ingredientName])) {
-          // retrieve IngredientInDishEntity
-          const ingredientEntity: IngredientEntity = ingredientsByName[ingredientName];
-          dish.ingredients.push(ingredientEntity);
+      if (!isNil(ingredientNamesInDishSpecByDishName[dishName])) {
+        const ingredientNamesInDishSpec: string[] = ingredientNamesInDishSpecByDishName[dishName];
+        for (const ingredientNameInDishSpec of ingredientNamesInDishSpec) {
+          if (!isNil(ingredientsByName[ingredientNameInDishSpec])) {
+            // retrieve IngredientInDishEntity
+            const ingredientEntity: IngredientEntity = ingredientsByName[ingredientNameInDishSpec];
+            dish.ingredientIds.push(ingredientEntity.id);
+          }
         }
       }
 
