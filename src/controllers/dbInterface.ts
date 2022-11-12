@@ -464,27 +464,22 @@ export const getIngredientsByDishFromDb = (userId: string): Promise<any> => {
       ingredientsInDishesPromises.push(getIngredientsInDishPromise);
     }
     return Promise.all(ingredientsInDishesPromises).then((ingredientsInDishes) => {
-      const fooPromise: Promise<any> = getIngredientsInDishes(ingredientsByDishId, ingredientsInDishes);
-      return fooPromise.then(() => {
-        return Promise.resolve(ingredientsByDishId);
-      })
+      getIngredientsInDishes(ingredientsByDishId, ingredientsInDishes);
+      return Promise.resolve(ingredientsByDishId);
     });
   });
 }
 
-const getIngredientsInDish = (ingredientsByDishId: any, dishId: string, ingredientsInDish: any[]): Promise<any> => {
+const getIngredientsInDish = (ingredientsByDishId: any, dishId: string, ingredientsInDish: any[]) => {
   for (const ingredientInDish of ingredientsInDish) {
     ingredientsByDishId[dishId].push(ingredientInDish.ingredientId)
   }
-  return Promise.resolve();
 };
 
-const getIngredientsInDishes = (ingredientsByDishId: any, ingredientsInDishes: any[]): Promise<any> => {
-  const ingredientsInDishesPromises: Promise<any>[] = [];
+const getIngredientsInDishes = (ingredientsByDishId: any, ingredientsInDishes: any[]) => {
   ingredientsInDishes.forEach((ingredientsInDish: any[]) => {
     if (ingredientsInDish.length > 0) {
-      ingredientsInDishesPromises.push(getIngredientsInDish(ingredientsByDishId, ingredientsInDish[0].dishId, ingredientsInDish));
+      getIngredientsInDish(ingredientsByDishId, ingredientsInDish[0].dishId, ingredientsInDish);
     }
   });
-  return Promise.all(ingredientsInDishesPromises);
 }
