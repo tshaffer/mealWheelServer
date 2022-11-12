@@ -472,7 +472,7 @@ export const getIngredientsByDishFromDb = (userId: string): Promise<any> => {
   });
 }
 
-export const getIngredientsInDish = (ingredientsByDishId: any, ingredientsInDish: any[]): Promise<any> => {
+const getIngredientsInDish = (ingredientsByDishId: any, ingredientsInDish: any[]): Promise<any> => {
   if (ingredientsInDish.length === 0) {
     return Promise.resolve();
   }
@@ -497,7 +497,7 @@ export const getIngredientsInDish = (ingredientsByDishId: any, ingredientsInDish
   });
 };
 
-export const getIngredientsInDishes = (ingredientsByDishId: any, ingredientsInDishes: any[]): Promise<any> => {
+const getIngredientsInDishes = (ingredientsByDishId: any, ingredientsInDishes: any[]): Promise<any> => {
   const ingredientsInDishesPromises: Promise<any>[] = [];
   ingredientsInDishes.forEach((ingredientsInDish: any[]) => {
     ingredientsInDishesPromises.push(getIngredientsInDish(ingredientsByDishId, ingredientsInDish));

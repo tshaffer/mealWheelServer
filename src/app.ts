@@ -28,6 +28,7 @@ import {
   deleteScheduledMeal,
   addIngredient,
 } from './controllers';
+import { getIngredientsByDish } from './controllers/ingredients';
 
 class App {
 
@@ -67,6 +68,7 @@ class App {
     this.app.post('/api/v1/mealWheelSpec', uploadMealWheelSpec);
 
     this.app.get('/api/v1/dishes', getDishes);
+    this.app.get('/api/v1/ingredientsByDish', getIngredientsByDish);
     // this.app.post('/api/v1/dishSpec', uploadDishSpec);
     this.app.post('/api/v1/addDish', addDish);
     // this.app.post('/api/v1/updateDish', updateDish);
