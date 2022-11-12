@@ -472,35 +472,19 @@ export const getIngredientsByDishFromDb = (userId: string): Promise<any> => {
   });
 }
 
-const getIngredientsInDish = (ingredientsByDishId: any, ingredientsInDish: any[]): Promise<any> => {
-  if (ingredientsInDish.length === 0) {
-    return Promise.resolve();
+const getIngredientsInDish = (ingredientsByDishId: any, dishId: string, ingredientsInDish: any[]): Promise<any> => {
+  for (const ingredientInDish of ingredientsInDish) {
+    ingredientsByDishId[dishId].push(ingredientInDish.ingredientId)
   }
-  const dishId: string = ingredientsInDish[0].dishId;
-  const ingredientInDishPromises: Promise<any>[] = [];
-  ingredientsInDish.forEach((ingredientInDish: any) => {
-    /* ingredientInDish
-      dishId
-      ingredientId
-    */
-    console.log(ingredientInDish);
-
-    // get ingredient; add to array of ingredients for this dish
-    ingredientInDishPromises.push(getIngredientFromDb(ingredientInDish.ingredientId));
-  });
-  return Promise.all(ingredientInDishPromises).then((ingredients) => {
-    ingredients.forEach((ingredient) => {
-      ingredientsByDishId[dishId].push(ingredient.name);
-    })
-    console.log(ingredients);
-    return Promise.resolve();
-  });
+  return Promise.resolve();
 };
 
 const getIngredientsInDishes = (ingredientsByDishId: any, ingredientsInDishes: any[]): Promise<any> => {
   const ingredientsInDishesPromises: Promise<any>[] = [];
   ingredientsInDishes.forEach((ingredientsInDish: any[]) => {
-    ingredientsInDishesPromises.push(getIngredientsInDish(ingredientsByDishId, ingredientsInDish));
+    if (ingredientsInDish.length > 0) {
+      ingredientsInDishesPromises.push(getIngredientsInDish(ingredientsByDishId, ingredientsInDish[0].dishId, ingredientsInDish));
+    }
   });
   return Promise.all(ingredientsInDishesPromises);
 }
