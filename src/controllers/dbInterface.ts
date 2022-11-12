@@ -464,31 +464,43 @@ export const getIngredientsByDishFromDb = (userId: string): Promise<any> => {
       ingredientsInDishesPromises.push(getIngredientsInDishPromise);
     }
     return Promise.all(ingredientsInDishesPromises).then((ingredientsInDishes) => {
-      console.log(ingredientsInDishes);
-      ingredientsInDishes.forEach((ingredientsInDish: any[]) => {
-        if (ingredientsInDish.length > 0) {
-          const dishId: string = ingredientsInDish[0].dishId;
-          const ingredientInDishPromises: Promise<any>[] = [];
-          ingredientsInDish.forEach((ingredientInDish: any) => {
-            /* ingredientInDish
-              dishId
-              ingredientId
-            */
-            console.log(ingredientInDish);
-
-            // get ingredient; add to array of ingredients for this dish
-            const p = getIngredientFromDb(ingredientInDish.ingredientId);
-            ingredientInDishPromises.push(p);
-          });
-          return Promise.all(ingredientInDishPromises).then((values) => {
-            values.forEach((value) => {
-              ingredientsByDishId[dishId].push(value.name);
-            })
-            console.log(values);
-          });
-        }
+      const fooPromise: Promise<any> = getIngredientsInDishes(ingredientsByDishId, ingredientsInDishes);
+      return fooPromise.then(() => {
+        return Promise.resolve(ingredientsByDishId);
       })
-      return Promise.resolve(ingredientsByDishId);
     });
   });
+}
+
+export const getIngredientsInDish = (ingredientsByDishId: any, ingredientsInDish: any[]): Promise<any> => {
+  if (ingredientsInDish.length === 0) {
+    return Promise.resolve();
+  }
+  const dishId: string = ingredientsInDish[0].dishId;
+  const ingredientInDishPromises: Promise<any>[] = [];
+  ingredientsInDish.forEach((ingredientInDish: any) => {
+    /* ingredientInDish
+      dishId
+      ingredientId
+    */
+    console.log(ingredientInDish);
+
+    // get ingredient; add to array of ingredients for this dish
+    ingredientInDishPromises.push(getIngredientFromDb(ingredientInDish.ingredientId));
+  });
+  return Promise.all(ingredientInDishPromises).then((ingredients) => {
+    ingredients.forEach((ingredient) => {
+      ingredientsByDishId[dishId].push(ingredient.name);
+    })
+    console.log(ingredients);
+    return Promise.resolve();
+  });
+};
+
+export const getIngredientsInDishes = (ingredientsByDishId: any, ingredientsInDishes: any[]): Promise<any> => {
+  const ingredientsInDishesPromises: Promise<any>[] = [];
+  ingredientsInDishes.forEach((ingredientsInDish: any[]) => {
+    ingredientsInDishesPromises.push(getIngredientsInDish(ingredientsByDishId, ingredientsInDish));
+  });
+  return Promise.all(ingredientsInDishesPromises);
 }
