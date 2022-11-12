@@ -375,3 +375,120 @@ export const createIngredientInDishDocument = (ingredientInDishEntity: Ingredien
     });
 };
 
+export const getIngredientsFromDb = (): Promise<IngredientEntity[]> => {
+
+  const query = Ingredient.find({});
+
+  const promise: Promise<Document[]> = query.exec();
+
+  return promise.then((ingredientDocuments: Document[]) => {
+
+    console.log('ingredientDocuments');
+
+    const ingredientEntities: IngredientEntity[] = ingredientDocuments.map((ingredientDocuments: any) => {
+      const ingredientEntity: IngredientEntity = ingredientDocuments.toObject();
+      return ingredientEntity;
+    });
+
+    return Promise.resolve(ingredientEntities);
+
+  });
+}
+
+export const getIngredientFromDb = (id: string): Promise<IngredientEntity> => {
+
+  const query = Ingredient.findOne({ id });
+
+  const promise: Promise<Document> = query.exec();
+
+  return promise.then((ingredientDocument: Document) => {
+
+    console.log('ingredientDocument');
+
+    const ingredientEntity: any = ingredientDocument.toObject();
+
+    return Promise.resolve(ingredientEntity);
+
+  });
+}
+
+export const getIngredientsInDishDocumentsFromDb = (): Promise<IngredientInDishEntity[]> => {
+
+  const query = IngredientInDish.find({});
+
+  const promise: Promise<Document[]> = query.exec();
+
+  return promise.then((ingredientsInDishDocuments: Document[]) => {
+
+    console.log('ingredientsInDishDocuments');
+
+    const ingredientsInDishEntities: IngredientInDishEntity[] = ingredientsInDishDocuments.map((ingredientInDishDocuments: any) => {
+      const ingredientInDishEntity: IngredientInDishEntity = ingredientInDishDocuments.toObject();
+      return ingredientInDishEntity;
+    });
+
+    return Promise.resolve(ingredientsInDishEntities);
+
+  });
+}
+
+export const getIngredientsInDishFromDb = (dishId: string): Promise<IngredientInDishEntity[]> => {
+
+  const query = IngredientInDish.find({ dishId });
+
+  const promise: Promise<Document[]> = query.exec();
+
+  return promise.then((ingredientsInDishDocuments: Document[]) => {
+
+    console.log('ingredientsInDishDocuments');
+
+    const ingredientsInDishEntities: IngredientInDishEntity[] = ingredientsInDishDocuments.map((ingredientInDishDocuments: any) => {
+      const ingredientInDishEntity: IngredientInDishEntity = ingredientInDishDocuments.toObject();
+      return ingredientInDishEntity;
+    });
+
+    return Promise.resolve(ingredientsInDishEntities);
+
+  });
+}
+
+// TODO - rewrite using a single query
+export const getIngredientsByDishFromDb = (userId: string): Promise<any> => {
+  const ingredientsByDishId: any = {};
+  const getDishes: Promise<BaseDishEntity[]> = getDishesFromDb(userId);
+  return getDishes.then((dishes: BaseDishEntity[]) => {
+    const ingredientsInDishesPromises: Promise<any>[] = [];
+    for (const dish of dishes) {
+      ingredientsByDishId[dish.id] = [];
+      const getIngredientsInDishPromise: Promise<IngredientInDishEntity[]> = getIngredientsInDishFromDb(dish.id);
+      ingredientsInDishesPromises.push(getIngredientsInDishPromise);
+    }
+    return Promise.all(ingredientsInDishesPromises).then((ingredientsInDishes) => {
+      console.log(ingredientsInDishes);
+      ingredientsInDishes.forEach((ingredientsInDish: any[]) => {
+        if (ingredientsInDish.length > 0) {
+          const dishId: string = ingredientsInDish[0].dishId;
+          const ingredientInDishPromises: Promise<any>[] = [];
+          ingredientsInDish.forEach((ingredientInDish: any) => {
+            /* ingredientInDish
+              dishId
+              ingredientId
+            */
+            console.log(ingredientInDish);
+
+            // get ingredient; add to array of ingredients for this dish
+            const p = getIngredientFromDb(ingredientInDish.ingredientId);
+            ingredientInDishPromises.push(p);
+          });
+          return Promise.all(ingredientInDishPromises).then((values) => {
+            values.forEach((value) => {
+              ingredientsByDishId[dishId].push(value.name);
+            })
+            console.log(values);
+          });
+        }
+      })
+      return Promise.resolve(ingredientsByDishId);
+    });
+  });
+}
