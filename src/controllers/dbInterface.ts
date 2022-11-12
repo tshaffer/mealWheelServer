@@ -395,62 +395,42 @@ export const getIngredientsFromDb = (): Promise<IngredientEntity[]> => {
   });
 }
 
-export const getIngredientFromDb = (id: string): Promise<IngredientEntity> => {
+// export const getIngredientFromDb = (id: string): Promise<IngredientEntity> => {
 
-  const query = Ingredient.findOne({ id });
+//   const query = Ingredient.findOne({ id });
 
-  const promise: Promise<Document> = query.exec();
+//   const promise: Promise<Document> = query.exec();
 
-  return promise.then((ingredientDocument: Document) => {
+//   return promise.then((ingredientDocument: Document) => {
 
-    console.log('ingredientDocument');
+//     console.log('ingredientDocument');
 
-    const ingredientEntity: any = ingredientDocument.toObject();
+//     const ingredientEntity: any = ingredientDocument.toObject();
 
-    return Promise.resolve(ingredientEntity);
+//     return Promise.resolve(ingredientEntity);
 
-  });
-}
+//   });
+// }
 
-export const getIngredientsInDishDocumentsFromDb = (): Promise<IngredientInDishEntity[]> => {
+// export const getIngredientsInDishDocumentsFromDb = (): Promise<IngredientInDishEntity[]> => {
 
-  const query = IngredientInDish.find({});
+//   const query = IngredientInDish.find({});
 
-  const promise: Promise<Document[]> = query.exec();
+//   const promise: Promise<Document[]> = query.exec();
 
-  return promise.then((ingredientsInDishDocuments: Document[]) => {
+//   return promise.then((ingredientsInDishDocuments: Document[]) => {
 
-    console.log('ingredientsInDishDocuments');
+//     console.log('ingredientsInDishDocuments');
 
-    const ingredientsInDishEntities: IngredientInDishEntity[] = ingredientsInDishDocuments.map((ingredientInDishDocuments: any) => {
-      const ingredientInDishEntity: IngredientInDishEntity = ingredientInDishDocuments.toObject();
-      return ingredientInDishEntity;
-    });
+//     const ingredientsInDishEntities: IngredientInDishEntity[] = ingredientsInDishDocuments.map((ingredientInDishDocuments: any) => {
+//       const ingredientInDishEntity: IngredientInDishEntity = ingredientInDishDocuments.toObject();
+//       return ingredientInDishEntity;
+//     });
 
-    return Promise.resolve(ingredientsInDishEntities);
+//     return Promise.resolve(ingredientsInDishEntities);
 
-  });
-}
-
-export const getIngredientsInDishFromDb = (dishId: string): Promise<IngredientInDishEntity[]> => {
-
-  const query = IngredientInDish.find({ dishId });
-
-  const promise: Promise<Document[]> = query.exec();
-
-  return promise.then((ingredientsInDishDocuments: Document[]) => {
-
-    console.log('ingredientsInDishDocuments');
-
-    const ingredientsInDishEntities: IngredientInDishEntity[] = ingredientsInDishDocuments.map((ingredientInDishDocuments: any) => {
-      const ingredientInDishEntity: IngredientInDishEntity = ingredientInDishDocuments.toObject();
-      return ingredientInDishEntity;
-    });
-
-    return Promise.resolve(ingredientsInDishEntities);
-
-  });
-}
+//   });
+// }
 
 // TODO - rewrite using a single query
 export const getIngredientsByDishFromDb = (userId: string): Promise<any> => {
@@ -470,12 +450,33 @@ export const getIngredientsByDishFromDb = (userId: string): Promise<any> => {
   });
 }
 
+const getIngredientsInDishFromDb = (dishId: string): Promise<IngredientInDishEntity[]> => {
+
+  const query = IngredientInDish.find({ dishId });
+
+  const promise: Promise<Document[]> = query.exec();
+
+  return promise.then((ingredientsInDishDocuments: Document[]) => {
+
+    console.log('ingredientsInDishDocuments');
+
+    const ingredientsInDishEntities: IngredientInDishEntity[] = ingredientsInDishDocuments.map((ingredientInDishDocuments: any) => {
+      const ingredientInDishEntity: IngredientInDishEntity = ingredientInDishDocuments.toObject();
+      return ingredientInDishEntity;
+    });
+
+    return Promise.resolve(ingredientsInDishEntities);
+
+  });
+}
+
 const getIngredientsInDish = (ingredientsByDishId: any, dishId: string, ingredientsInDish: any[]) => {
   for (const ingredientInDish of ingredientsInDish) {
     ingredientsByDishId[dishId].push(ingredientInDish.ingredientId)
   }
 };
 
+// TODO - further simplification possible
 const getIngredientsInDishes = (ingredientsByDishId: any, ingredientsInDishes: any[]) => {
   ingredientsInDishes.forEach((ingredientsInDish: any[]) => {
     if (ingredientsInDish.length > 0) {
