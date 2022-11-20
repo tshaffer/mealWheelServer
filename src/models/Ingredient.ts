@@ -8,6 +8,7 @@ const IngredientSchema = new Schema(
   {
     id: { type: String, required: true },
     name: { type: String, required: true },
+    showInGroceryList: { type: Boolean, required: true },
     ingredients: [{
       id: { type: String, required: true },
     }],
