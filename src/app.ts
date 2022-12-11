@@ -27,6 +27,9 @@ import {
   validate,
   deleteScheduledMeal,
   addIngredient,
+  addIngredientToDish,
+  deleteIngredientFromDish,
+  replaceIngredientInDish,
 } from './controllers';
 import { getIngredients, getIngredientsByDish } from './controllers/ingredients';
 
@@ -70,10 +73,11 @@ class App {
     this.app.get('/api/v1/dishes', getDishes);
     this.app.get('/api/v1/ingredients', getIngredients);
     this.app.get('/api/v1/ingredientsByDish', getIngredientsByDish);
-    // this.app.post('/api/v1/dishSpec', uploadDishSpec);
     this.app.post('/api/v1/addDish', addDish);
-    // this.app.post('/api/v1/updateDish', updateDish);
     this.app.post('/api/v1/addIngredient', addIngredient)
+    this.app.post('/api/v1/addIngredientToDish', addIngredientToDish)
+    this.app.post('/api/v1/replaceIngredientInDish', replaceIngredientInDish)
+    this.app.post('/api/v1/deleteIngredientFromDish', deleteIngredientFromDish)
 
     this.app.get('/api/v1/definedMeals', getDefinedMeals);
     this.app.get('/api/v1/scheduledMeals', getScheduledMeals);

@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, response, Response } from 'express';
 import multer from 'multer';
 import * as fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
@@ -34,7 +34,9 @@ import {
   validateDb,
   deleteScheduledMealDb,
   createDishDocument,
-  createIngredientInDishDocument
+  createIngredientInDishDocument,
+  deleteIngredientFromDishDb,
+  replaceIngredientInDishDb
 } from './dbInterface';
 
 import { version } from '../version';
@@ -499,3 +501,42 @@ export const addIngredient = (request: Request, response: Response, next: any) =
   response.sendStatus(200);
 }
 
+export const addIngredientToDish = (request: Request, response: Response, next: any) => {
+
+  console.log('addIngredientToDish');
+  console.log(request.body);
+
+  const { dishId, ingredientId } = request.body;
+
+  const ingredientInDishEntity: IngredientInDishEntity = {
+    dishId,
+    ingredientId
+  };
+  createIngredientInDishDocument(ingredientInDishEntity);
+
+  response.sendStatus(200);
+}
+
+export const replaceIngredientInDish = (request: Request, response: Response, next: any) => {
+
+  console.log('replaceIngredientInDish');
+  console.log(request.body);
+
+  const { dishId, existingIngredientId, newIngredientId } = request.body;
+
+  replaceIngredientInDishDb(dishId, existingIngredientId, newIngredientId);
+
+  response.sendStatus(200);
+}
+
+export const deleteIngredientFromDish = (request: Request, response: Response, next: any) => {
+
+  console.log('deleteIngredientFromDish');
+  console.log(request.body);
+
+  const { dishId, ingredientId } = request.body;
+
+  deleteIngredientFromDishDb(dishId, ingredientId);
+
+  response.sendStatus(200);
+}

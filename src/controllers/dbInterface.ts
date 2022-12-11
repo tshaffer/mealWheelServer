@@ -362,19 +362,6 @@ export const createIngredientDocument = (ingredientEntity: IngredientEntity): Pr
     });
 };
 
-export const createIngredientInDishDocument = (ingredientInDishEntity: IngredientInDishEntity): Promise<Document | void> => {
-  return IngredientInDish.create(ingredientInDishEntity)
-    .then((ingredientInDish: Document) => {
-      return Promise.resolve(ingredientInDish);
-    }).catch((err: any) => {
-      if (err.name === 'MongoError' && err.code === 11000) {
-        console.log('Duplicate key error in createIngredientDocument: ', ingredientInDishEntity);
-      }
-      // return Promise.reject(err);
-      return Promise.resolve();
-    });
-};
-
 export const getIngredientsFromDb = (): Promise<IngredientEntity[]> => {
 
   const query = Ingredient.find({});
@@ -432,6 +419,19 @@ export const getIngredientsFromDb = (): Promise<IngredientEntity[]> => {
 //   });
 // }
 
+export const createIngredientInDishDocument = (ingredientInDishEntity: IngredientInDishEntity): Promise<Document | void> => {
+  return IngredientInDish.create(ingredientInDishEntity)
+    .then((ingredientInDish: Document) => {
+      return Promise.resolve(ingredientInDish);
+    }).catch((err: any) => {
+      if (err.name === 'MongoError' && err.code === 11000) {
+        console.log('Duplicate key error in createIngredientDocument: ', ingredientInDishEntity);
+      }
+      // return Promise.reject(err);
+      return Promise.resolve();
+    });
+};
+
 // TODO - rewrite using a single query
 export const getIngredientsByDishFromDb = (userId: string): Promise<any> => {
   const ingredientsByDishId: any = {};
@@ -484,3 +484,36 @@ const getIngredientsInDishes = (ingredientsByDishId: any, ingredientsInDishes: a
     }
   });
 }
+
+export const replaceIngredientInDishDb = (
+  dishId: string,
+  existingIngredientId: string,
+  newIngredientId: string,
+
+) => {
+  const query = IngredientInDish.findOneAndUpdate(
+    { dishId, ingredientId: existingIngredientId },
+    { dishId, ingredientId: newIngredientId }
+  )
+  const promise: Promise<Document[]> = query.exec();
+  return promise.then((findOneAndUpdateRetVal: any) => {
+    console.log('IngredientInDish.findOneAndUpdateRetVal returned value:');
+    console.log(findOneAndUpdateRetVal);
+  }).catch((error: any) => {
+    console.log('IngredientInDish.findOneAndUpdateRetVal returned error:');
+    console.log(error);
+  });
+}
+
+
+export const deleteIngredientFromDishDb = (
+  dishId: string,
+  ingredientId: string,
+): void => {
+  IngredientInDish.deleteOne({ dishId, ingredientId }).then(() => {
+    console.log('Ingredient deleted from dish');
+  }).catch((error: any) => {
+    console.log('Ingredient deletion from dish failed: ', error);
+  });
+}
+
