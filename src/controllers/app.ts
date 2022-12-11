@@ -36,7 +36,8 @@ import {
   createDishDocument,
   createIngredientInDishDocument,
   deleteIngredientFromDishDb,
-  replaceIngredientInDishDb
+  replaceIngredientInDishDb,
+  updateIngredientDb
 } from './dbInterface';
 
 import { version } from '../version';
@@ -497,6 +498,25 @@ export const addIngredient = (request: Request, response: Response, next: any) =
     showInGroceryList,
   };
   createIngredientDocument(ingredientEntity);
+
+  response.sendStatus(200);
+}
+
+export const updateIngredient = (request: Request, response: Response, next: any) => {
+
+  console.log('updateIngredient');
+  console.log(request.body);
+
+  // TEDTODO - looks like there may be some unnecessary conversions going on in this path
+  const { id, name, ingredients, showInGroceryList } = request.body;
+
+  const ingredientEntity: IngredientEntity = {
+    id,
+    name,
+    ingredients,
+    showInGroceryList,
+  };
+  updateIngredientDb(ingredientEntity);
 
   response.sendStatus(200);
 }

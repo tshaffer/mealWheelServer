@@ -362,6 +362,27 @@ export const createIngredientDocument = (ingredientEntity: IngredientEntity): Pr
     });
 };
 
+export const updateIngredientDb = (ingredientEntity: IngredientEntity): Promise<Document | void> => {
+  const { id, name, ingredients, showInGroceryList } = ingredientEntity;
+  const query = Ingredient.findOneAndUpdate(
+    { id: ingredientEntity.id },
+    {
+      id,
+      name,
+      ingredients,
+      showInGroceryList,
+    }
+  )
+  const promise: Promise<Document[]> = query.exec();
+  return promise.then((findOneAndUpdateRetVal: any) => {
+    console.log('Ingredients.findOneAndUpdateRetVal returned value:');
+    console.log(findOneAndUpdateRetVal);
+  }).catch((error: any) => {
+    console.log('Ingredients.findOneAndUpdateRetVal returned error:');
+    console.log(error);
+  });
+};
+
 export const getIngredientsFromDb = (): Promise<IngredientEntity[]> => {
 
   const query = Ingredient.find({});
@@ -382,42 +403,6 @@ export const getIngredientsFromDb = (): Promise<IngredientEntity[]> => {
   });
 }
 
-// export const getIngredientFromDb = (id: string): Promise<IngredientEntity> => {
-
-//   const query = Ingredient.findOne({ id });
-
-//   const promise: Promise<Document> = query.exec();
-
-//   return promise.then((ingredientDocument: Document) => {
-
-//     console.log('ingredientDocument');
-
-//     const ingredientEntity: any = ingredientDocument.toObject();
-
-//     return Promise.resolve(ingredientEntity);
-
-//   });
-// }
-
-// export const getIngredientsInDishDocumentsFromDb = (): Promise<IngredientInDishEntity[]> => {
-
-//   const query = IngredientInDish.find({});
-
-//   const promise: Promise<Document[]> = query.exec();
-
-//   return promise.then((ingredientsInDishDocuments: Document[]) => {
-
-//     console.log('ingredientsInDishDocuments');
-
-//     const ingredientsInDishEntities: IngredientInDishEntity[] = ingredientsInDishDocuments.map((ingredientInDishDocuments: any) => {
-//       const ingredientInDishEntity: IngredientInDishEntity = ingredientInDishDocuments.toObject();
-//       return ingredientInDishEntity;
-//     });
-
-//     return Promise.resolve(ingredientsInDishEntities);
-
-//   });
-// }
 
 export const createIngredientInDishDocument = (ingredientInDishEntity: IngredientInDishEntity): Promise<Document | void> => {
   return IngredientInDish.create(ingredientInDishEntity)
