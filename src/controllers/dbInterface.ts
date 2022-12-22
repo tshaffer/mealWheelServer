@@ -61,7 +61,7 @@ export const createMainDishDocument = (dishEntity: MainDishEntity): Promise<Docu
   const getExistingDishesPromise: Promise<any> = getDishByNameFromDb(dishEntity.userId, dishEntity.name);
   getExistingDishesPromise
     .then((existingDishes: any) => {
-      console.log('existingDishes: ', existingDishes);
+      // console.log('existingDishes: ', existingDishes);
     }).catch((err: any) => {
       console.log('getExistingDishes error: ', err);
     });
@@ -164,7 +164,7 @@ const getDishesFromDbHelper = (query: any): Promise<BaseDishEntity[]> => {
   const promise: Promise<Document[]> = query.exec();
   return promise.then((dishDocuments: Document[]) => {
 
-    console.log('dishDocuments');
+    // console.log('dishDocuments');
 
     const dishEntities: BaseDishEntity[] = dishDocuments.map((dishDocument: any) => {
 
