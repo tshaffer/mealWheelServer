@@ -85,7 +85,10 @@ export const uploadMealWheelSpec = (request: Request, response: Response, next: 
         transform,
       });
 
-    processMealWheelSpec(userId, result.data as any[]);
+    const errorList: string[] = processMealWheelSpec(userId, result.data as any[]);
+    if (errorList.length > 0) {
+     return response.status(400).json(errorList);
+    }
 
     const responseData = {
       uploadStatus: 'success',
@@ -94,7 +97,10 @@ export const uploadMealWheelSpec = (request: Request, response: Response, next: 
   });
 };
 
-const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]) => {
+const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]): string[] => {
+
+  const errorList: string[] = [];
+
   console.log('processMealWheelSpec: ', userId);
   console.log(userId);
   if (isString(userId)) {
@@ -103,6 +109,8 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
     console.log('userId is number');
   } else {
     console.log('userId is neither string nor number');
+    errorList.push('Invalid user id - contact customer support');
+    return errorList;
   }
 
   console.log('convertedMealWheelSpecItems');
@@ -136,6 +144,10 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
           continue;
           break;
         default:
+          if (entityTypeValue !== '') {
+            errorList.push('Unrecognized value in first column: ' + entityTypeValue + '. Valid values are mains, veggies, salads, sides, ingredients, ingredient in dish');
+            return errorList;
+          }
           break;
       }
     }
@@ -144,10 +156,25 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
 
     switch (currentEntityType) {
       case 'mains':
+
+        if (!isString(parsedLine[1])) {
+          errorList.push('Invalid non string value for main name on line: ' + parsedLine);
+          continue;
+        }
         const mainName: string = parsedLine[1];
+        if (dishesByName.hasOwnProperty(mainName)) {
+          errorList.push('Duplicate main name on line: ' + parsedLine);
+          continue;
+        }
+
         const requiresVeggie: boolean = parsedLine[2];
         const requiresSide: boolean = parsedLine[3];
         const requiresSalad: boolean = parsedLine[4];
+        if (!isBoolean(requiresVeggie) || !isBoolean(requiresSalad) || !isBoolean(requiresSide)) {
+          errorList.push('Invalid accompaniment specification on line: ' + parsedLine);
+          continue;
+        }
+
         const mainDish: MainDishEntity = {
           id: uuidv4(),
           userId,
@@ -275,6 +302,7 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
 
   console.log('upload complete');
 
+  return errorList;
 }
 
 const isEmptyLine = (lineOfInput: any[]): boolean => {
