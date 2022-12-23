@@ -434,9 +434,9 @@ export const updateDish = (request: Request, response: Response, next: any) => {
   // console.log(request.body);
 
   const { dish } = request.body;
-  const { id, userId, name, type, accompaniment } = dish;
 
-  updateDishDb(id, userId, name, type, accompaniment);
+  const { id, name, type, accompanimentRequired } = dish;
+  updateDishDb(id, name, type, accompanimentRequired);
 
   response.sendStatus(200);
 
