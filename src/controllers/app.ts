@@ -87,7 +87,7 @@ export const uploadMealWheelSpec = (request: Request, response: Response, next: 
 
     const errorList: string[] = processMealWheelSpec(userId, result.data as any[]);
     if (errorList.length > 0) {
-     return response.status(400).json(errorList);
+      return response.status(400).json(errorList);
     }
 
     const responseData = {
@@ -130,9 +130,11 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
       continue;
     }
 
-    const entityTypeValue = parsedLine[0];
-
+    let entityTypeValue = parsedLine[0];
     if (isString(entityTypeValue)) {
+      if (entityTypeValue.charCodeAt(0) === 65279) {
+        entityTypeValue = (entityTypeValue as string).substring(1);
+      }
       switch (entityTypeValue) {
         case 'mains':
         case 'veggies':
@@ -144,7 +146,7 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
           continue;
           break;
         default:
-          if (entityTypeValue !== '') {
+          if (entityTypeValue.length > 0) {
             errorList.push('Unrecognized value in first column: ' + entityTypeValue + '. Valid values are mains, veggies, salads, sides, ingredients, ingredient in dish');
             return errorList;
           }
@@ -252,27 +254,6 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
     }
   }
 
-  // create ingredientInDish documents
-  for (const dishName in ingredientNamesInDishSpecByDishName) {
-    if (Object.prototype.hasOwnProperty.call(ingredientNamesInDishSpecByDishName, dishName)) {
-      const ingredientNamesInDishSpec: string[] = ingredientNamesInDishSpecByDishName[dishName];
-      for (const ingredientInDishName of ingredientNamesInDishSpec) {
-        if (dishesByName.hasOwnProperty(dishName)) {
-          const dishId = dishesByName[dishName].id;
-          const ingredientId: string = ingredientsByName[ingredientInDishName].id;
-          const ingredientInDishEntity: IngredientInDishEntity = {
-            dishId,
-            ingredientId
-          };
-          createIngredientInDishDocument(ingredientInDishEntity);
-        }
-        else {
-          console.log(dishName + ' not found in dishesByName');
-        }
-      }
-    }
-  }
-
   // return to dishes and fill in the ingredients
   for (const dishName in dishesByName) {
     if (Object.prototype.hasOwnProperty.call(dishesByName, dishName)) {
@@ -296,6 +277,46 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
         createMainDishDocument(dish as MainDishEntity);
       } else {
         createBaseDishDocument(dish);
+      }
+    }
+  }
+
+  // make a pass for error checking before creating documents
+  for (const dishName in ingredientNamesInDishSpecByDishName) {
+    if (Object.prototype.hasOwnProperty.call(ingredientNamesInDishSpecByDishName, dishName)) {
+      const ingredientNamesInDishSpec: string[] = ingredientNamesInDishSpecByDishName[dishName];
+      for (const ingredientInDishName of ingredientNamesInDishSpec) {
+        if (!dishesByName.hasOwnProperty(dishName)) {
+          errorList.push('Dish ' + dishName + ' not found in list of dishes.');
+
+        }
+        if (!ingredientsByName.hasOwnProperty(ingredientInDishName)) {
+          errorList.push('Ingredient ' + ingredientInDishName + ' not found in list of ingredients.');
+        }
+      }
+    }
+
+  }
+
+  if (errorList.length === 0) {
+    // create ingredientInDish documents
+    for (const dishName in ingredientNamesInDishSpecByDishName) {
+      if (Object.prototype.hasOwnProperty.call(ingredientNamesInDishSpecByDishName, dishName)) {
+        const ingredientNamesInDishSpec: string[] = ingredientNamesInDishSpecByDishName[dishName];
+        for (const ingredientInDishName of ingredientNamesInDishSpec) {
+          if (dishesByName.hasOwnProperty(dishName)) {
+            const dishId = dishesByName[dishName].id;
+            const ingredientId: string = ingredientsByName[ingredientInDishName].id;
+            const ingredientInDishEntity: IngredientInDishEntity = {
+              dishId,
+              ingredientId
+            };
+            createIngredientInDishDocument(ingredientInDishEntity);
+          }
+          else {
+            console.log(dishName + ' not found in dishesByName');
+          }
+        }
       }
     }
   }
