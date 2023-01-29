@@ -234,6 +234,7 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
         const showInGroceryList = parsedLine[2];
         const ingredientEntity: IngredientEntity = {
           id: uuidv4(),
+          userId,
           name: ingredientName,
           showInGroceryList: showInGroceryList,
           ingredients: []
@@ -501,10 +502,11 @@ export const addIngredient = (request: Request, response: Response, next: any) =
   console.log('addIngredient');
   console.log(request.body);
 
-  const { id, name, ingredients, showInGroceryList } = request.body;
+  const { id, userId, name, ingredients, showInGroceryList } = request.body;
 
   const ingredientEntity: IngredientEntity = {
     id,
+    userId,
     name,
     ingredients,
     showInGroceryList,
@@ -520,10 +522,11 @@ export const updateIngredient = (request: Request, response: Response, next: any
   console.log(request.body);
 
   // TEDTODO - looks like there may be some unnecessary conversions going on in this path
-  const { id, name, ingredients, showInGroceryList } = request.body;
+  const { id, userId, name, ingredients, showInGroceryList } = request.body;
 
   const ingredientEntity: IngredientEntity = {
     id,
+    userId,
     name,
     ingredients,
     showInGroceryList,

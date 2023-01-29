@@ -14,6 +14,7 @@ export class Routes {
 
   createRoutes(app: express.Application) {
     app.get('/', getIndex);
+    app.get('/app', getIndex);
     app.get('/index.html', getIndex);
     app.get('/css/app.css', getCSS);
     app.get('/build/bundle.js', getBundle);

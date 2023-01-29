@@ -7,6 +7,7 @@ mongoose.Schema.Types.String.checkRequired(v => typeof v === 'string');
 const IngredientSchema = new Schema(
   {
     id: { type: String, required: true },
+    userId: { type: String, required: true },
     name: { type: String, required: true },
     showInGroceryList: { type: Boolean, required: true },
     ingredients: [{

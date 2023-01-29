@@ -57,6 +57,7 @@ export interface UserEntity {
 
 export interface IngredientEntity {
   id: string;
+  userId: string;
   name: string;
   showInGroceryList: boolean;
   ingredients: IngredientEntity[];

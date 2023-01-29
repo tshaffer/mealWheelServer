@@ -362,11 +362,12 @@ export const createIngredientDocument = (ingredientEntity: IngredientEntity): Pr
 };
 
 export const updateIngredientDb = (ingredientEntity: IngredientEntity): Promise<Document | void> => {
-  const { id, name, ingredients, showInGroceryList } = ingredientEntity;
+  const { id, userId, name, ingredients, showInGroceryList } = ingredientEntity;
   const query = Ingredient.findOneAndUpdate(
     { id: ingredientEntity.id },
     {
       id,
+      userId,
       name,
       ingredients,
       showInGroceryList,
@@ -382,9 +383,9 @@ export const updateIngredientDb = (ingredientEntity: IngredientEntity): Promise<
   });
 };
 
-export const getIngredientsFromDb = (): Promise<IngredientEntity[]> => {
+export const getIngredientsFromDb = (userId: string): Promise<IngredientEntity[]> => {
 
-  const query = Ingredient.find({});
+  const query = Ingredient.find({ userId });
 
   const promise: Promise<Document[]> = query.exec();
 

@@ -5,7 +5,10 @@ import {
 } from './dbInterface';
 
 export function getIngredients(request: Request, response: Response) {
-  return getIngredientsFromDb()
+
+  const id: string = request.query.id as string;
+
+  return getIngredientsFromDb(id)
     .then((values: any[]) => {
       console.log('return from getIngredients, invoke response.json');
       response.json(values);
