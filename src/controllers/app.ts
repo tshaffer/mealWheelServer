@@ -182,6 +182,8 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
           userId,
           name: mainName,
           type: DishType.Main,
+          minimumInterval: 5,
+          last: null,
           accompanimentRequired: RequiredAccompanimentFlags.None,
           ingredientIds: [],
         }
@@ -203,6 +205,8 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
           userId,
           name: veggieName,
           type: DishType.Veggie,
+          minimumInterval: 5,
+          last: null,
           ingredientIds: [],
         }
         dishesByName[veggieName] = veggieDish;
@@ -214,6 +218,8 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
           userId,
           name: saladName,
           type: DishType.Salad,
+          minimumInterval: 5,
+          last: null,
           ingredientIds: [],
         }
         dishesByName[saladName] = saladDish;
@@ -225,6 +231,8 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
           userId,
           name: sideName,
           type: DishType.Side,
+          minimumInterval: 5,
+          last: null,
           ingredientIds: [],
         }
         dishesByName[sideName] = sideDish;
@@ -485,8 +493,8 @@ export const updateDish = (request: Request, response: Response, next: any) => {
 
   const { dish } = request.body;
 
-  const { id, name, type, accompanimentRequired } = dish;
-  updateDishDb(id, name, type, accompanimentRequired);
+  const { id, name, type, minimumInterval, accompanimentRequired } = dish;
+  updateDishDb(id, name, type, minimumInterval, accompanimentRequired);
 
   response.sendStatus(200);
 

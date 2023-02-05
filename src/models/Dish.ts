@@ -10,6 +10,8 @@ const DishSchema = new Schema(
     userId: { type: String, required: true },
     name: { type: String, required: true, unique: true },
     type: { type: String, required: true },
+    minimumInterval: { type: Number, required: true },
+    last: { type: Date },
     accompanimentRequired: { type: Number, required: true },
     ingredientIds: { type: [String] },
   },

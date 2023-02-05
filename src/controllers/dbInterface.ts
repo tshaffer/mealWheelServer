@@ -91,7 +91,7 @@ export const createBaseDishDocument = (dishEntity: BaseDishEntity): Promise<Docu
     });
 };
 
-export const updateDishDb = (id: string, name: string, type: DishType, accompaniment: RequiredAccompanimentFlags): void => {
+export const updateDishDb = (id: string, name: string, type: DishType, minimumInterval: number, accompaniment: RequiredAccompanimentFlags): void => {
   Dish.find({ id, }
     , (err, dishDocs: any) => {
       if (err) {
@@ -101,6 +101,7 @@ export const updateDishDb = (id: string, name: string, type: DishType, accompani
           const dishDoc: any = dishDocs[0];
           (dishDoc as DishEntity).name = name;
           (dishDoc as DishEntity).type = type;
+          (dishDoc as DishEntity).minimumInterval = minimumInterval,
           (dishDoc as DishEntity).accompanimentRequired = accompaniment;
           dishDoc.save();
         }

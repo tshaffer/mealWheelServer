@@ -5,6 +5,7 @@ export interface DishEntity {
   userId: string;
   name: string;
   type: DishType;
+  minimumInterval: number;
   accompanimentRequired?: RequiredAccompanimentFlags;   // only applies when dishType === DishType.Main
   // ingredients: IngredientEntity[];
   ingredientIds: string[];
@@ -15,6 +16,8 @@ export interface BaseDishEntity {
   userId: string;
   name: string;
   type: DishType;
+  minimumInterval: number;
+  last: Date | null;
   // ingredients: IngredientEntity[];
   ingredientIds: string[];
 }
