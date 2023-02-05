@@ -493,8 +493,8 @@ export const updateDish = (request: Request, response: Response, next: any) => {
 
   const { dish } = request.body;
 
-  const { id, name, type, minimumInterval, accompanimentRequired } = dish;
-  updateDishDb(id, name, type, minimumInterval, accompanimentRequired);
+  const { id, name, type, minimumInterval, last, accompanimentRequired } = dish;
+  updateDishDb(id, name, type, minimumInterval, last, accompanimentRequired);
 
   response.sendStatus(200);
 
