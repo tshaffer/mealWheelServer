@@ -186,6 +186,9 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
           last: null,
           accompanimentRequired: RequiredAccompanimentFlags.None,
           ingredientIds: [],
+          prepEffort: 5,
+          prepTime: 30,
+          cleanupEffort: 5,
         }
         if (requiresVeggie) {
           mainDish.accompanimentRequired = RequiredAccompanimentFlags.Veggie;
@@ -208,6 +211,9 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
           minimumInterval: 5,
           last: null,
           ingredientIds: [],
+          prepEffort: 5,
+          prepTime: 30,
+          cleanupEffort: 5,
         }
         dishesByName[veggieName] = veggieDish;
         break;
@@ -221,6 +227,9 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
           minimumInterval: 5,
           last: null,
           ingredientIds: [],
+          prepEffort: 5,
+          prepTime: 30,
+          cleanupEffort: 5,
         }
         dishesByName[saladName] = saladDish;
         break;
@@ -234,6 +243,9 @@ const processMealWheelSpec = (userId: string, convertedMealWheelSpecItems: any[]
           minimumInterval: 5,
           last: null,
           ingredientIds: [],
+          prepEffort: 5,
+          prepTime: 30,
+          cleanupEffort: 5,
         }
         dishesByName[sideName] = sideDish;
         break;
@@ -383,6 +395,7 @@ export function getDishes(request: Request, response: Response) {
   return getDishesFromDb(id)
     .then((dishEntities: BaseDishEntity[]) => {
       console.log('return from getDishesFromDb, invoke response.json');
+      console.log(dishEntities);
       response.json(dishEntities);
     });
 
@@ -493,8 +506,8 @@ export const updateDish = (request: Request, response: Response, next: any) => {
 
   const { dish } = request.body;
 
-  const { id, name, type, minimumInterval, last, accompanimentRequired } = dish;
-  updateDishDb(id, name, type, minimumInterval, last, accompanimentRequired);
+  const { id, name, type, minimumInterval, last, accompanimentRequired, prepEffort, prepTime, cleanupEffort } = dish;
+  updateDishDb(id, name, type, minimumInterval, last, accompanimentRequired, prepEffort, prepTime, cleanupEffort);
 
   response.sendStatus(200);
 

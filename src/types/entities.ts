@@ -10,6 +10,9 @@ export interface DishEntity {
   accompanimentRequired?: RequiredAccompanimentFlags;   // only applies when dishType === DishType.Main
   // ingredients: IngredientEntity[];
   ingredientIds: string[];
+  prepEffort: number;
+  prepTime: number;
+  cleanupEffort: number;
 }
 
 export interface BaseDishEntity {
@@ -21,6 +24,10 @@ export interface BaseDishEntity {
   last: Date | null;
   // ingredients: IngredientEntity[];
   ingredientIds: string[];
+  prepEffort: number;
+  prepTime: number;
+  cleanupEffort: number;
+
 }
 
 export interface MainDishEntity extends BaseDishEntity {

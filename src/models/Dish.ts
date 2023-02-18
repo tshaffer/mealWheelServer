@@ -14,6 +14,9 @@ const DishSchema = new Schema(
     last: { type: Date },
     accompanimentRequired: { type: Number, required: true },
     ingredientIds: { type: [String] },
+    prepEffort: { type: Number, required: true },
+    prepTime: { type: Number, required: true },
+    cleanupEffort: { type: Number, required: true },
   },
 );
 
