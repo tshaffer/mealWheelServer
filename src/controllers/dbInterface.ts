@@ -122,6 +122,14 @@ export const updateDishDb = (
     });
 }
 
+export const deleteDishFromDb = (id: string): void => {
+  Dish.deleteOne({ id }).then(() => {
+    console.log('Deleted dish');
+  }).catch((error: any) => {
+    console.log('Dish deletion failed: ', error);
+  });
+};
+
 export const getScheduledMealsFromDb = (userId: string): Promise<ScheduledMealEntity[]> => {
 
   const query = ScheduledMeal.find({ userId });
@@ -457,8 +465,6 @@ const getIngredientsInDishFromDb = (dishId: string): Promise<IngredientInDishEnt
   const promise: Promise<Document[]> = query.exec();
 
   return promise.then((ingredientsInDishDocuments: Document[]) => {
-
-    console.log('ingredientsInDishDocuments');
 
     const ingredientsInDishEntities: IngredientInDishEntity[] = ingredientsInDishDocuments.map((ingredientInDishDocuments: any) => {
       const ingredientInDishEntity: IngredientInDishEntity = ingredientInDishDocuments.toObject();

@@ -35,7 +35,8 @@ import {
   createIngredientInDishDocument,
   deleteIngredientFromDishDb,
   replaceIngredientInDishDb,
-  updateIngredientDb
+  updateIngredientDb,
+  deleteDishFromDb
 } from './dbInterface';
 
 import { version } from '../version';
@@ -511,6 +512,18 @@ export const updateDish = (request: Request, response: Response, next: any) => {
 
   response.sendStatus(200);
 
+}
+
+export const deleteDish = (request: Request, response: Response, next: any) => {
+
+  console.log('deleteDish');
+  console.log(request.body);
+
+  const { dishId } = request.body;
+
+  deleteDishFromDb(dishId);
+
+  response.sendStatus(200);
 }
 
 export const validate = (request: Request, response: Response, next: any) => {

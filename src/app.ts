@@ -31,6 +31,7 @@ import {
   deleteIngredientFromDish,
   replaceIngredientInDish,
   updateIngredient,
+  deleteDish,
 } from './controllers';
 import { getIngredients, getIngredientsByDish } from './controllers/ingredients';
 
@@ -80,6 +81,7 @@ class App {
     this.app.post('/api/v1/addIngredientToDish', addIngredientToDish)
     
     this.app.post('/api/v1/updateDish', updateDish);
+    this.app.post('/api/v1/deleteDish', deleteDish);
     
     this.app.post('/api/v1/updateIngredient', updateIngredient)
     this.app.post('/api/v1/replaceIngredientInDish', replaceIngredientInDish)
