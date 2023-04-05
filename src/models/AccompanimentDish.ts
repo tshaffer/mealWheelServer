@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 mongoose.Schema.Types.String.checkRequired(v => typeof v === 'string');
 
-const DishSchema = new Schema(
+const AccompanimentDishSchema = new Schema(
   {
     id: { type: String, required: true },
     userId: { type: String, required: true },
@@ -12,7 +12,6 @@ const DishSchema = new Schema(
     type: { type: String, required: true },
     minimumInterval: { type: Number, required: true },
     last: { type: Date },
-    accompanimentRequired: { type: Number, required: true },
     ingredientIds: { type: [String] },
     prepEffort: { type: Number, required: true },
     prepTime: { type: Number, required: true },
@@ -20,4 +19,4 @@ const DishSchema = new Schema(
   },
 );
 
-export default mongoose.model('Dish', DishSchema);
+export default mongoose.model('AccompanimentDish', AccompanimentDishSchema);

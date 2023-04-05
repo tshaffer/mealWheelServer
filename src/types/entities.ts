@@ -1,60 +1,30 @@
-import { DishType, MealStatus, RequiredAccompanimentFlags } from '../types';
+import { MealStatus } from '../types';
 
-export interface DishEntity {
+interface DishEntity {
   id: string;
   userId: string;
   name: string;
-  type: DishType;
   minimumInterval: number;
   last: Date | null;
-  accompanimentRequired?: RequiredAccompanimentFlags;   // only applies when dishType === DishType.Main
-  // ingredients: IngredientEntity[];
   ingredientIds: string[];
   prepEffort: number;
   prepTime: number;
   cleanupEffort: number;
 }
 
-export interface BaseDishEntity {
-  id: string;
-  userId: string;
-  name: string;
-  type: DishType;
-  minimumInterval: number;
-  last: Date | null;
-  // ingredients: IngredientEntity[];
-  ingredientIds: string[];
-  prepEffort: number;
-  prepTime: number;
-  cleanupEffort: number;
-
+export interface AccompanimentDishEntity extends DishEntity {
+  type: number;
 }
 
-export interface MainDishEntity extends BaseDishEntity {
-  accompanimentRequired: RequiredAccompanimentFlags;
-}
-
-export interface DefinedMealEntity {
-  id: string;
-  userId: string;
-  name: string;
-  mainDishId: string;
-  saladId: string;
-  veggieId: string;
-  sideId: string;
-  mainName: string;
-  veggieName: string;
-  saladName: string;
-  sideName: string;
+export interface MainDishEntity extends DishEntity {
+  accompanimentRequired: number | null;
 }
 
 export interface ScheduledMealEntity {
   id: string;
   userId: string;
   mainDishId: string;
-  saladId: string;
-  veggieId: string;
-  sideId: string;
+  accompanimentIds: string[];
   dateScheduled: Date;
   status: MealStatus;
 }

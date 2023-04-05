@@ -2,7 +2,6 @@ import express from 'express';
 import cors from 'cors';
 import connectDB from './config/db';
 
-// import cookieParser from 'cookie-parser';
 import { readConfig } from './config';
 
 const bodyParser = require('body-parser');
@@ -15,15 +14,11 @@ import {
   getDishes,
   getScheduledMeals,
   addDish,
-  // addMeal,
-  // getMeals,
   getUsers,
   getVersion,
   uploadMealWheelSpec,
   updateDish,
   updateMeal,
-  // validateDb,
-  // uploadDishSpec,
   validate,
   deleteScheduledMeal,
   addIngredient,

@@ -1,37 +1,18 @@
 import { isArray, isNil, isString } from 'lodash';
 import { Document } from 'mongoose';
-import DefinedMeal from '../models/DefinedMeal';
+import AccompanimentDish from '../models/AccompanimentDish';
+import MainDish from '../models/MainDish';
 import Ingredient from '../models/Ingredient';
 import IngredientInDish from '../models/IngredientInDish';
 import ScheduledMeal from '../models/ScheduledMeal';
-import Dish from '../models/Dish';
 import {
-  BaseDishEntity,
-  // DishEntity,
-  DishType,
+  AccompanimentDishEntity,
   MainDishEntity,
   ScheduledMealEntity,
   MealStatus,
-  RequiredAccompanimentFlags,
-  DefinedMealEntity,
-  DishEntity,
   IngredientEntity,
   IngredientInDishEntity,
 } from '../types';
-
-
-export const createDefinedMealDocument = (definedMealEntity: DefinedMealEntity): Promise<Document | void> => {
-  return DefinedMeal.create(definedMealEntity)
-    .then((definedMeal: Document) => {
-      return Promise.resolve(definedMeal);
-    }).catch((err: any) => {
-      if (err.name === 'MongoError' && err.code === 11000) {
-        console.log('Duplicate key error in createScheduledMealDocument: ', definedMealEntity);
-      }
-      // return Promise.reject(err);
-      return Promise.resolve();
-    });
-}
 
 
 export const createScheduledMealDocument = (scheduledMealEntity: ScheduledMealEntity): Promise<Document | void> => {
@@ -47,11 +28,8 @@ export const createScheduledMealDocument = (scheduledMealEntity: ScheduledMealEn
     });
 }
 
-export const createDishDocument = (dishEntity: DishEntity): Promise<Document> => {
-  if (isNil(dishEntity.accompanimentRequired)) {
-    dishEntity.accompanimentRequired = RequiredAccompanimentFlags.None;
-  }
-  return Dish.create(dishEntity)
+export const createAccompanimentDishDocument = (accompanimentDishEntity: AccompanimentDishEntity): Promise<Document> => {
+  return AccompanimentDish.create(accompanimentDishEntity)
     .then((dish: Document) => {
       return Promise.resolve(dish);
     });
@@ -65,7 +43,7 @@ export const createMainDishDocument = (dishEntity: MainDishEntity): Promise<Docu
     }).catch((err: any) => {
       console.log('getExistingDishes error: ', err);
     });
-  return Dish.create(dishEntity)
+  return MainDish.create(dishEntity)
     .then((dish: Document) => {
       return Promise.resolve(dish);
     }).catch((err: any) => {
@@ -77,58 +55,44 @@ export const createMainDishDocument = (dishEntity: MainDishEntity): Promise<Docu
     });
 };
 
-export const createBaseDishDocument = (dishEntity: BaseDishEntity): Promise<Document | void> => {
-  (dishEntity as MainDishEntity).accompanimentRequired = RequiredAccompanimentFlags.None;
-  return Dish.create(dishEntity)
-    .then((dish: Document) => {
-      return Promise.resolve(dish);
-    }).catch((err: any) => {
-      if (err.name === 'MongoError' && err.code === 11000) {
-        console.log('Duplicate key error in createBaseDishDocument: ', dishEntity);
-      }
-      // return Promise.reject(err);
-      return Promise.resolve();
-    });
-};
+// export const updateDishDb = (
+//   id: string, 
+//   name: string, 
+//   type: DishType, 
+//   minimumInterval: number, 
+//   last: Date | null, 
+//   accompaniment: RequiredAccompanimentFlags,
+//   prepEffort: number,
+//   prepTime: number,
+//   cleanupEffort: number,
+//   ): void => {
+//   Dish.find({ id, }
+//     , (err, dishDocs: any) => {
+//       if (err) {
+//         console.log(err);
+//       } else
+//         if (isArray(dishDocs) && dishDocs.length === 1) {
+//           const dishDoc: any = dishDocs[0];
+//           (dishDoc as DishEntity).name = name;
+//           (dishDoc as DishEntity).type = type;
+//           (dishDoc as DishEntity).minimumInterval = minimumInterval,
+//           (dishDoc as DishEntity).last = last,
+//           (dishDoc as DishEntity).accompanimentRequired = accompaniment;
+//           (dishDoc as DishEntity).prepEffort = prepEffort;
+//           (dishDoc as DishEntity).prepTime = prepTime;
+//           (dishDoc as DishEntity).cleanupEffort = cleanupEffort;
+//           dishDoc.save();
+//         }
+//     });
+// }
 
-export const updateDishDb = (
-  id: string, 
-  name: string, 
-  type: DishType, 
-  minimumInterval: number, 
-  last: Date | null, 
-  accompaniment: RequiredAccompanimentFlags,
-  prepEffort: number,
-  prepTime: number,
-  cleanupEffort: number,
-  ): void => {
-  Dish.find({ id, }
-    , (err, dishDocs: any) => {
-      if (err) {
-        console.log(err);
-      } else
-        if (isArray(dishDocs) && dishDocs.length === 1) {
-          const dishDoc: any = dishDocs[0];
-          (dishDoc as DishEntity).name = name;
-          (dishDoc as DishEntity).type = type;
-          (dishDoc as DishEntity).minimumInterval = minimumInterval,
-          (dishDoc as DishEntity).last = last,
-          (dishDoc as DishEntity).accompanimentRequired = accompaniment;
-          (dishDoc as DishEntity).prepEffort = prepEffort;
-          (dishDoc as DishEntity).prepTime = prepTime;
-          (dishDoc as DishEntity).cleanupEffort = cleanupEffort;
-          dishDoc.save();
-        }
-    });
-}
-
-export const deleteDishFromDb = (id: string): void => {
-  Dish.deleteOne({ id }).then(() => {
-    console.log('Deleted dish');
-  }).catch((error: any) => {
-    console.log('Dish deletion failed: ', error);
-  });
-};
+// export const deleteDishFromDb = (id: string): void => {
+//   Dish.deleteOne({ id }).then(() => {
+//     console.log('Deleted dish');
+//   }).catch((error: any) => {
+//     console.log('Dish deletion failed: ', error);
+//   });
+// };
 
 export const getScheduledMealsFromDb = (userId: string): Promise<ScheduledMealEntity[]> => {
 
@@ -139,135 +103,88 @@ export const getScheduledMealsFromDb = (userId: string): Promise<ScheduledMealEn
     console.log('scheduledMealDocuments');
 
     const scheduledMealEntities: ScheduledMealEntity[] = scheduledMealDocuments.map((scheduledMealDocument: any) => {
-
-      // console.log('scheduledMealDocument', scheduledMealDocument);
-      const scheduledMealDocAsObj: any = scheduledMealDocument.toObject();
-      // console.log('scheduledMealDocAsObj', scheduledMealDocAsObj);
       const scheduledMealEntity: ScheduledMealEntity = scheduledMealDocument.toObject();
-      // console.log('scheduledMealEntity', scheduledMealEntity);
-
       return scheduledMealEntity;
     });
-
-    // console.log(scheduledMealEntities);
 
     return Promise.resolve(scheduledMealEntities);
   });
 }
 
-export const getDefinedMealsFromDb = (userId: string): Promise<DefinedMealEntity[]> => {
-
-  const query = DefinedMeal.find({ userId });
-  const promise: Promise<Document[]> = query.exec();
-  return promise.then((definedMealDocuments: Document[]) => {
-
-    console.log('definedMealDocuments');
-
-    const definedMealEntities: DefinedMealEntity[] = definedMealDocuments.map((definedMealDocument: any) => {
-
-      // console.log('definedMealDocument', definedMealDocument);
-      const definedMealDocAsObj: any = definedMealDocument.toObject();
-      // console.log('definedMealDocAsObj', definedMealDocAsObj);
-      const definedMealEntity: DefinedMealEntity = definedMealDocument.toObject();
-      // console.log('definedMealEntity', definedMealEntity);
-
-      return definedMealEntity;
-    });
-
-    // console.log(definedMealEntities);
-
-    return Promise.resolve(definedMealEntities);
-  });
-}
-
-// TEDTODO - proper way to indicate either BaseDishes or MainDishes?
-const getDishesFromDbHelper = (query: any): Promise<BaseDishEntity[]> => {
+const getMainDishesFromDbHelper = (query: any): Promise<MainDishEntity[]> => {
 
   const promise: Promise<Document[]> = query.exec();
-  return promise.then((dishDocuments: Document[]) => {
+  return promise.then((mainDishDocuments: Document[]) => {
 
-    // console.log('dishDocuments');
-
-    const dishEntities: BaseDishEntity[] = dishDocuments.map((dishDocument: any) => {
-
-      // console.log('dishDocument', dishDocument);
-      const dishDocAsObj: any = dishDocument.toObject();
-      // console.log('dishDocAsObj', dishDocAsObj);
-      const dishEntity: BaseDishEntity = dishDocument.toObject();
-      // console.log('dishEntity', dishEntity);
-
-      return dishEntity;
+    const mainDishEntities: MainDishEntity[] = mainDishDocuments.map((mainDishDocument: any) => {
+      const mainDishEntity: MainDishEntity = mainDishDocument.toObject();
+      return mainDishEntity;
     });
 
-    // console.log(dishEntities);
-
-    return Promise.resolve(dishEntities);
+    return Promise.resolve(mainDishEntities);
   });
 
 }
-export const getDishesFromDb = (userId: string): Promise<BaseDishEntity[]> => {
-  const query = Dish.find({ userId });
-  return getDishesFromDbHelper(query);
-}
 
-export const getMainDishesFromDb = (userId: string): Promise<BaseDishEntity[]> => {
-  const query = Dish.find({ userId, type: 'main' });
-  return getDishesFromDbHelper(query);
-}
+const getAccompanimentDishesFromDbHelper = (query: any): Promise<AccompanimentDishEntity[]> => {
 
-const getDishByNameFromDb = (userId: string, name: string): Promise<BaseDishEntity[]> => {
-  const query = Dish.find({ userId, name, type: 'main' });
-  return getDishesFromDbHelper(query);
-}
+  const promise: Promise<Document[]> = query.exec();
+  return promise.then((accompanimentDishDocuments: Document[]) => {
 
-export const getAccompanimentDishesFromDb = (userId: string): Promise<BaseDishEntity[]> => {
-  const query = Dish.find({ $and: [{ userId }, { type: { $ne: 'main' } }] });
-  return getDishesFromDbHelper(query);
-}
-
-export const getVegDishesFromDb = (userId: string): Promise<BaseDishEntity[]> => {
-  const query = Dish.find({ $and: [{ userId }, { type: { $eq: 'veggie' } }] });
-  return getDishesFromDbHelper(query);
-}
-
-export const getSaladDishesFromDb = (userId: string): Promise<BaseDishEntity[]> => {
-  const query = Dish.find({ $and: [{ userId }, { type: { $eq: 'salad' } }] });
-  return getDishesFromDbHelper(query);
-}
-
-export const getSideDishesFromDb = (userId: string): Promise<BaseDishEntity[]> => {
-  const query = Dish.find({ $and: [{ userId }, { type: { $eq: 'side' } }] });
-  return getDishesFromDbHelper(query);
-}
-
-export const updateMealDb = (
-  id: string,
-  userId: string,
-  mainDishId: string,
-  saladId: string,
-  veggieId: string,
-  sideId: string,
-  dateScheduled: Date,
-  status: MealStatus,
-): void => {
-  ScheduledMeal.find({ id, }
-    , (err, mealsDocs: any) => {
-      if (err) {
-        console.log(err);
-      } else
-        if (isArray(mealsDocs) && mealsDocs.length === 1) {
-          const mealDoc: any = mealsDocs[0];
-          (mealDoc as ScheduledMealEntity).userId = userId;
-          (mealDoc as ScheduledMealEntity).mainDishId = mainDishId;
-          (mealDoc as ScheduledMealEntity).saladId = saladId;
-          (mealDoc as ScheduledMealEntity).veggieId = veggieId;
-          (mealDoc as ScheduledMealEntity).sideId = sideId;
-          (mealDoc as ScheduledMealEntity).dateScheduled = dateScheduled;
-          (mealDoc as ScheduledMealEntity).status = status;
-          mealDoc.save();
-        }
+    const accompanimentDishEntities: AccompanimentDishEntity[] = accompanimentDishDocuments.map((accompanimentDishDocument: any) => {
+      const accompanimentDishEntity: AccompanimentDishEntity = accompanimentDishDocument.toObject();
+      return accompanimentDishEntity;
     });
+
+    return Promise.resolve(accompanimentDishEntities);
+  });
+
 }
+
+export const getMainDishesFromDb = (userId: string): Promise<MainDishEntity[]> => {
+  const query = MainDish.find({ userId, type: 'main' });
+  return getMainDishesFromDbHelper(query);
+}
+
+export const getAccompanimentDishesFromDb = (userId: string): Promise<AccompanimentDishEntity[]> => {
+  const query = AccompanimentDish.find({ userId });
+  return getAccompanimentDishesFromDbHelper(query);
+}
+
+
+// const getDishByNameFromDb = (userId: string, name: string): Promise<BaseDishEntity[]> => {
+//   const query = Dish.find({ userId, name, type: 'main' });
+//   return getDishesFromDbHelper(query);
+// }
+
+// export const updateMealDb = (
+//   id: string,
+//   userId: string,
+//   mainDishId: string,
+//   saladId: string,
+//   veggieId: string,
+//   sideId: string,
+//   dateScheduled: Date,
+//   status: MealStatus,
+// ): void => {
+//   ScheduledMeal.find({ id, }
+//     , (err, mealsDocs: any) => {
+//       if (err) {
+//         console.log(err);
+//       } else
+//         if (isArray(mealsDocs) && mealsDocs.length === 1) {
+//           const mealDoc: any = mealsDocs[0];
+//           (mealDoc as ScheduledMealEntity).userId = userId;
+//           (mealDoc as ScheduledMealEntity).mainDishId = mainDishId;
+//           (mealDoc as ScheduledMealEntity).saladId = saladId;
+//           (mealDoc as ScheduledMealEntity).veggieId = veggieId;
+//           (mealDoc as ScheduledMealEntity).sideId = sideId;
+//           (mealDoc as ScheduledMealEntity).dateScheduled = dateScheduled;
+//           (mealDoc as ScheduledMealEntity).status = status;
+//           mealDoc.save();
+//         }
+//     });
+// }
 
 
 export const deleteScheduledMealDb = (
@@ -284,92 +201,92 @@ interface MainDishMap {
   [key: string]: MainDishEntity; // id or name
 }
 
-export const validateDb = () => {
-  const userId = '0';
-  getDishesFromDb(userId)
-    .then((dishes: BaseDishEntity[]) => {
-      const allDishes = dishes;
-      return getMainDishesFromDb(userId)
-        .then((dishes: BaseDishEntity[]) => {
-          const mainDishes = dishes as MainDishEntity[];
-          return getSaladDishesFromDb(userId)
-            .then((dishes: BaseDishEntity[]) => {
-              const saladDishes = dishes;
-              return getVegDishesFromDb(userId)
-                .then((dishes: BaseDishEntity[]) => {
-                  const veggieDishes = dishes;
-                  return getSideDishesFromDb(userId)
-                    .then((dishes: BaseDishEntity[]) => {
-                      const sideDishes = dishes;
-                      console.log('MAINS');
-                      console.log(mainDishes);
-                      console.log('SALADS');
-                      console.log(saladDishes);
-                      console.log('VEGGIES');
-                      console.log(veggieDishes);
-                      console.log('SIDES');
-                      console.log(sideDishes);
-                      return getDefinedMealsFromDb(userId)
-                        .then((meals: DefinedMealEntity[]) => {
-                          const definedMeals = meals;
-                          return getScheduledMealsFromDb(userId)
-                            .then((meals: ScheduledMealEntity[]) => {
-                              const scheduledMeals = meals;
+// export const validateDb = () => {
+//   const userId = '0';
+//   getDishesFromDb(userId)
+//     .then((dishes: BaseDishEntity[]) => {
+//       const allDishes = dishes;
+//       return getMainDishesFromDb(userId)
+//         .then((dishes: BaseDishEntity[]) => {
+//           const mainDishes = dishes as MainDishEntity[];
+//           return getSaladDishesFromDb(userId)
+//             .then((dishes: BaseDishEntity[]) => {
+//               const saladDishes = dishes;
+//               return getVegDishesFromDb(userId)
+//                 .then((dishes: BaseDishEntity[]) => {
+//                   const veggieDishes = dishes;
+//                   return getSideDishesFromDb(userId)
+//                     .then((dishes: BaseDishEntity[]) => {
+//                       const sideDishes = dishes;
+//                       console.log('MAINS');
+//                       console.log(mainDishes);
+//                       console.log('SALADS');
+//                       console.log(saladDishes);
+//                       console.log('VEGGIES');
+//                       console.log(veggieDishes);
+//                       console.log('SIDES');
+//                       console.log(sideDishes);
+//                       return getDefinedMealsFromDb(userId)
+//                         .then((meals: DefinedMealEntity[]) => {
+//                           const definedMeals = meals;
+//                           return getScheduledMealsFromDb(userId)
+//                             .then((meals: ScheduledMealEntity[]) => {
+//                               const scheduledMeals = meals;
 
-                              // data structures available at this point
-                              /*
-                                allDishes
-                                mainDishes
-                                saladDishes
-                                veggieDishes
-                                sideDishes
-                                definedMeals
-                                scheduledMeals
-                              */
-                              const mainDishById: MainDishMap = {};
-                              const mainDishByName: MainDishMap = {};
-                              for (const mainDish of mainDishes) {
-                                mainDishById[mainDish.id] = mainDish;
-                                mainDishByName[mainDish.name] = mainDish;
-                              }
+//                               // data structures available at this point
+//                               /*
+//                                 allDishes
+//                                 mainDishes
+//                                 saladDishes
+//                                 veggieDishes
+//                                 sideDishes
+//                                 definedMeals
+//                                 scheduledMeals
+//                               */
+//                               const mainDishById: MainDishMap = {};
+//                               const mainDishByName: MainDishMap = {};
+//                               for (const mainDish of mainDishes) {
+//                                 mainDishById[mainDish.id] = mainDish;
+//                                 mainDishByName[mainDish.name] = mainDish;
+//                               }
 
-                              // validate existence of main dishes in defined meals and scheduled meals
-                              for (const definedMeal of definedMeals) {
-                                if (!isString(definedMeal.mainDishId) || definedMeal.mainDishId === '') {
-                                  console.log('Defined meal has no mainDishId');
-                                  debugger;
-                                }
-                                if (isNil(mainDishById[definedMeal.mainDishId])) {
-                                  console.log('Main in defined meal does not exist in mainDishById');
-                                  debugger;
-                                }
-                                if (isNil(mainDishByName[definedMeal.mainName])) {
-                                  console.log('Main in defined meal does not exist in mainDishByName');
-                                  debugger;
-                                }
-                              }
+//                               // validate existence of main dishes in defined meals and scheduled meals
+//                               for (const definedMeal of definedMeals) {
+//                                 if (!isString(definedMeal.mainDishId) || definedMeal.mainDishId === '') {
+//                                   console.log('Defined meal has no mainDishId');
+//                                   debugger;
+//                                 }
+//                                 if (isNil(mainDishById[definedMeal.mainDishId])) {
+//                                   console.log('Main in defined meal does not exist in mainDishById');
+//                                   debugger;
+//                                 }
+//                                 if (isNil(mainDishByName[definedMeal.mainName])) {
+//                                   console.log('Main in defined meal does not exist in mainDishByName');
+//                                   debugger;
+//                                 }
+//                               }
 
-                              for (const scheduledMeal of scheduledMeals) {
-                                if (!isString(scheduledMeal.mainDishId) || scheduledMeal.mainDishId === '') {
-                                  console.log('Scheduled meal has no mainDishId');
-                                  debugger;
-                                }
-                                if (isNil(mainDishById[scheduledMeal.mainDishId])) {
-                                  console.log('Main in scheduled meal does not exist in mainDishById');
-                                  debugger;
-                                }
-                              }
+//                               for (const scheduledMeal of scheduledMeals) {
+//                                 if (!isString(scheduledMeal.mainDishId) || scheduledMeal.mainDishId === '') {
+//                                   console.log('Scheduled meal has no mainDishId');
+//                                   debugger;
+//                                 }
+//                                 if (isNil(mainDishById[scheduledMeal.mainDishId])) {
+//                                   console.log('Main in scheduled meal does not exist in mainDishById');
+//                                   debugger;
+//                                 }
+//                               }
 
-                              console.log('Defined meal and scheduled meal main dishes valid');
+//                               console.log('Defined meal and scheduled meal main dishes valid');
 
-                            });
-                        });
-                    });
-                });
-            });
-        });
-    });
-};
+//                             });
+//                         });
+//                     });
+//                 });
+//             });
+//         });
+//     });
+// };
 
 export const createIngredientDocument = (ingredientEntity: IngredientEntity): Promise<Document | void> => {
   return Ingredient.create(ingredientEntity)
