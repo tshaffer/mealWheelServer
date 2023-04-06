@@ -36,7 +36,7 @@ export const createAccompanimentDishDocument = (accompanimentDishEntity: Accompa
 };
 
 export const createMainDishDocument = (dishEntity: MainDishEntity): Promise<Document | void> => {
-  const getExistingDishesPromise: Promise<any> = getDishByNameFromDb(dishEntity.userId, dishEntity.name);
+  const getExistingDishesPromise: Promise<any> = getMainDishByNameFromDb(dishEntity.userId, dishEntity.name);
   getExistingDishesPromise
     .then((existingDishes: any) => {
       // console.log('existingDishes: ', existingDishes);
@@ -152,10 +152,10 @@ export const getAccompanimentDishesFromDb = (userId: string): Promise<Accompanim
 }
 
 
-// const getDishByNameFromDb = (userId: string, name: string): Promise<BaseDishEntity[]> => {
-//   const query = Dish.find({ userId, name, type: 'main' });
-//   return getDishesFromDbHelper(query);
-// }
+const getMainDishByNameFromDb = (userId: string, name: string): Promise<MainDishEntity[]> => {
+  const query = MainDish.find({ userId, name, type: 'main' });
+  return getMainDishesFromDbHelper(query);
+}
 
 // export const updateMealDb = (
 //   id: string,
@@ -358,22 +358,22 @@ export const createIngredientInDishDocument = (ingredientInDishEntity: Ingredien
 };
 
 // TODO - rewrite using a single query
-export const getIngredientsByDishFromDb = (userId: string): Promise<any> => {
-  const ingredientsByDishId: any = {};
-  const getDishes: Promise<BaseDishEntity[]> = getDishesFromDb(userId);
-  return getDishes.then((dishes: BaseDishEntity[]) => {
-    const ingredientsInDishesPromises: Promise<any>[] = [];
-    for (const dish of dishes) {
-      ingredientsByDishId[dish.id] = [];
-      const getIngredientsInDishPromise: Promise<IngredientInDishEntity[]> = getIngredientsInDishFromDb(dish.id);
-      ingredientsInDishesPromises.push(getIngredientsInDishPromise);
-    }
-    return Promise.all(ingredientsInDishesPromises).then((ingredientsInDishes) => {
-      getIngredientsInDishes(ingredientsByDishId, ingredientsInDishes);
-      return Promise.resolve(ingredientsByDishId);
-    });
-  });
-}
+// export const getIngredientsByDishFromDb = (userId: string): Promise<any> => {
+//   const ingredientsByDishId: any = {};
+//   const getDishes: Promise<BaseDishEntity[]> = getDishesFromDb(userId);
+//   return getDishes.then((dishes: BaseDishEntity[]) => {
+//     const ingredientsInDishesPromises: Promise<any>[] = [];
+//     for (const dish of dishes) {
+//       ingredientsByDishId[dish.id] = [];
+//       const getIngredientsInDishPromise: Promise<IngredientInDishEntity[]> = getIngredientsInDishFromDb(dish.id);
+//       ingredientsInDishesPromises.push(getIngredientsInDishPromise);
+//     }
+//     return Promise.all(ingredientsInDishesPromises).then((ingredientsInDishes) => {
+//       getIngredientsInDishes(ingredientsByDishId, ingredientsInDishes);
+//       return Promise.resolve(ingredientsByDishId);
+//     });
+//   });
+// }
 
 const getIngredientsInDishFromDb = (dishId: string): Promise<IngredientInDishEntity[]> => {
 

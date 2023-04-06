@@ -12,25 +12,25 @@ import {
 } from '../types';
 
 import {
-  createBaseDishDocument,
+  // createBaseDishDocument,
   createMainDishDocument,
   createScheduledMealDocument,
   getAccompanimentDishesFromDb,
-  getDishesFromDb,
+  // getDishesFromDb,
   getMainDishesFromDb,
   getScheduledMealsFromDb,
-  updateDishDb,
-  updateMealDb,
+  // updateDishDb,
+  // updateMealDb,
   createIngredientDocument,
-  getDefinedMealsFromDb,
-  validateDb,
+  // getDefinedMealsFromDb,
+  // validateDb,
   deleteScheduledMealDb,
-  createDishDocument,
+  // createDishDocument,
   createIngredientInDishDocument,
   deleteIngredientFromDishDb,
   replaceIngredientInDishDb,
   updateIngredientDb,
-  deleteDishFromDb
+  // deleteDishFromDb
 } from './dbInterface';
 
 import { version } from '../version';
@@ -144,10 +144,10 @@ export const addMainDish = (request: Request, response: Response, next: any) => 
 //   response.sendStatus(200);
 // }
 
-export const validate = (request: Request, response: Response, next: any) => {
-  validateDb();
-  response.sendStatus(200);
-}
+// export const validate = (request: Request, response: Response, next: any) => {
+//   validateDb();
+//   response.sendStatus(200);
+// }
 
 export const addIngredient = (request: Request, response: Response, next: any) => {
 
