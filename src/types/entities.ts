@@ -13,7 +13,7 @@ interface DishEntity {
 }
 
 export interface AccompanimentDishEntity extends DishEntity {
-  type: number;
+  type: string;
 }
 
 export interface MainDishEntity extends DishEntity {
