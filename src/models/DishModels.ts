@@ -17,7 +17,7 @@ const baseDishSchema = new Schema(
     prepTime: { type: Number, required: true },
     cleanupEffort: { type: Number, required: true },
   },
-  { discriminatorKey: 'type' }
+  { discriminatorKey: 'side' }
 );
 const BaseDishModel = mongoose.model('BaseDish', baseDishSchema);
 
@@ -26,8 +26,8 @@ const mainDishSchema = new Schema({
   allowableAccompanimentTypes: { type: [Number], required: true },
 });
 
-export const AccompanimentDishModel = mongoose.model('BaseDish', baseDishSchema);
-export const MainDishModel = BaseDishModel.discriminator('MainDish', mainDishSchema);
+export const AccompanimentModel = mongoose.model('BaseDish', baseDishSchema);
+export const MainModel = BaseDishModel.discriminator('main', mainDishSchema);
 
 // const options = { discriminatorKey: 'kind' };
 

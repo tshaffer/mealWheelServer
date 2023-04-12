@@ -1,12 +1,12 @@
 import { isArray, isNil, isString } from 'lodash';
 import { Document } from 'mongoose';
 
-import { MainDishModel, AccompanimentDishModel } from '../models/DishModels';
+import { MainModel, AccompanimentModel } from '../models/DishModels';
 import Ingredient from '../models/Ingredient';
 import IngredientInDish from '../models/IngredientInDish';
 import ScheduledMeal from '../models/ScheduledMeal';
 import {
-  AccompanimentDishEntity,
+  AccompanimentDishEntity as AccompanimentEntity,
   MainDishEntity,
   ScheduledMealEntity,
   MealStatus,
@@ -28,10 +28,16 @@ export const createScheduledMealDocument = (scheduledMealEntity: ScheduledMealEn
     });
 }
 
-export const createAccompanimentDishDocument = (accompanimentDishEntity: AccompanimentDishEntity): Promise<Document> => {
-  return AccompanimentDishModel.create(accompanimentDishEntity)
+export const createAccompanimentDocument = (accompanimentEntity: AccompanimentEntity): Promise<Document | void> => {
+  console.log('createAccompanimentDocument');
+  console.log(accompanimentEntity);
+  return AccompanimentModel.create(accompanimentEntity)
     .then((dish: Document) => {
+      console.log('successful returned from create');
       return Promise.resolve(dish);
+    }).catch((err: any) => {
+      console.log(err);
+      return Promise.resolve();
     });
 };
 
@@ -43,7 +49,7 @@ export const createMainDishDocument = (dishEntity: MainDishEntity): Promise<Docu
     }).catch((err: any) => {
       console.log('getExistingDishes error: ', err);
     });
-  return MainDishModel.create(dishEntity)
+  return MainModel.create(dishEntity)
     .then((dish: Document) => {
       return Promise.resolve(dish);
     }).catch((err: any) => {
@@ -126,13 +132,13 @@ const getMainDishesFromDbHelper = (query: any): Promise<MainDishEntity[]> => {
 
 }
 
-const getAccompanimentDishesFromDbHelper = (query: any): Promise<AccompanimentDishEntity[]> => {
+const getAccompanimentDishesFromDbHelper = (query: any): Promise<AccompanimentEntity[]> => {
 
   const promise: Promise<Document[]> = query.exec();
   return promise.then((accompanimentDishDocuments: Document[]) => {
 
-    const accompanimentDishEntities: AccompanimentDishEntity[] = accompanimentDishDocuments.map((accompanimentDishDocument: any) => {
-      const accompanimentDishEntity: AccompanimentDishEntity = accompanimentDishDocument.toObject();
+    const accompanimentDishEntities: AccompanimentEntity[] = accompanimentDishDocuments.map((accompanimentDishDocument: any) => {
+      const accompanimentDishEntity: AccompanimentEntity = accompanimentDishDocument.toObject();
       return accompanimentDishEntity;
     });
 
@@ -142,18 +148,18 @@ const getAccompanimentDishesFromDbHelper = (query: any): Promise<AccompanimentDi
 }
 
 export const getMainDishesFromDb = (userId: string): Promise<MainDishEntity[]> => {
-  const query = MainDishModel.find({ userId, type: 'main' });
+  const query = MainModel.find({ userId, type: 'main' });
   return getMainDishesFromDbHelper(query);
 }
 
-export const getAccompanimentDishesFromDb = (userId: string): Promise<AccompanimentDishEntity[]> => {
-  const query = AccompanimentDishModel.find({ userId });
+export const getAccompanimentDishesFromDb = (userId: string): Promise<AccompanimentEntity[]> => {
+  const query = AccompanimentModel.find({ userId });
   return getAccompanimentDishesFromDbHelper(query);
 }
 
 
 const getMainDishByNameFromDb = (userId: string, name: string): Promise<MainDishEntity[]> => {
-  const query = MainDishModel.find({ userId, name, type: 'main' });
+  const query = MainModel.find({ userId, name, type: 'main' });
   return getMainDishesFromDbHelper(query);
 }
 
