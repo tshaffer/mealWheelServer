@@ -7,7 +7,7 @@ import IngredientInDish from '../models/IngredientInDish';
 import ScheduledMeal from '../models/ScheduledMeal';
 import {
   AccompanimentDishEntity as AccompanimentEntity,
-  MainDishEntity,
+  MainDishEntity as MainEntity,
   ScheduledMealEntity,
   MealStatus,
   IngredientEntity,
@@ -41,20 +41,20 @@ export const createAccompanimentDocument = (accompanimentEntity: AccompanimentEn
     });
 };
 
-export const createMainDishDocument = (dishEntity: MainDishEntity): Promise<Document | void> => {
-  const getExistingDishesPromise: Promise<any> = getMainDishByNameFromDb(dishEntity.userId, dishEntity.name);
+export const createMainDocument = (mainEntity: MainEntity): Promise<Document | void> => {
+  const getExistingDishesPromise: Promise<any> = getMainByNameFromDb(mainEntity.userId, mainEntity.name);
   getExistingDishesPromise
     .then((existingDishes: any) => {
       // console.log('existingDishes: ', existingDishes);
     }).catch((err: any) => {
       console.log('getExistingDishes error: ', err);
     });
-  return MainModel.create(dishEntity)
+  return MainModel.create(mainEntity)
     .then((dish: Document) => {
       return Promise.resolve(dish);
     }).catch((err: any) => {
       if (err.name === 'MongoError' && err.code === 11000) {
-        console.log('Duplicate key error in createMainDishDocument: ', dishEntity);
+        console.log('Duplicate key error in createMainDishDocument: ', mainEntity);
       }
       // return Promise.reject(err);
       return Promise.resolve();
@@ -117,13 +117,13 @@ export const getScheduledMealsFromDb = (userId: string): Promise<ScheduledMealEn
   });
 }
 
-const getMainDishesFromDbHelper = (query: any): Promise<MainDishEntity[]> => {
+const getMainDishesFromDbHelper = (query: any): Promise<MainEntity[]> => {
 
   const promise: Promise<Document[]> = query.exec();
   return promise.then((mainDishDocuments: Document[]) => {
 
-    const mainDishEntities: MainDishEntity[] = mainDishDocuments.map((mainDishDocument: any) => {
-      const mainDishEntity: MainDishEntity = mainDishDocument.toObject();
+    const mainDishEntities: MainEntity[] = mainDishDocuments.map((mainDishDocument: any) => {
+      const mainDishEntity: MainEntity = mainDishDocument.toObject();
       return mainDishEntity;
     });
 
@@ -147,7 +147,7 @@ const getAccompanimentDishesFromDbHelper = (query: any): Promise<AccompanimentEn
 
 }
 
-export const getMainDishesFromDb = (userId: string): Promise<MainDishEntity[]> => {
+export const getMainDishesFromDb = (userId: string): Promise<MainEntity[]> => {
   const query = MainModel.find({ userId, type: 'main' });
   return getMainDishesFromDbHelper(query);
 }
@@ -158,7 +158,7 @@ export const getAccompanimentDishesFromDb = (userId: string): Promise<Accompanim
 }
 
 
-const getMainDishByNameFromDb = (userId: string, name: string): Promise<MainDishEntity[]> => {
+const getMainByNameFromDb = (userId: string, name: string): Promise<MainEntity[]> => {
   const query = MainModel.find({ userId, name, type: 'main' });
   return getMainDishesFromDbHelper(query);
 }
@@ -204,7 +204,7 @@ export const deleteScheduledMealDb = (
 }
 
 interface MainDishMap {
-  [key: string]: MainDishEntity; // id or name
+  [key: string]: MainEntity; // id or name
 }
 
 // export const validateDb = () => {

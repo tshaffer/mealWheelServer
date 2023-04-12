@@ -13,7 +13,7 @@ import {
 
 import {
   // createBaseDishDocument,
-  createMainDishDocument,
+  createMainDocument,
   createScheduledMealDocument,
   getAccompanimentDishesFromDb,
   // getDishesFromDb,
@@ -125,10 +125,10 @@ export const addMain = (request: Request, response: Response, next: any) => {
   console.log('addMain');
   console.log(request.body);
 
-  const { mainDish, userId } = request.body;
+  const { dish, userId } = request.body;
 
-  mainDish.userId = userId;
-  createMainDishDocument(mainDish);
+  dish.userId = userId;
+  createMainDocument(dish);
 
   response.sendStatus(200);
 }
