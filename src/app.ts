@@ -10,25 +10,28 @@ import { Routes } from './routes/routes';
 
 import {
   addScheduledMeal,
-  getDefinedMeals,
-  getDishes,
+  // getDishes,
   getScheduledMeals,
-  addDish,
+  // addDish,
+  // getIngredients,
   getUsers,
   getVersion,
-  uploadMealWheelSpec,
-  updateDish,
-  updateMeal,
-  validate,
+  // uploadMealWheelSpec,
+  // updateDish,
+  // updateMeal,
+  // validate,
   deleteScheduledMeal,
   addIngredient,
-  addIngredientToDish,
-  deleteIngredientFromDish,
-  replaceIngredientInDish,
+  // addIngredientToDish,
+  // deleteIngredientFromDish,
+  // replaceIngredientInDish,
   updateIngredient,
-  deleteDish,
+  // addAccompanimentDish,
+  addMain,
+  addAccompaniment,
+  // deleteDish,
 } from './controllers';
-import { getIngredients, getIngredientsByDish } from './controllers/ingredients';
+// import { getIngredientsByDish } from './controllers/ingredients';
 
 class App {
 
@@ -65,30 +68,31 @@ class App {
     // app routes
     this.app.get('/api/v1/version', getVersion);
     this.app.get('/api/v1/users', getUsers);
-    this.app.post('/api/v1/mealWheelSpec', uploadMealWheelSpec);
+    // this.app.post('/api/v1/mealWheelSpec', uploadMealWheelSpec);
 
-    this.app.get('/api/v1/dishes', getDishes);
-    this.app.get('/api/v1/ingredients', getIngredients);
-    this.app.get('/api/v1/ingredientsByDish', getIngredientsByDish);
+    // this.app.get('/api/v1/dishes', getDishes);
+    // this.app.get('/api/v1/ingredients', getIngredients);
+    // this.app.get('/api/v1/ingredientsByDish', getIngredientsByDish);
 
-    this.app.post('/api/v1/addDish', addDish);
+    this.app.post('/api/v1/addMain', addMain);
+    this.app.post('/api/v1/addAccompaniment', addAccompaniment);
+    // this.app.post('/api/v1/addDish', addDish);
     this.app.post('/api/v1/addIngredient', addIngredient)
-    this.app.post('/api/v1/addIngredientToDish', addIngredientToDish)
+    // this.app.post('/api/v1/addIngredientToDish', addIngredientToDish)
     
-    this.app.post('/api/v1/updateDish', updateDish);
-    this.app.post('/api/v1/deleteDish', deleteDish);
+    // this.app.post('/api/v1/updateDish', updateDish);
+    // this.app.post('/api/v1/deleteDish', deleteDish);
     
     this.app.post('/api/v1/updateIngredient', updateIngredient)
-    this.app.post('/api/v1/replaceIngredientInDish', replaceIngredientInDish)
-    this.app.post('/api/v1/deleteIngredientFromDish', deleteIngredientFromDish)
+    // this.app.post('/api/v1/replaceIngredientInDish', replaceIngredientInDish)
+    // this.app.post('/api/v1/deleteIngredientFromDish', deleteIngredientFromDish)
 
-    this.app.get('/api/v1/definedMeals', getDefinedMeals);
     this.app.get('/api/v1/scheduledMeals', getScheduledMeals);
     this.app.post('/api/v1/addScheduledMeal', addScheduledMeal);
-    this.app.post('/api/v1/updateMeal', updateMeal);
+    // this.app.post('/api/v1/updateMeal', updateMeal);
     this.app.post('/api/v1/deleteScheduledMeal', deleteScheduledMeal);
 
-    this.app.get('/api/v1/validate', validate);
+    // this.app.get('/api/v1/validate', validate);
   }
 
   private config(): void {

@@ -1,7 +1,7 @@
 import { isArray, isNil, isString } from 'lodash';
 import { Document } from 'mongoose';
-import AccompanimentDish from '../models/AccompanimentDish';
-import MainDish from '../models/MainDish';
+
+import { MainDishModel, AccompanimentDishModel } from '../models/DishModels';
 import Ingredient from '../models/Ingredient';
 import IngredientInDish from '../models/IngredientInDish';
 import ScheduledMeal from '../models/ScheduledMeal';
@@ -29,7 +29,7 @@ export const createScheduledMealDocument = (scheduledMealEntity: ScheduledMealEn
 }
 
 export const createAccompanimentDishDocument = (accompanimentDishEntity: AccompanimentDishEntity): Promise<Document> => {
-  return AccompanimentDish.create(accompanimentDishEntity)
+  return AccompanimentDishModel.create(accompanimentDishEntity)
     .then((dish: Document) => {
       return Promise.resolve(dish);
     });
@@ -43,7 +43,7 @@ export const createMainDishDocument = (dishEntity: MainDishEntity): Promise<Docu
     }).catch((err: any) => {
       console.log('getExistingDishes error: ', err);
     });
-  return MainDish.create(dishEntity)
+  return MainDishModel.create(dishEntity)
     .then((dish: Document) => {
       return Promise.resolve(dish);
     }).catch((err: any) => {
@@ -142,18 +142,18 @@ const getAccompanimentDishesFromDbHelper = (query: any): Promise<AccompanimentDi
 }
 
 export const getMainDishesFromDb = (userId: string): Promise<MainDishEntity[]> => {
-  const query = MainDish.find({ userId, type: 'main' });
+  const query = MainDishModel.find({ userId, type: 'main' });
   return getMainDishesFromDbHelper(query);
 }
 
 export const getAccompanimentDishesFromDb = (userId: string): Promise<AccompanimentDishEntity[]> => {
-  const query = AccompanimentDish.find({ userId });
+  const query = AccompanimentDishModel.find({ userId });
   return getAccompanimentDishesFromDbHelper(query);
 }
 
 
 const getMainDishByNameFromDb = (userId: string, name: string): Promise<MainDishEntity[]> => {
-  const query = MainDish.find({ userId, name, type: 'main' });
+  const query = MainDishModel.find({ userId, name, type: 'main' });
   return getMainDishesFromDbHelper(query);
 }
 

@@ -1,6 +1,7 @@
 import { MealStatus } from '../types';
 
-interface DishEntity {
+interface IDish {
+  type: string;
   id: string;
   userId: string;
   name: string;
@@ -12,13 +13,13 @@ interface DishEntity {
   cleanupEffort: number;
 }
 
-export interface AccompanimentDishEntity extends DishEntity {
-  type: string;
+interface IMainDish extends IDish {
+  numAccompanimentsRequired: number,
+  allowableAccompanimentTypes: number[],
 }
 
-export interface MainDishEntity extends DishEntity {
-  accompanimentRequired: number | null;
-}
+export type AccompanimentDishEntity = IDish;
+export type MainDishEntity = IMainDish;
 
 export interface ScheduledMealEntity {
   id: string;

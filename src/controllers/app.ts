@@ -30,6 +30,7 @@ import {
   deleteIngredientFromDishDb,
   replaceIngredientInDishDb,
   updateIngredientDb,
+  createAccompanimentDishDocument,
   // deleteDishFromDb
 } from './dbInterface';
 
@@ -105,7 +106,21 @@ export const deleteScheduledMeal = (request: Request, response: Response, next: 
   response.sendStatus(200);
 }
 
-export const addMainDish = (request: Request, response: Response, next: any) => {
+export const addAccompaniment = (request: Request, response: Response, next: any) => {
+
+  console.log('addAccompanimentDish');
+  console.log(request.body);
+
+  // const { mainDish, userId } = request.body;
+
+  // mainDish.userId = userId;
+  // createAccompanimentDishDocument(mainDish);
+
+  response.sendStatus(200);
+}
+
+
+export const addMain = (request: Request, response: Response, next: any) => {
 
   console.log('addMainDish');
   console.log(request.body);
