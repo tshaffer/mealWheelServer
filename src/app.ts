@@ -29,6 +29,8 @@ import {
   // addAccompanimentDish,
   addMain,
   addAccompaniment,
+  getAccompanimentDishes,
+  getAccompaniments,
   // deleteDish,
 } from './controllers';
 // import { getIngredientsByDish } from './controllers/ingredients';
@@ -74,15 +76,17 @@ class App {
     // this.app.get('/api/v1/ingredients', getIngredients);
     // this.app.get('/api/v1/ingredientsByDish', getIngredientsByDish);
 
+    this.app.get('/api/v1/accompaniments', getAccompaniments);
+
     this.app.post('/api/v1/addMain', addMain);
     this.app.post('/api/v1/addAccompaniment', addAccompaniment);
     // this.app.post('/api/v1/addDish', addDish);
     this.app.post('/api/v1/addIngredient', addIngredient)
     // this.app.post('/api/v1/addIngredientToDish', addIngredientToDish)
-    
+
     // this.app.post('/api/v1/updateDish', updateDish);
     // this.app.post('/api/v1/deleteDish', deleteDish);
-    
+
     this.app.post('/api/v1/updateIngredient', updateIngredient)
     // this.app.post('/api/v1/replaceIngredientInDish', replaceIngredientInDish)
     // this.app.post('/api/v1/deleteIngredientFromDish', deleteIngredientFromDish)

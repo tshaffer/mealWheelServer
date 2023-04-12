@@ -31,6 +31,7 @@ import {
   replaceIngredientInDishDb,
   updateIngredientDb,
   createAccompanimentDocument as createAccompanimentDocument,
+  getAccompanimentsFromDb,
   // deleteDishFromDb
 } from './dbInterface';
 
@@ -106,6 +107,33 @@ export const deleteScheduledMeal = (request: Request, response: Response, next: 
   response.sendStatus(200);
 }
 
+/*
+interface IDish {
+  type: string;
+  id: string;
+  userId: string;
+  name: string;
+  minimumInterval: number;
+  last: Date | null;
+  ingredientIds: string[];
+  prepEffort: number;
+  prepTime: number;
+  cleanupEffort: number;
+}
+*/
+export const getAccompaniments = (request: Request, response: Response) => {
+  const id: string = request.query.id as string;
+
+  console.log('getAccompaniments');
+  console.log(id);
+
+  return getAccompanimentsFromDb(id)
+    .then((dishEntities: AccompanimentDishEntity[]) => {
+      response.json(dishEntities);
+    });
+}
+
+
 export const addAccompaniment = (request: Request, response: Response, next: any) => {
 
   console.log('addAccompaniment');
@@ -118,7 +146,6 @@ export const addAccompaniment = (request: Request, response: Response, next: any
 
   response.sendStatus(200);
 }
-
 
 export const addMain = (request: Request, response: Response, next: any) => {
 

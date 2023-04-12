@@ -157,6 +157,11 @@ export const getAccompanimentDishesFromDb = (userId: string): Promise<Accompanim
   return getAccompanimentDishesFromDbHelper(query);
 }
 
+export const getAccompanimentsFromDb = (userId: string): Promise<AccompanimentEntity[]> => {
+  const query = AccompanimentModel.find({ userId });
+  return getAccompanimentDishesFromDbHelper(query);
+}
+
 
 const getMainByNameFromDb = (userId: string, name: string): Promise<MainEntity[]> => {
   const query = MainModel.find({ userId, name, type: 'main' });
