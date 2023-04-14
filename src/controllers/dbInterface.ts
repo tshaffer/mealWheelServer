@@ -117,6 +117,10 @@ export const getScheduledMealsFromDb = (userId: string): Promise<ScheduledMealEn
   });
 }
 
+// export const getDishesFromDb  = (query: any): Promise<MainEntity[]> => {
+//   return Promise.resolve([]);
+// }
+
 const getMainDishesFromDbHelper = (query: any): Promise<MainEntity[]> => {
 
   const promise: Promise<Document[]> = query.exec();
@@ -157,8 +161,22 @@ export const getAccompanimentDishesFromDb = (userId: string): Promise<Accompanim
   return getAccompanimentDishesFromDbHelper(query);
 }
 
-export const getAccompanimentsFromDb = (userId: string): Promise<AccompanimentEntity[]> => {
-  const query = AccompanimentModel.find({ userId });
+export const getAccompanimentsFromDb = (userId: string, accompanimentType: string): Promise<AccompanimentEntity[]> => {
+  const query = AccompanimentModel.find({
+    userId,
+    type: { $eq: accompanimentType },
+  });
+  return getAccompanimentDishesFromDbHelper(query);
+}
+
+
+export const getAllAccompanimentsFromDb = (userId: string): Promise<AccompanimentEntity[]> => {
+  const query = AccompanimentModel.find({
+    userId,
+    type: { $ne: 'main' },
+    // $ne: [{ type: 'main' }]
+    // $or: [{ type: 'salad' }, { type: 'side' }, { type: 'veggie' }  ]
+  });
   return getAccompanimentDishesFromDbHelper(query);
 }
 

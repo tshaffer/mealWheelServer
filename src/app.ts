@@ -30,6 +30,9 @@ import {
   addMain,
   addAccompaniment,
   getAccompanimentDishes,
+  getAllAccompaniments,
+  // getDishes,
+  getMains,
   getAccompaniments,
   // deleteDish,
 } from './controllers';
@@ -76,6 +79,8 @@ class App {
     // this.app.get('/api/v1/ingredients', getIngredients);
     // this.app.get('/api/v1/ingredientsByDish', getIngredientsByDish);
 
+    this.app.get('/api/v1/mains', getMains);
+    this.app.get('/api/v1/allAccompaniments', getAllAccompaniments);
     this.app.get('/api/v1/accompaniments', getAccompaniments);
 
     this.app.post('/api/v1/addMain', addMain);

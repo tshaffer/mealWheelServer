@@ -18,6 +18,7 @@ interface IMainDish extends IDish {
   allowableAccompanimentTypes: number[],
 }
 
+export type DishEntity = IDish;
 export type AccompanimentDishEntity = IDish;
 export type MainDishEntity = IMainDish;
 

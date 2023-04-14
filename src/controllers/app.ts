@@ -5,6 +5,7 @@ const path = require('node:path');
 
 import {
   AccompanimentDishEntity,
+  DishEntity,
   IngredientEntity,
   IngredientInDishEntity,
   MainDishEntity,
@@ -31,6 +32,7 @@ import {
   replaceIngredientInDishDb,
   updateIngredientDb,
   createAccompanimentDocument as createAccompanimentDocument,
+  getAllAccompanimentsFromDb,
   getAccompanimentsFromDb,
   // deleteDishFromDb
 } from './dbInterface';
@@ -107,27 +109,54 @@ export const deleteScheduledMeal = (request: Request, response: Response, next: 
   response.sendStatus(200);
 }
 
-/*
-interface IDish {
-  type: string;
-  id: string;
-  userId: string;
-  name: string;
-  minimumInterval: number;
-  last: Date | null;
-  ingredientIds: string[];
-  prepEffort: number;
-  prepTime: number;
-  cleanupEffort: number;
+// export const getDishes = (request: Request, response: Response) => {
+//   const id: string = request.query.id as string;
+
+//   console.log('getDishes');
+//   console.log(id);
+
+//   return getDishesFromDb(id)
+//     .then((dishEntities: DishEntity[]) => {
+//       response.json(dishEntities);
+//     });
+// }
+
+
+export const getMains = (request: Request, response: Response) => {
+  const id: string = request.query.id as string;
+
+  console.log('getMains');
+  console.log(id);
+
+  return getMainDishesFromDb(id)
+    .then((dishEntities: AccompanimentDishEntity[]) => {
+      response.json(dishEntities);
+    });
 }
-*/
+
 export const getAccompaniments = (request: Request, response: Response) => {
   const id: string = request.query.id as string;
+  const accompanimentType: string = request.query.type as string;
 
   console.log('getAccompaniments');
   console.log(id);
+  console.log('accompanimentType');
+  console.log(accompanimentType);
 
-  return getAccompanimentsFromDb(id)
+  return getAccompanimentsFromDb(id, accompanimentType)
+    .then((dishEntities: AccompanimentDishEntity[]) => {
+      response.json(dishEntities);
+    });
+}
+
+
+export const getAllAccompaniments = (request: Request, response: Response) => {
+  const id: string = request.query.id as string;
+
+  console.log('getAllAccompaniments');
+  console.log(id);
+
+  return getAllAccompanimentsFromDb(id)
     .then((dishEntities: AccompanimentDishEntity[]) => {
       response.json(dishEntities);
     });
