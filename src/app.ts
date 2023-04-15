@@ -33,6 +33,7 @@ import {
   getAllAccompaniments,
   getMains,
   getAccompaniments,
+  getAccompanimentTypes,
   // deleteDish,
 } from './controllers';
 // import { getIngredientsByDish } from './controllers/ingredients';
@@ -73,6 +74,8 @@ class App {
     this.app.get('/api/v1/version', getVersion);
     this.app.get('/api/v1/users', getUsers);
     // this.app.post('/api/v1/mealWheelSpec', uploadMealWheelSpec);
+
+    this.app.get('/api/v1/accompanimentTypes', getAccompanimentTypes);
 
     this.app.get('/api/v1/dishes', getDishes);
     // this.app.get('/api/v1/ingredients', getIngredients);

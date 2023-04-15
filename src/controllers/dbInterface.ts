@@ -1,17 +1,19 @@
 import { isArray, isNil, isString } from 'lodash';
 import { Document } from 'mongoose';
+import AccompanimentType from '../models/AccompanimentType';
 
 import { MainModel, AccompanimentModel } from '../models/DishModels';
 import Ingredient from '../models/Ingredient';
 import IngredientInDish from '../models/IngredientInDish';
 import ScheduledMeal from '../models/ScheduledMeal';
 import {
-  AccompanimentDishEntity as AccompanimentEntity,
+  AccompanimentDishEntity,
   MainDishEntity as MainEntity,
   ScheduledMealEntity,
   MealStatus,
   IngredientEntity,
   IngredientInDishEntity,
+  AccompanimentTypeEntity,
 } from '../types';
 
 
@@ -28,7 +30,7 @@ export const createScheduledMealDocument = (scheduledMealEntity: ScheduledMealEn
     });
 }
 
-export const createAccompanimentDocument = (accompanimentEntity: AccompanimentEntity): Promise<Document | void> => {
+export const createAccompanimentDocument = (accompanimentEntity: AccompanimentDishEntity): Promise<Document | void> => {
   console.log('createAccompanimentDocument');
   console.log(accompanimentEntity);
   return AccompanimentModel.create(accompanimentEntity)
@@ -132,13 +134,13 @@ const getMainDishesFromDbHelper = (query: any): Promise<MainEntity[]> => {
 
 }
 
-const getAccompanimentDishesFromDbHelper = (query: any): Promise<AccompanimentEntity[]> => {
+const getAccompanimentDishesFromDbHelper = (query: any): Promise<AccompanimentDishEntity[]> => {
 
   const promise: Promise<Document[]> = query.exec();
   return promise.then((accompanimentDishDocuments: Document[]) => {
 
-    const accompanimentDishEntities: AccompanimentEntity[] = accompanimentDishDocuments.map((accompanimentDishDocument: any) => {
-      const accompanimentDishEntity: AccompanimentEntity = accompanimentDishDocument.toObject();
+    const accompanimentDishEntities: AccompanimentDishEntity[] = accompanimentDishDocuments.map((accompanimentDishDocument: any) => {
+      const accompanimentDishEntity: AccompanimentDishEntity = accompanimentDishDocument.toObject();
       return accompanimentDishEntity;
     });
 
@@ -157,12 +159,12 @@ export const getMainDishesFromDb = (userId: string): Promise<MainEntity[]> => {
   return getMainDishesFromDbHelper(query);
 }
 
-// export const getAccompanimentDishesFromDb = (userId: string): Promise<AccompanimentEntity[]> => {
+// export const getAccompanimentDishesFromDb = (userId: string): Promise<AccompanimentDishEntity[]> => {
 //   const query = AccompanimentModel.find({ userId });
 //   return getAccompanimentDishesFromDbHelper(query);
 // }
 
-export const getAccompanimentsFromDb = (userId: string, accompanimentType: string): Promise<AccompanimentEntity[]> => {
+export const getAccompanimentsFromDb = (userId: string, accompanimentType: string): Promise<AccompanimentDishEntity[]> => {
   const query = AccompanimentModel.find({
     userId,
     type: { $eq: accompanimentType },
@@ -170,7 +172,7 @@ export const getAccompanimentsFromDb = (userId: string, accompanimentType: strin
   return getAccompanimentDishesFromDbHelper(query);
 }
 
-export const getAllAccompanimentsFromDb = (userId: string): Promise<AccompanimentEntity[]> => {
+export const getAllAccompanimentsFromDb = (userId: string): Promise<AccompanimentDishEntity[]> => {
   const query = AccompanimentModel.find({
     userId,
     type: { $ne: 'main' },
@@ -178,6 +180,29 @@ export const getAllAccompanimentsFromDb = (userId: string): Promise<Accompanimen
     // $or: [{ type: 'salad' }, { type: 'side' }, { type: 'veggie' }  ]
   });
   return getAccompanimentDishesFromDbHelper(query);
+}
+
+const getAccompanimentTypesFromDbHelper = (query: any): Promise<AccompanimentTypeEntity[]> => {
+
+  const promise: Promise<Document[]> = query.exec();
+  return promise.then((accompanimentTypeDocuments: Document[]) => {
+
+    const accompanimentTypeEntities: AccompanimentTypeEntity[] = accompanimentTypeDocuments.map((accompanimentTypeDocument: any) => {
+      const accompanimentTypeEntity: AccompanimentTypeEntity = accompanimentTypeDocument.toObject();
+      return accompanimentTypeEntity;
+    });
+
+    return Promise.resolve(accompanimentTypeEntities);
+  });
+
+}
+
+
+export const getAccompanimentTypesFromDb = (userId: string): Promise<AccompanimentTypeEntity[]> => {
+  const query = AccompanimentType.find({
+    userId,
+  });
+  return getAccompanimentTypesFromDbHelper(query);
 }
 
 

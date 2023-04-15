@@ -5,6 +5,7 @@ const path = require('node:path');
 
 import {
   AccompanimentDishEntity,
+  AccompanimentTypeEntity,
   DishEntity,
   IngredientEntity,
   IngredientInDishEntity,
@@ -34,6 +35,7 @@ import {
   createAccompanimentDocument as createAccompanimentDocument,
   getAllAccompanimentsFromDb,
   getAccompanimentsFromDb,
+  getAccompanimentTypesFromDb,
   // deleteDishFromDb
 } from './dbInterface';
 
@@ -295,3 +297,17 @@ export const updateIngredient = (request: Request, response: Response, next: any
 
 //   response.sendStatus(200);
 // }
+
+export const getAccompanimentTypes = (request: Request, response: Response) => {
+
+  const userId: string = request.query.id as string;
+
+  console.log('getAccompanimentTypes');
+  console.log(userId);
+
+  return getAccompanimentTypesFromDb(userId)
+    .then((accompanimentTypes: AccompanimentTypeEntity[]) => {
+      response.json(accompanimentTypes);
+    });
+}
+

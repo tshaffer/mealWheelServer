@@ -22,6 +22,13 @@ export type DishEntity = IDish;
 export type AccompanimentDishEntity = IDish;
 export type MainDishEntity = IMainDish;
 
+export interface AccompanimentTypeEntity {
+  id: string;
+  userId: string;
+  name: string;
+  uiIndex: number;
+}
+
 export interface ScheduledMealEntity {
   id: string;
   userId: string;
