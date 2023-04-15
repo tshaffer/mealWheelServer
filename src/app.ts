@@ -10,7 +10,7 @@ import { Routes } from './routes/routes';
 
 import {
   addScheduledMeal,
-  // getDishes,
+  getDishes,
   getScheduledMeals,
   // addDish,
   // getIngredients,
@@ -29,9 +29,8 @@ import {
   // addAccompanimentDish,
   addMain,
   addAccompaniment,
-  getAccompanimentDishes,
+  // getAccompanimentDishes,
   getAllAccompaniments,
-  // getDishes,
   getMains,
   getAccompaniments,
   // deleteDish,
@@ -75,7 +74,7 @@ class App {
     this.app.get('/api/v1/users', getUsers);
     // this.app.post('/api/v1/mealWheelSpec', uploadMealWheelSpec);
 
-    // this.app.get('/api/v1/dishes', getDishes);
+    this.app.get('/api/v1/dishes', getDishes);
     // this.app.get('/api/v1/ingredients', getIngredients);
     // this.app.get('/api/v1/ingredientsByDish', getIngredientsByDish);
 

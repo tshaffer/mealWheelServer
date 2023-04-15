@@ -117,10 +117,6 @@ export const getScheduledMealsFromDb = (userId: string): Promise<ScheduledMealEn
   });
 }
 
-// export const getDishesFromDb  = (query: any): Promise<MainEntity[]> => {
-//   return Promise.resolve([]);
-// }
-
 const getMainDishesFromDbHelper = (query: any): Promise<MainEntity[]> => {
 
   const promise: Promise<Document[]> = query.exec();
@@ -151,15 +147,20 @@ const getAccompanimentDishesFromDbHelper = (query: any): Promise<AccompanimentEn
 
 }
 
+export const getDishesFromDb = (userId: string): Promise<MainEntity[]> => {
+  const query = AccompanimentModel.find({ userId });
+  return getMainDishesFromDbHelper(query);
+}
+
 export const getMainDishesFromDb = (userId: string): Promise<MainEntity[]> => {
   const query = MainModel.find({ userId, type: 'main' });
   return getMainDishesFromDbHelper(query);
 }
 
-export const getAccompanimentDishesFromDb = (userId: string): Promise<AccompanimentEntity[]> => {
-  const query = AccompanimentModel.find({ userId });
-  return getAccompanimentDishesFromDbHelper(query);
-}
+// export const getAccompanimentDishesFromDb = (userId: string): Promise<AccompanimentEntity[]> => {
+//   const query = AccompanimentModel.find({ userId });
+//   return getAccompanimentDishesFromDbHelper(query);
+// }
 
 export const getAccompanimentsFromDb = (userId: string, accompanimentType: string): Promise<AccompanimentEntity[]> => {
   const query = AccompanimentModel.find({
@@ -168,7 +169,6 @@ export const getAccompanimentsFromDb = (userId: string, accompanimentType: strin
   });
   return getAccompanimentDishesFromDbHelper(query);
 }
-
 
 export const getAllAccompanimentsFromDb = (userId: string): Promise<AccompanimentEntity[]> => {
   const query = AccompanimentModel.find({

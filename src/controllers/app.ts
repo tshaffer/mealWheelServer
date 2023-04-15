@@ -16,8 +16,8 @@ import {
   // createBaseDishDocument,
   createMainDocument,
   createScheduledMealDocument,
-  getAccompanimentDishesFromDb,
-  // getDishesFromDb,
+  // getAccompanimentDishesFromDb,
+  getDishesFromDb,
   getMainDishesFromDb,
   getScheduledMealsFromDb,
   // updateDishDb,
@@ -69,14 +69,14 @@ export function getMainDishes(request: Request, response: Response) {
 
 }
 
-export function getAccompanimentDishes(request: Request, response: Response) {
-  const id: string = request.query.id as string;
+// export function getAccompanimentDishes(request: Request, response: Response) {
+//   const id: string = request.query.id as string;
 
-  return getAccompanimentDishesFromDb(id)
-    .then((dishEntities: AccompanimentDishEntity[]) => {
-      response.json(dishEntities);
-    });
-}
+//   return getAccompanimentDishesFromDb(id)
+//     .then((dishEntities: AccompanimentDishEntity[]) => {
+//       response.json(dishEntities);
+//     });
+// }
 
 export const addScheduledMeal = (request: Request, response: Response, next: any) => {
 
@@ -109,18 +109,17 @@ export const deleteScheduledMeal = (request: Request, response: Response, next: 
   response.sendStatus(200);
 }
 
-// export const getDishes = (request: Request, response: Response) => {
-//   const id: string = request.query.id as string;
+export const getDishes = (request: Request, response: Response) => {
+  const id: string = request.query.id as string;
 
-//   console.log('getDishes');
-//   console.log(id);
+  console.log('getDishes');
+  console.log(id);
 
-//   return getDishesFromDb(id)
-//     .then((dishEntities: DishEntity[]) => {
-//       response.json(dishEntities);
-//     });
-// }
-
+  return getDishesFromDb(id)
+    .then((dishEntities: DishEntity[]) => {
+      response.json(dishEntities);
+    });
+}
 
 export const getMains = (request: Request, response: Response) => {
   const id: string = request.query.id as string;
@@ -149,7 +148,6 @@ export const getAccompaniments = (request: Request, response: Response) => {
     });
 }
 
-
 export const getAllAccompaniments = (request: Request, response: Response) => {
   const id: string = request.query.id as string;
 
@@ -161,7 +159,6 @@ export const getAllAccompaniments = (request: Request, response: Response) => {
       response.json(dishEntities);
     });
 }
-
 
 export const addAccompaniment = (request: Request, response: Response, next: any) => {
 
