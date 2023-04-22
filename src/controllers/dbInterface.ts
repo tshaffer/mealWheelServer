@@ -71,7 +71,7 @@ export const updateDishDb = (
   minimumInterval: number, 
   last: Date | null, 
   numAccompanimentsRequired: number,
-  allowableAccompanimentTypes: any[],
+  allowableAccompanimentTypes: string[],
   prepEffort: number,
   prepTime: number,
   cleanupEffort: number,

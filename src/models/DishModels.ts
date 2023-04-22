@@ -23,7 +23,7 @@ const BaseDishModel = mongoose.model('BaseDish', baseDishSchema);
 
 const mainDishSchema = new Schema({
   numAccompanimentsRequired: { type: Number, required: true },
-  allowableAccompanimentTypes: { type: [Number], required: true },
+  allowableAccompanimentTypes: { type: [String], required: true },
 });
 
 export const AccompanimentModel = mongoose.model('BaseDish', baseDishSchema);
