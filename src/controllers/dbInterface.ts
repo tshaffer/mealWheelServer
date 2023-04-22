@@ -14,6 +14,7 @@ import {
   IngredientEntity,
   IngredientInDishEntity,
   AccompanimentTypeEntity,
+  MainDishEntity,
 } from '../types';
 
 
@@ -63,36 +64,38 @@ export const createMainDocument = (mainEntity: MainEntity): Promise<Document | v
     });
 };
 
-// export const updateDishDb = (
-//   id: string, 
-//   name: string, 
-//   type: DishType, 
-//   minimumInterval: number, 
-//   last: Date | null, 
-//   accompaniment: RequiredAccompanimentFlags,
-//   prepEffort: number,
-//   prepTime: number,
-//   cleanupEffort: number,
-//   ): void => {
-//   Dish.find({ id, }
-//     , (err, dishDocs: any) => {
-//       if (err) {
-//         console.log(err);
-//       } else
-//         if (isArray(dishDocs) && dishDocs.length === 1) {
-//           const dishDoc: any = dishDocs[0];
-//           (dishDoc as DishEntity).name = name;
-//           (dishDoc as DishEntity).type = type;
-//           (dishDoc as DishEntity).minimumInterval = minimumInterval,
-//           (dishDoc as DishEntity).last = last,
-//           (dishDoc as DishEntity).accompanimentRequired = accompaniment;
-//           (dishDoc as DishEntity).prepEffort = prepEffort;
-//           (dishDoc as DishEntity).prepTime = prepTime;
-//           (dishDoc as DishEntity).cleanupEffort = cleanupEffort;
-//           dishDoc.save();
-//         }
-//     });
-// }
+export const updateDishDb = (
+  id: string, 
+  name: string, 
+  type: MainDishEntity, 
+  minimumInterval: number, 
+  last: Date | null, 
+  numAccompanimentsRequired: number,
+  allowableAccompanimentTypes: any[],
+  prepEffort: number,
+  prepTime: number,
+  cleanupEffort: number,
+  ): void => {
+  MainModel.find({ id, }
+    , (err, dishDocs: any) => {
+      if (err) {
+        console.log(err);
+      } else
+        if (isArray(dishDocs) && dishDocs.length === 1) {
+          const dishDoc: any = dishDocs[0];
+          (dishDoc as MainDishEntity).name = name;
+          // (dishDoc as MainDishEntity).type = type;   TEDTODO!!!!
+          (dishDoc as MainDishEntity).minimumInterval = minimumInterval,
+          (dishDoc as MainDishEntity).last = last,
+          (dishDoc as MainDishEntity).numAccompanimentsRequired = numAccompanimentsRequired;
+          (dishDoc as MainDishEntity).allowableAccompanimentTypes = allowableAccompanimentTypes;
+          (dishDoc as MainDishEntity).prepEffort = prepEffort;
+          (dishDoc as MainDishEntity).prepTime = prepTime;
+          (dishDoc as MainDishEntity).cleanupEffort = cleanupEffort;
+          dishDoc.save();
+        }
+    });
+}
 
 // export const deleteDishFromDb = (id: string): void => {
 //   Dish.deleteOne({ id }).then(() => {

@@ -21,7 +21,7 @@ import {
   getDishesFromDb,
   getMainDishesFromDb,
   getScheduledMealsFromDb,
-  // updateDishDb,
+  updateDishDb,
   // updateMealDb,
   createIngredientDocument,
   // getDefinedMealsFromDb,
@@ -188,19 +188,20 @@ export const addMain = (request: Request, response: Response, next: any) => {
   response.sendStatus(200);
 }
 
-// export const updateDish = (request: Request, response: Response, next: any) => {
+export const updateDish = (request: Request, response: Response, next: any) => {
 
-//   console.log('updateDish');
-//   // console.log(request.body);
+  console.log('updateDish');
+  console.log(request.body);
+  console.log(request.body.dish);
 
-//   const { dish } = request.body;
+  const { dish } = request.body;
 
-//   const { id, name, type, minimumInterval, last, accompanimentRequired, prepEffort, prepTime, cleanupEffort } = dish;
-//   updateDishDb(id, name, type, minimumInterval, last, accompanimentRequired, prepEffort, prepTime, cleanupEffort);
+  const { id, name, type, minimumInterval, last, numAccompanimentsRequired, allowableAccompanimentTypes, prepEffort, prepTime, cleanupEffort } = dish;
+  updateDishDb(id, name, type, minimumInterval, last, numAccompanimentsRequired, allowableAccompanimentTypes, prepEffort, prepTime, cleanupEffort);
 
-//   response.sendStatus(200);
+  response.sendStatus(200);
 
-// }
+}
 
 // export const deleteDish = (request: Request, response: Response, next: any) => {
 

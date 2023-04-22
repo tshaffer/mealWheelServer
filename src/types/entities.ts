@@ -15,7 +15,7 @@ interface IDish {
 
 interface IMainDish extends IDish {
   numAccompanimentsRequired: number,
-  allowableAccompanimentTypes: number[],
+  allowableAccompanimentTypes: string[],
 }
 
 export type DishEntity = IDish;

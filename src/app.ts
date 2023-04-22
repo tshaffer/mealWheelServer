@@ -17,7 +17,7 @@ import {
   getUsers,
   getVersion,
   // uploadMealWheelSpec,
-  // updateDish,
+  updateDish,
   // updateMeal,
   // validate,
   deleteScheduledMeal,
@@ -91,7 +91,7 @@ class App {
     this.app.post('/api/v1/addIngredient', addIngredient)
     // this.app.post('/api/v1/addIngredientToDish', addIngredientToDish)
 
-    // this.app.post('/api/v1/updateDish', updateDish);
+    this.app.post('/api/v1/updateDish', updateDish);
     // this.app.post('/api/v1/deleteDish', deleteDish);
 
     this.app.post('/api/v1/updateIngredient', updateIngredient)
