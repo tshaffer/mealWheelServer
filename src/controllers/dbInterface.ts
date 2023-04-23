@@ -179,8 +179,6 @@ export const getAllAccompanimentsFromDb = (userId: string): Promise<Accompanimen
   const query = AccompanimentModel.find({
     userId,
     type: { $ne: 'main' },
-    // $ne: [{ type: 'main' }]
-    // $or: [{ type: 'salad' }, { type: 'side' }, { type: 'veggie' }  ]
   });
   return getAccompanimentDishesFromDbHelper(query);
 }
@@ -214,34 +212,30 @@ const getMainByNameFromDb = (userId: string, name: string): Promise<MainEntity[]
   return getMainDishesFromDbHelper(query);
 }
 
-// export const updateMealDb = (
-//   id: string,
-//   userId: string,
-//   mainDishId: string,
-//   saladId: string,
-//   veggieId: string,
-//   sideId: string,
-//   dateScheduled: Date,
-//   status: MealStatus,
-// ): void => {
-//   ScheduledMeal.find({ id, }
-//     , (err, mealsDocs: any) => {
-//       if (err) {
-//         console.log(err);
-//       } else
-//         if (isArray(mealsDocs) && mealsDocs.length === 1) {
-//           const mealDoc: any = mealsDocs[0];
-//           (mealDoc as ScheduledMealEntity).userId = userId;
-//           (mealDoc as ScheduledMealEntity).mainDishId = mainDishId;
-//           (mealDoc as ScheduledMealEntity).saladId = saladId;
-//           (mealDoc as ScheduledMealEntity).veggieId = veggieId;
-//           (mealDoc as ScheduledMealEntity).sideId = sideId;
-//           (mealDoc as ScheduledMealEntity).dateScheduled = dateScheduled;
-//           (mealDoc as ScheduledMealEntity).status = status;
-//           mealDoc.save();
-//         }
-//     });
-// }
+export const updateMealDb = (
+  id: string,
+  userId: string,
+  mainDishId: string,
+  accompanimentIds: string[],
+  dateScheduled: Date,
+  status: MealStatus,
+): void => {
+  ScheduledMeal.find({ id, }
+    , (err, mealsDocs: any) => {
+      if (err) {
+        console.log(err);
+      } else
+        if (isArray(mealsDocs) && mealsDocs.length === 1) {
+          const mealDoc: any = mealsDocs[0];
+          (mealDoc as ScheduledMealEntity).userId = userId;
+          (mealDoc as ScheduledMealEntity).mainDishId = mainDishId;
+          (mealDoc as ScheduledMealEntity).accompanimentIds = accompanimentIds;
+          (mealDoc as ScheduledMealEntity).dateScheduled = dateScheduled;
+          (mealDoc as ScheduledMealEntity).status = status;
+          mealDoc.save();
+        }
+    });
+}
 
 
 export const deleteScheduledMealDb = (
