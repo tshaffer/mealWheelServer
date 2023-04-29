@@ -16,6 +16,9 @@ import {
   AccompanimentTypeEntity,
   MainDishEntity,
   OldBaseDishEntity,
+  DishType,
+  OldMainDishEntity,
+  RequiredAccompanimentFlags,
 } from '../types';
 import Olddish from '../models/Olddish';
 
@@ -497,13 +500,128 @@ export const upgradeDbSchema = (
 ): void => {
   console.log('upgradeDbSchema');
   getOldDishesFromDb()
-    .then((dishDocuments: OldBaseDishEntity[]) => {
+    .then((oldDishDocuments: OldBaseDishEntity[]) => {
       console.log('return from getOldDishesFromDb');
-      console.log(dishDocuments);
-      return dishDocuments
-    }).then((dishDocuments: any[]) => {
+      console.log(oldDishDocuments);
+      return oldDishDocuments;
+    }).then((oldDishDocuments: OldBaseDishEntity[]) => {
       console.log('chained promise');
+      const entities: any = generateNewDishesFromOldDishes(oldDishDocuments);
+      console.log('Mains');
+      console.log(entities.mainDishes);
+      console.log('Accompaniments');
+      console.log(entities.accompanimentDishes);
     });
+}
+
+const getOldDishesFromDb = (): Promise<OldBaseDishEntity[]> => {
+  const query = Olddish.find({});
+  return getOldDishesFromDbHelper(query);
+}
+
+const generateNewDishesFromOldDishes = (oldDishDocuments: any[]) => {
+
+  const mainDishes: MainEntity[] = [];
+  const accompanimentDishes: AccompanimentDishEntity[] = [];
+
+  oldDishDocuments.forEach((oldDishDocument: OldBaseDishEntity) => {
+    if (oldDishDocument.type === DishType.Main) {
+
+      const oldMain: OldMainDishEntity = oldDishDocument as unknown as OldMainDishEntity;
+      const requiresSide: boolean = isNil(oldMain.accompanimentRequired) ? false : (oldMain.accompanimentRequired & RequiredAccompanimentFlags.Side) !== 0;
+      const requiresSalad = isNil(oldMain.accompanimentRequired) ? false : (oldMain.accompanimentRequired & RequiredAccompanimentFlags.Salad) !== 0;
+      const requiresVeggie = isNil(oldMain.accompanimentRequired) ? false : (oldMain.accompanimentRequired & RequiredAccompanimentFlags.Veggie) !== 0;
+      
+      let numAccompanimentsRequired = 0;
+      const allowableAccompanimentTypes: string[] = [];
+
+      if (requiresSide) {
+        numAccompanimentsRequired++;
+        allowableAccompanimentTypes.push('side');
+      }
+      if (requiresSalad) {
+        numAccompanimentsRequired++;
+        allowableAccompanimentTypes.push('salad');
+      }
+      if (requiresVeggie) {
+        numAccompanimentsRequired++;
+        allowableAccompanimentTypes.push('veggie');
+      }
+      const mainEntity: MainDishEntity = {
+        type: 'main',
+        id: oldDishDocument.id,
+        userId: oldDishDocument.userId,
+        name: oldDishDocument.name,
+        minimumInterval: oldDishDocument.minimumInterval,
+        last: oldDishDocument.last,
+        ingredientIds: oldDishDocument.ingredientIds,
+        prepEffort: oldDishDocument.prepEffort,
+        prepTime: oldDishDocument.prepTime,
+        cleanupEffort: oldDishDocument.cleanupEffort,
+        numAccompanimentsRequired,
+        allowableAccompanimentTypes,
+      }
+      mainDishes.push(mainEntity);
+    } else {
+      let type: string = '';
+      switch (oldDishDocument.type) {
+        case DishType.Salad:
+          type = 'salad';
+          break;
+        case DishType.Side:
+          type = 'side';
+          break;
+        case DishType.Veggie:
+          type = 'veggie';
+          break;
+        default:
+          debugger;
+      }
+      const accompanimentDishEntity: AccompanimentDishEntity = {
+        type,
+        id: oldDishDocument.id,
+        userId: oldDishDocument.userId,
+        name: oldDishDocument.name,
+        minimumInterval: oldDishDocument.minimumInterval,
+        last: oldDishDocument.last,
+        ingredientIds: oldDishDocument.ingredientIds,
+        prepEffort: oldDishDocument.prepEffort,
+        prepTime: oldDishDocument.prepTime,
+        cleanupEffort: oldDishDocument.cleanupEffort,
+      }
+      accompanimentDishes.push(accompanimentDishEntity);
+    }
+  });
+
+  return {
+    mainDishes,
+    accompanimentDishes,
+  };
+};
+
+const getOldMainDishesFromDb = (): Promise<OldBaseDishEntity[]> => {
+  const query = Olddish.find({ type: 'main' });
+  return getOldDishesFromDbHelper(query);
+}
+
+const getOldAccompanimentDishesFromDb = (): Promise<OldBaseDishEntity[]> => {
+  const query = Olddish.find({ type: { $ne: 'main' } });
+  return getOldDishesFromDbHelper(query);
+}
+
+const getOldVegDishesFromDb = (): Promise<OldBaseDishEntity[]> => {
+  const query = Olddish.find({ type: { $eq: 'veggie' } });
+  return getOldDishesFromDbHelper(query);
+}
+
+const getOldSaladDishesFromDb = (): Promise<OldBaseDishEntity[]> => {
+  const query = Olddish.find({ type: { $eq: 'salad' } });
+  return getOldDishesFromDbHelper(query);
+}
+
+const getOldSideDishesFromDb = (): Promise<OldBaseDishEntity[]> => {
+  const query = Olddish.find({ type: { $eq: 'side' } });
+  return getOldDishesFromDbHelper(query);
 }
 
 const getOldDishesFromDbHelper = (query: any): Promise<OldBaseDishEntity[]> => {
@@ -518,34 +636,4 @@ const getOldDishesFromDbHelper = (query: any): Promise<OldBaseDishEntity[]> => {
 
     return Promise.resolve(dishEntities);
   });
-
-}
-export const getOldDishesFromDb = (): Promise<OldBaseDishEntity[]> => {
-  const query = Olddish.find({});
-  return getOldDishesFromDbHelper(query);
-}
-
-export const getOldMainDishesFromDb = (): Promise<OldBaseDishEntity[]> => {
-  const query = Olddish.find({ type: 'main' });
-  return getOldDishesFromDbHelper(query);
-}
-
-export const getOldAccompanimentDishesFromDb = (): Promise<OldBaseDishEntity[]> => {
-  const query = Olddish.find({ type: { $ne: 'main' } });
-  return getOldDishesFromDbHelper(query);
-}
-
-export const getOldVegDishesFromDb = (): Promise<OldBaseDishEntity[]> => {
-  const query = Olddish.find({ type: { $eq: 'veggie' } });
-  return getOldDishesFromDbHelper(query);
-}
-
-export const getOldSaladDishesFromDb = (): Promise<OldBaseDishEntity[]> => {
-  const query = Olddish.find({ type: { $eq: 'salad' } });
-  return getOldDishesFromDbHelper(query);
-}
-
-export const getOldSideDishesFromDb = (): Promise<OldBaseDishEntity[]> => {
-  const query = Olddish.find({ type: { $eq: 'side' } });
-  return getOldDishesFromDbHelper(query);
 }
