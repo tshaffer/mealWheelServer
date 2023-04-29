@@ -15,6 +15,7 @@ import {
   IngredientInDishEntity,
   AccompanimentTypeEntity,
   MainDishEntity,
+  OldBaseDishEntity,
 } from '../types';
 import Olddish from '../models/Olddish';
 
@@ -495,9 +496,67 @@ export const deleteIngredientFromDishDb = (
 export const upgradeDbSchema = (
 ): void => {
   console.log('upgradeDbSchema');
-  const query = Olddish.find({});
-  const promise: Promise<Document[]> = query.exec();
-  promise.then((dishDocuments: Document[]) => {
+  // const query = Olddish.find({});
+  // const promise: Promise<Document[]> = query.exec();
+  // promise.then((dishDocuments: Document[]) => {
+  //   console.log(dishDocuments);
+  // });
+  getOldDishesFromDb().then((dishDocuments: any[]) => {
+    console.log('return from getOldDishesFromDb');
     console.log(dishDocuments);
+  })
+}
+
+const getDishesFromDbHelper = (query: any): Promise<OldBaseDishEntity[]> => {
+
+  const promise: Promise<Document[]> = query.exec();
+  return promise.then((dishDocuments: Document[]) => {
+
+    // console.log('dishDocuments');
+
+    const dishEntities: OldBaseDishEntity[] = dishDocuments.map((dishDocument: any) => {
+
+      // console.log('dishDocument', dishDocument);
+      const dishDocAsObj: any = dishDocument.toObject();
+      // console.log('dishDocAsObj', dishDocAsObj);
+      const dishEntity: OldBaseDishEntity = dishDocument.toObject();
+      // console.log('dishEntity', dishEntity);
+
+      return dishEntity;
+    });
+
+    // console.log(dishEntities);
+
+    return Promise.resolve(dishEntities);
   });
+
+}
+export const getOldDishesFromDb = (): Promise<OldBaseDishEntity[]> => {
+  const query = Olddish.find({  });
+  return getDishesFromDbHelper(query);
+}
+
+export const getOldMainDishesFromDb = (): Promise<OldBaseDishEntity[]> => {
+  const query = Olddish.find({ type: 'main' });
+  return getDishesFromDbHelper(query);
+}
+
+export const getOldAccompanimentDishesFromDb = (): Promise<OldBaseDishEntity[]> => {
+  const query = Olddish.find({ type: { $ne: 'main' } });
+  return getDishesFromDbHelper(query);
+}
+
+export const getOldVegDishesFromDb = (): Promise<OldBaseDishEntity[]> => {
+  const query = Olddish.find({ type: { $eq: 'veggie' } });
+  return getDishesFromDbHelper(query);
+}
+
+export const getOldSaladDishesFromDb = (): Promise<OldBaseDishEntity[]> => {
+  const query = Olddish.find({ type: { $eq: 'salad' } });
+  return getDishesFromDbHelper(query);
+}
+
+export const getOldSideDishesFromDb = (): Promise<OldBaseDishEntity[]> => {
+  const query = Olddish.find({ type: { $eq: 'side' } });
+  return getDishesFromDbHelper(query);
 }

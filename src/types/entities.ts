@@ -58,7 +58,7 @@ export interface OldDishEntity {
   cleanupEffort: number;
 }
 
-export interface BaseDishEntity {
+export interface OldBaseDishEntity {
   id: string;
   userId: string;
   name: string;
@@ -73,7 +73,7 @@ export interface BaseDishEntity {
 
 }
 
-export interface OldMainDishEntity extends BaseDishEntity {
+export interface OldMainDishEntity extends OldBaseDishEntity {
   accompanimentRequired: RequiredAccompanimentFlags;
 }
 
