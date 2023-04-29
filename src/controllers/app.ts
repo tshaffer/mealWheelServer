@@ -36,6 +36,7 @@ import {
   getAllAccompanimentsFromDb,
   getAccompanimentsFromDb,
   getAccompanimentTypesFromDb,
+  upgradeDbSchema,
   // deleteDishFromDb
 } from './dbInterface';
 
@@ -310,5 +311,10 @@ export const getAccompanimentTypes = (request: Request, response: Response) => {
     .then((accompanimentTypes: AccompanimentTypeEntity[]) => {
       response.json(accompanimentTypes);
     });
+}
+
+export const upgradeSchema = (request: Request, response: Response, next: any) => {
+  upgradeDbSchema();
+  response.sendStatus(200);
 }
 

@@ -34,6 +34,7 @@ import {
   getMains,
   getAccompaniments,
   getAccompanimentTypes,
+  upgradeSchema,
   // deleteDish,
 } from './controllers';
 // import { getIngredientsByDish } from './controllers/ingredients';
@@ -104,6 +105,8 @@ class App {
     this.app.post('/api/v1/deleteScheduledMeal', deleteScheduledMeal);
 
     // this.app.get('/api/v1/validate', validate);
+    this.app.get('/api/v1/upgradeSchema', upgradeSchema);
+
   }
 
   private config(): void {

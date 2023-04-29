@@ -16,6 +16,7 @@ import {
   AccompanimentTypeEntity,
   MainDishEntity,
 } from '../types';
+import Olddish from '../models/Olddish';
 
 
 export const createScheduledMealDocument = (scheduledMealEntity: ScheduledMealEntity): Promise<Document | void> => {
@@ -65,17 +66,17 @@ export const createMainDocument = (mainEntity: MainEntity): Promise<Document | v
 };
 
 export const updateDishDb = (
-  id: string, 
-  name: string, 
-  type: MainDishEntity, 
-  minimumInterval: number, 
-  last: Date | null, 
+  id: string,
+  name: string,
+  type: MainDishEntity,
+  minimumInterval: number,
+  last: Date | null,
   numAccompanimentsRequired: number,
   allowableAccompanimentTypes: string[],
   prepEffort: number,
   prepTime: number,
   cleanupEffort: number,
-  ): void => {
+): void => {
   MainModel.find({ id, }
     , (err, dishDocs: any) => {
       if (err) {
@@ -86,8 +87,8 @@ export const updateDishDb = (
           (dishDoc as MainDishEntity).name = name;
           // (dishDoc as MainDishEntity).type = type;   TEDTODO!!!!
           (dishDoc as MainDishEntity).minimumInterval = minimumInterval,
-          (dishDoc as MainDishEntity).last = last,
-          (dishDoc as MainDishEntity).numAccompanimentsRequired = numAccompanimentsRequired;
+            (dishDoc as MainDishEntity).last = last,
+            (dishDoc as MainDishEntity).numAccompanimentsRequired = numAccompanimentsRequired;
           (dishDoc as MainDishEntity).allowableAccompanimentTypes = allowableAccompanimentTypes;
           (dishDoc as MainDishEntity).prepEffort = prepEffort;
           (dishDoc as MainDishEntity).prepTime = prepTime;
@@ -491,3 +492,12 @@ export const deleteIngredientFromDishDb = (
   });
 }
 
+export const upgradeDbSchema = (
+): void => {
+  console.log('upgradeDbSchema');
+  const query = Olddish.find({});
+  const promise: Promise<Document[]> = query.exec();
+  promise.then((dishDocuments: Document[]) => {
+    console.log(dishDocuments);
+  });
+}

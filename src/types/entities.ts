@@ -18,9 +18,69 @@ interface IMainDish extends IDish {
   allowableAccompanimentTypes: string[],
 }
 
+export enum MealWheelEntityType {
+  Meal = 'meal',
+  Dish = 'dish',
+  Ingredient = 'ingredient',
+  IngredientInDish= 'ingredientInDish',
+};
+
+export enum DishType {
+  Main = 'main',
+  Side = 'side',
+  Salad = 'salad',
+  Veggie = 'veggie',
+}
+
+export enum RequiredAccompanimentFlags {
+  None = 0,
+  Side = 1,
+  Salad = 2,
+  Veggie = 4,
+}
+
 export type DishEntity = IDish;
 export type AccompanimentDishEntity = IDish;
 export type MainDishEntity = IMainDish;
+
+export interface OldDishEntity {
+  id: string;
+  userId: string;
+  name: string;
+  type: DishType;
+  minimumInterval: number;
+  last: Date | null;
+  accompanimentRequired?: RequiredAccompanimentFlags;   // only applies when dishType === DishType.Main
+  // ingredients: IngredientEntity[];
+  ingredientIds: string[];
+  prepEffort: number;
+  prepTime: number;
+  cleanupEffort: number;
+}
+
+export interface BaseDishEntity {
+  id: string;
+  userId: string;
+  name: string;
+  type: DishType;
+  minimumInterval: number;
+  last: Date | null;
+  // ingredients: IngredientEntity[];
+  ingredientIds: string[];
+  prepEffort: number;
+  prepTime: number;
+  cleanupEffort: number;
+
+}
+
+export interface OldMainDishEntity extends BaseDishEntity {
+  accompanimentRequired: RequiredAccompanimentFlags;
+}
+
+
+
+
+
 
 export interface AccompanimentTypeEntity {
   id: string;
