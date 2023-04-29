@@ -497,9 +497,9 @@ export const deleteIngredientFromDishDb = (
 }
 
 export const upgradeDbSchema = (
-): void => {
+): Promise<any> => {
   console.log('upgradeDbSchema');
-  getOldDishesFromDb()
+  return getOldDishesFromDb()
     .then((oldDishDocuments: OldBaseDishEntity[]) => {
       console.log('return from getOldDishesFromDb');
       console.log(oldDishDocuments);
@@ -511,6 +511,7 @@ export const upgradeDbSchema = (
       console.log(entities.mainDishes);
       console.log('Accompaniments');
       console.log(entities.accompanimentDishes);
+      return writeNewDishes(entities.mainDishes, entities.accompanimentDishes);
     });
 }
 
@@ -598,6 +599,22 @@ const generateNewDishesFromOldDishes = (oldDishDocuments: any[]) => {
     accompanimentDishes,
   };
 };
+
+const writeNewDishes = (mainDishes: MainEntity[] = [], accompanimentDishes: AccompanimentDishEntity[]): Promise<any> => {
+  
+  const promises: Promise<Document | void>[] = [];
+
+  mainDishes.forEach((mainDish: MainDishEntity) => {
+    promises.push(createMainDocument(mainDish));
+  });
+
+  accompanimentDishes.forEach((accompanimentDish: AccompanimentDishEntity) => {
+    promises.push(createAccompanimentDocument(accompanimentDish));
+  });
+
+  return Promise.all(promises);
+
+}
 
 const getOldMainDishesFromDb = (): Promise<OldBaseDishEntity[]> => {
   const query = Olddish.find({ type: 'main' });
