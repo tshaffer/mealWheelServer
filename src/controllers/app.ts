@@ -22,7 +22,7 @@ import {
   getMainDishesFromDb,
   getScheduledMealsFromDb,
   updateDishDb,
-  // updateMealDb,
+  updateMealDb,
   createIngredientDocument,
   // getDefinedMealsFromDb,
   // validateDb,
@@ -92,19 +92,19 @@ export const addScheduledMeal = (request: Request, response: Response, next: any
   response.sendStatus(200);
 }
 
-// export const updateMeal = (request: Request, response: Response, next: any) => {
+export const updateMeal = (request: Request, response: Response, next: any) => {
 
-//   console.log('updateMeal');
-//   // console.log(request.body);
+  console.log('updateMeal');
+  // console.log(request.body);
 
-//   const { meal } = request.body;
-//   const { id, userId, mainDishId, accompanimentIds, dateScheduled, status } = meal;
+  const { meal } = request.body;
+  const { id, userId, mainDishId, accompanimentIds, dateScheduled, status } = meal;
 
-//   updateMealDb(id, userId, mainDishId, accompanimentIds, dateScheduled, status);
+  updateMealDb(id, userId, mainDishId, accompanimentIds, dateScheduled, status);
 
-//   response.sendStatus(200);
+  response.sendStatus(200);
 
-// }
+}
 
 export const deleteScheduledMeal = (request: Request, response: Response, next: any) => {
   const { id } = request.body;
