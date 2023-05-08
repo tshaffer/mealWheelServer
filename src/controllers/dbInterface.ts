@@ -76,7 +76,7 @@ export const updateDishDb = (
   minimumInterval: number,
   last: Date | null,
   numAccompanimentsRequired: number,
-  allowableAccompanimentTypes: string[],
+  allowableAccompanimentTypeEntityIds: string[],
   prepEffort: number,
   prepTime: number,
   cleanupEffort: number,
@@ -93,7 +93,7 @@ export const updateDishDb = (
           (dishDoc as MainDishEntity).minimumInterval = minimumInterval,
             (dishDoc as MainDishEntity).last = last,
             (dishDoc as MainDishEntity).numAccompanimentsRequired = numAccompanimentsRequired;
-          (dishDoc as MainDishEntity).allowableAccompanimentTypes = allowableAccompanimentTypes;
+          (dishDoc as MainDishEntity).allowableAccompanimentTypeEntityIds = allowableAccompanimentTypeEntityIds;
           (dishDoc as MainDishEntity).prepEffort = prepEffort;
           (dishDoc as MainDishEntity).prepTime = prepTime;
           (dishDoc as MainDishEntity).cleanupEffort = cleanupEffort;
@@ -120,6 +120,7 @@ export const getScheduledMealsFromDb = (userId: string): Promise<ScheduledMealEn
 
     const scheduledMealEntities: ScheduledMealEntity[] = scheduledMealDocuments.map((scheduledMealDocument: any) => {
       const scheduledMealEntity: ScheduledMealEntity = scheduledMealDocument.toObject();
+      console.log(scheduledMealEntity);
       return scheduledMealEntity;
     });
 
@@ -221,7 +222,7 @@ export const updateMealDb = (
   id: string,
   userId: string,
   mainDishId: string,
-  accompanimentIds: string[],
+  accompanimentDishIds: string[],
   dateScheduled: Date,
   status: MealStatus,
 ): void => {
@@ -234,7 +235,7 @@ export const updateMealDb = (
           const mealDoc: any = mealsDocs[0];
           (mealDoc as ScheduledMealEntity).userId = userId;
           (mealDoc as ScheduledMealEntity).mainDishId = mainDishId;
-          (mealDoc as ScheduledMealEntity).accompanimentIds = accompanimentIds;
+          (mealDoc as ScheduledMealEntity).accompanimentDishIds = accompanimentDishIds;
           (mealDoc as ScheduledMealEntity).dateScheduled = dateScheduled;
           (mealDoc as ScheduledMealEntity).status = status;
           mealDoc.save();
@@ -534,19 +535,19 @@ const generateNewDishesFromOldDishes = (oldDishDocuments: any[]) => {
       const requiresVeggie = isNil(oldMain.accompanimentRequired) ? false : (oldMain.accompanimentRequired & RequiredAccompanimentFlags.Veggie) !== 0;
       
       let numAccompanimentsRequired = 0;
-      const allowableAccompanimentTypes: string[] = [];
+      const allowableAccompanimentTypeEntityIds: string[] = [];
 
       if (requiresSide) {
         numAccompanimentsRequired++;
-        allowableAccompanimentTypes.push('side');
+        allowableAccompanimentTypeEntityIds.push('side');
       }
       if (requiresSalad) {
         numAccompanimentsRequired++;
-        allowableAccompanimentTypes.push('salad');
+        allowableAccompanimentTypeEntityIds.push('salad');
       }
       if (requiresVeggie) {
         numAccompanimentsRequired++;
-        allowableAccompanimentTypes.push('veggie');
+        allowableAccompanimentTypeEntityIds.push('veggie');
       }
       const mainEntity: MainDishEntity = {
         type: 'main',
@@ -560,7 +561,7 @@ const generateNewDishesFromOldDishes = (oldDishDocuments: any[]) => {
         prepTime: oldDishDocument.prepTime,
         cleanupEffort: oldDishDocument.cleanupEffort,
         numAccompanimentsRequired,
-        allowableAccompanimentTypes,
+        allowableAccompanimentTypeEntityIds,
       }
       mainDishes.push(mainEntity);
     } else {

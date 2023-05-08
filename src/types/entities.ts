@@ -15,7 +15,7 @@ interface IDish {
 
 interface IMainDish extends IDish {
   numAccompanimentsRequired: number,
-  allowableAccompanimentTypes: string[],
+  allowableAccompanimentTypeEntityIds: string[],
 }
 
 export enum MealWheelEntityType {
@@ -93,7 +93,7 @@ export interface ScheduledMealEntity {
   id: string;
   userId: string;
   mainDishId: string;
-  accompanimentIds: string[];
+  accompanimentDishIds: string[];
   dateScheduled: Date;
   status: MealStatus;
 }

@@ -98,9 +98,9 @@ export const updateMeal = (request: Request, response: Response, next: any) => {
   // console.log(request.body);
 
   const { meal } = request.body;
-  const { id, userId, mainDishId, accompanimentIds, dateScheduled, status } = meal;
+  const { id, userId, mainDishId, accompanimentDishIds, dateScheduled, status } = meal;
 
-  updateMealDb(id, userId, mainDishId, accompanimentIds, dateScheduled, status);
+  updateMealDb(id, userId, mainDishId, accompanimentDishIds, dateScheduled, status);
 
   response.sendStatus(200);
 
@@ -197,8 +197,8 @@ export const updateDish = (request: Request, response: Response, next: any) => {
 
   const { dish } = request.body;
 
-  const { id, name, type, minimumInterval, last, numAccompanimentsRequired, allowableAccompanimentTypes, prepEffort, prepTime, cleanupEffort } = dish;
-  updateDishDb(id, name, type, minimumInterval, last, numAccompanimentsRequired, allowableAccompanimentTypes, prepEffort, prepTime, cleanupEffort);
+  const { id, name, type, minimumInterval, last, numAccompanimentsRequired, allowableAccompanimentTypeEntityIds, prepEffort, prepTime, cleanupEffort } = dish;
+  updateDishDb(id, name, type, minimumInterval, last, numAccompanimentsRequired, allowableAccompanimentTypeEntityIds, prepEffort, prepTime, cleanupEffort);
 
   response.sendStatus(200);
 
