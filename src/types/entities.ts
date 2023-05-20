@@ -32,13 +32,6 @@ export enum DishType {
   Veggie = 'veggie',
 }
 
-export enum RequiredAccompanimentFlags {
-  None = 0,
-  Side = 1,
-  Salad = 2,
-  Veggie = 4,
-}
-
 export type DishEntity = IDish;
 export type AccompanimentDishEntity = IDish;
 export type MainDishEntity = IMainDish;

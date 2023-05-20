@@ -36,11 +36,11 @@ import {
   getAllAccompanimentsFromDb,
   getAccompanimentsFromDb,
   getAccompanimentTypesFromDb,
-  upgradeDbSchema,
   // deleteDishFromDb
 } from './dbInterface';
 
 import { version } from '../version';
+import { upgradeDbSchema } from './dbSchemaUpgrade';
 
 export const getVersion = (request: Request, response: Response, next: any) => {
   console.log('getVersion');

@@ -1,4 +1,12 @@
-import { DishType, RequiredAccompanimentFlags } from './entities';
+import { DishType } from './entities';
+
+export enum RequiredAccompanimentFlags {
+  None = 0,
+  Side = 1,
+  Salad = 2,
+  Veggie = 4,
+}
+
 
 export interface OldDishEntity {
   id: string;
