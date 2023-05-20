@@ -43,44 +43,6 @@ export type DishEntity = IDish;
 export type AccompanimentDishEntity = IDish;
 export type MainDishEntity = IMainDish;
 
-export interface OldDishEntity {
-  id: string;
-  userId: string;
-  name: string;
-  type: DishType;
-  minimumInterval: number;
-  last: Date | null;
-  accompanimentRequired?: RequiredAccompanimentFlags;   // only applies when dishType === DishType.Main
-  // ingredients: IngredientEntity[];
-  ingredientIds: string[];
-  prepEffort: number;
-  prepTime: number;
-  cleanupEffort: number;
-}
-
-export interface OldBaseDishEntity {
-  id: string;
-  userId: string;
-  name: string;
-  type: DishType;
-  minimumInterval: number;
-  last: Date | null;
-  // ingredients: IngredientEntity[];
-  ingredientIds: string[];
-  prepEffort: number;
-  prepTime: number;
-  cleanupEffort: number;
-
-}
-
-export interface OldMainDishEntity extends OldBaseDishEntity {
-  accompanimentRequired: RequiredAccompanimentFlags;
-}
-
-
-
-
-
 
 export interface AccompanimentTypeEntity {
   id: string;
