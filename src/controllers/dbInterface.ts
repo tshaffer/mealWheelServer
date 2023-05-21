@@ -1,5 +1,6 @@
 import { isArray } from 'lodash';
 import { Document } from 'mongoose';
+import SuggestedAccompanimentTypeForMain from '../models/SuggestedAccompanimentTypeForMain';
 import AccompanimentType from '../models/AccompanimentType';
 
 import { MainModel, AccompanimentModel } from '../models/DishModels';
@@ -14,6 +15,7 @@ import {
   IngredientEntity,
   IngredientInDishEntity,
   AccompanimentTypeEntity,
+  SuggestedAccompanimentTypeForMainEntity,
 } from '../types';
 
 
@@ -489,6 +491,39 @@ export const deleteIngredientFromDishDb = (
     console.log('Ingredient deleted from dish');
   }).catch((error: any) => {
     console.log('Ingredient deletion from dish failed: ', error);
+  });
+}
+
+export const suggestedAccompanimentTypeForMain = (
+  suggestedAccompanimentTypeForMainEntity: SuggestedAccompanimentTypeForMainEntity)
+  : Promise<Document | void> => {
+  return SuggestedAccompanimentTypeForMain.create(suggestedAccompanimentTypeForMainEntity)
+    .then((suggestedAccompanimentTypeForMainEntityDoc: Document) => {
+      return Promise.resolve(suggestedAccompanimentTypeForMainEntityDoc);
+    }).catch((err: any) => {
+      if (err.name === 'MongoError' && err.code === 11000) {
+        console.log('Duplicate key error in createIngredientDocument: ', suggestedAccompanimentTypeForMainEntity);
+      }
+      // return Promise.reject(err);
+      return Promise.resolve();
+    });
+}
+
+const getSuggestedAccompanimentTypesForMain = (dishId: string): Promise<SuggestedAccompanimentTypeForMainEntity[]> => {
+
+  const query = SuggestedAccompanimentTypeForMain.find({ dishId });
+
+  const promise: Promise<Document[]> = query.exec();
+
+  return promise.then((suggestedAccompanimentTypesForMainDocuments: Document[]) => {
+
+    const suggestedAccompanimentTypeForMainEntities: SuggestedAccompanimentTypeForMainEntity[] = suggestedAccompanimentTypesForMainDocuments.map((suggestedAccompanimentTypeForMainDocuments: any) => {
+      const suggestedAccompanimentTypeForMainEntity: SuggestedAccompanimentTypeForMainEntity = suggestedAccompanimentTypeForMainDocuments.toObject();
+      return suggestedAccompanimentTypeForMainEntity;
+    });
+
+    return Promise.resolve(suggestedAccompanimentTypeForMainEntities);
+
   });
 }
 

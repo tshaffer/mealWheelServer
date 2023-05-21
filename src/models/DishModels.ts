@@ -23,7 +23,7 @@ const BaseDishModel = mongoose.model('BaseDish', baseDishSchema);
 
 const mainDishSchema = new Schema({
   numAccompanimentsRequired: { type: Number, required: true },
-  allowableAccompanimentTypeEntityIds: { type: [String], required: true },
+  allowableAccompanimentTypeEntityIds: { type: [String], required: true },    // TEDTODO - obsolete
 });
 
 export const AccompanimentModel = mongoose.model('BaseDish', baseDishSchema);
