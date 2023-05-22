@@ -15,7 +15,7 @@ import {
   IngredientEntity,
   IngredientInDishEntity,
   AccompanimentTypeEntity,
-  SuggestedAccompanimentTypeForMainEntity,
+  SuggestedAccompanimentTypeForMainEntityDb,
 } from '../types';
 
 
@@ -78,25 +78,25 @@ export const updateDishDb = (
   prepTime: number,
   cleanupEffort: number,
 ): void => {
-  MainModel.find({ id, }
-    , (err, dishDocs: any) => {
-      if (err) {
-        console.log(err);
-      } else
-        if (isArray(dishDocs) && dishDocs.length === 1) {
-          const dishDoc: any = dishDocs[0];
-          (dishDoc as MainDishEntity).name = name;
-          // (dishDoc as MainDishEntity).type = type;   TEDTODO!!!!
-          (dishDoc as MainDishEntity).minimumInterval = minimumInterval,
-            (dishDoc as MainDishEntity).last = last,
-            (dishDoc as MainDishEntity).numAccompanimentsRequired = numAccompanimentsRequired;
-          (dishDoc as MainDishEntity).allowableAccompanimentTypeEntityIds = allowableAccompanimentTypeEntityIds;
-          (dishDoc as MainDishEntity).prepEffort = prepEffort;
-          (dishDoc as MainDishEntity).prepTime = prepTime;
-          (dishDoc as MainDishEntity).cleanupEffort = cleanupEffort;
-          dishDoc.save();
-        }
-    });
+  // MainModel.find({ id, }
+  //   , (err, dishDocs: any) => {
+  //     if (err) {
+  //       console.log(err);
+  //     } else
+  //       if (isArray(dishDocs) && dishDocs.length === 1) {
+  //         const dishDoc: any = dishDocs[0];
+  //         (dishDoc as MainDishEntity).name = name;
+  //         // (dishDoc as MainDishEntity).type = type;   TEDTODO!!!!
+  //         (dishDoc as MainDishEntity).minimumInterval = minimumInterval,
+  //           (dishDoc as MainDishEntity).last = last,
+  //           (dishDoc as MainDishEntity).numAccompanimentsRequired = numAccompanimentsRequired;
+  //         (dishDoc as MainDishEntity).allowableAccompanimentTypeEntityIds = allowableAccompanimentTypeEntityIds;
+  //         (dishDoc as MainDishEntity).prepEffort = prepEffort;
+  //         (dishDoc as MainDishEntity).prepTime = prepTime;
+  //         (dishDoc as MainDishEntity).cleanupEffort = cleanupEffort;
+  //         dishDoc.save();
+  //       }
+  //   });
 }
 
 // export const deleteDishFromDb = (id: string): void => {
@@ -495,21 +495,21 @@ export const deleteIngredientFromDishDb = (
 }
 
 export const suggestedAccompanimentTypeForMain = (
-  suggestedAccompanimentTypeForMainEntity: SuggestedAccompanimentTypeForMainEntity)
+  SuggestedAccompanimentTypeForMainEntityDb: SuggestedAccompanimentTypeForMainEntityDb)
   : Promise<Document | void> => {
-  return SuggestedAccompanimentTypeForMain.create(suggestedAccompanimentTypeForMainEntity)
-    .then((suggestedAccompanimentTypeForMainEntityDoc: Document) => {
-      return Promise.resolve(suggestedAccompanimentTypeForMainEntityDoc);
+  return SuggestedAccompanimentTypeForMain.create(SuggestedAccompanimentTypeForMainEntityDb)
+    .then((SuggestedAccompanimentTypeForMainEntityDbDoc: Document) => {
+      return Promise.resolve(SuggestedAccompanimentTypeForMainEntityDbDoc);
     }).catch((err: any) => {
       if (err.name === 'MongoError' && err.code === 11000) {
-        console.log('Duplicate key error in createIngredientDocument: ', suggestedAccompanimentTypeForMainEntity);
+        console.log('Duplicate key error in createIngredientDocument: ', SuggestedAccompanimentTypeForMainEntityDb);
       }
       // return Promise.reject(err);
       return Promise.resolve();
     });
 }
 
-const getSuggestedAccompanimentTypesForMain = (dishId: string): Promise<SuggestedAccompanimentTypeForMainEntity[]> => {
+const getSuggestedAccompanimentTypesForMain = (dishId: string): Promise<SuggestedAccompanimentTypeForMainEntityDb[]> => {
 
   const query = SuggestedAccompanimentTypeForMain.find({ dishId });
 
@@ -517,9 +517,9 @@ const getSuggestedAccompanimentTypesForMain = (dishId: string): Promise<Suggeste
 
   return promise.then((suggestedAccompanimentTypesForMainDocuments: Document[]) => {
 
-    const suggestedAccompanimentTypeForMainEntities: SuggestedAccompanimentTypeForMainEntity[] = suggestedAccompanimentTypesForMainDocuments.map((suggestedAccompanimentTypeForMainDocuments: any) => {
-      const suggestedAccompanimentTypeForMainEntity: SuggestedAccompanimentTypeForMainEntity = suggestedAccompanimentTypeForMainDocuments.toObject();
-      return suggestedAccompanimentTypeForMainEntity;
+    const suggestedAccompanimentTypeForMainEntities: SuggestedAccompanimentTypeForMainEntityDb[] = suggestedAccompanimentTypesForMainDocuments.map((suggestedAccompanimentTypeForMainDocuments: any) => {
+      const SuggestedAccompanimentTypeForMainEntityDb: SuggestedAccompanimentTypeForMainEntityDb = suggestedAccompanimentTypeForMainDocuments.toObject();
+      return SuggestedAccompanimentTypeForMainEntityDb;
     });
 
     return Promise.resolve(suggestedAccompanimentTypeForMainEntities);

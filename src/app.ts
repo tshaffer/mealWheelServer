@@ -35,6 +35,7 @@ import {
   getAccompaniments,
   getAccompanimentTypes,
   upgradeSchema,
+  upgradeSchemaGen2ToGen3,
   // deleteDish,
 } from './controllers';
 // import { getIngredientsByDish } from './controllers/ingredients';
@@ -106,6 +107,7 @@ class App {
 
     // this.app.get('/api/v1/validate', validate);
     this.app.get('/api/v1/upgradeSchema', upgradeSchema);
+    this.app.get('/api/v1/upgradeSchemaGen2ToGen3', upgradeSchemaGen2ToGen3);
 
   }
 

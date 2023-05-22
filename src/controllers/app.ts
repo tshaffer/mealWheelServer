@@ -40,7 +40,7 @@ import {
 } from './dbInterface';
 
 import { version } from '../version';
-import { upgradeDbSchema } from './dbSchemaUpgrade';
+import { upgradeDbSchema, upgradeDbSchemaGen2ToGen3 } from './dbSchemaUpgrade';
 
 export const getVersion = (request: Request, response: Response, next: any) => {
   console.log('getVersion');
@@ -318,3 +318,7 @@ export const upgradeSchema = (request: Request, response: Response, next: any) =
   response.sendStatus(200);
 }
 
+export const upgradeSchemaGen2ToGen3 = (request: Request, response: Response, next: any) => {
+  upgradeDbSchemaGen2ToGen3();
+  response.sendStatus(200);
+}

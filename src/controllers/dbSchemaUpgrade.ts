@@ -3,6 +3,12 @@ import Olddish from "../models/Olddish";
 import { OldBaseDishEntity, AccompanimentDishEntity, DishType, OldMainDishEntity, RequiredAccompanimentFlags, MainDishEntity } from "../types";
 import { createMainDocument, createAccompanimentDocument } from "./dbInterface";
 
+export const upgradeDbSchemaGen2ToGen3 = (
+): Promise<any> => {
+  console.log('upgradeDbSchemaGen2ToGen3');
+  return Promise.resolve();
+};
+
 export const upgradeDbSchema = (
   ): Promise<any> => {
     console.log('upgradeDbSchema');
@@ -32,74 +38,74 @@ export const upgradeDbSchema = (
     const mainDishes: MainDishEntity[] = [];
     const accompanimentDishes: AccompanimentDishEntity[] = [];
   
-    oldDishDocuments.forEach((oldDishDocument: OldBaseDishEntity) => {
-      if (oldDishDocument.type === DishType.Main) {
+    // oldDishDocuments.forEach((oldDishDocument: OldBaseDishEntity) => {
+    //   if (oldDishDocument.type === DishType.Main) {
   
-        const oldMain: OldMainDishEntity = oldDishDocument as unknown as OldMainDishEntity;
-        const requiresSide: boolean = isNil(oldMain.accompanimentRequired) ? false : (oldMain.accompanimentRequired & RequiredAccompanimentFlags.Side) !== 0;
-        const requiresSalad = isNil(oldMain.accompanimentRequired) ? false : (oldMain.accompanimentRequired & RequiredAccompanimentFlags.Salad) !== 0;
-        const requiresVeggie = isNil(oldMain.accompanimentRequired) ? false : (oldMain.accompanimentRequired & RequiredAccompanimentFlags.Veggie) !== 0;
+    //     const oldMain: OldMainDishEntity = oldDishDocument as unknown as OldMainDishEntity;
+    //     const requiresSide: boolean = isNil(oldMain.accompanimentRequired) ? false : (oldMain.accompanimentRequired & RequiredAccompanimentFlags.Side) !== 0;
+    //     const requiresSalad = isNil(oldMain.accompanimentRequired) ? false : (oldMain.accompanimentRequired & RequiredAccompanimentFlags.Salad) !== 0;
+    //     const requiresVeggie = isNil(oldMain.accompanimentRequired) ? false : (oldMain.accompanimentRequired & RequiredAccompanimentFlags.Veggie) !== 0;
         
-        let numAccompanimentsRequired = 0;
-        const allowableAccompanimentTypeEntityIds: string[] = [];
+    //     let numAccompanimentsRequired = 0;
+    //     const allowableAccompanimentTypeEntityIds: string[] = [];
   
-        if (requiresSide) {
-          numAccompanimentsRequired++;
-          allowableAccompanimentTypeEntityIds.push('side');
-        }
-        if (requiresSalad) {
-          numAccompanimentsRequired++;
-          allowableAccompanimentTypeEntityIds.push('salad');
-        }
-        if (requiresVeggie) {
-          numAccompanimentsRequired++;
-          allowableAccompanimentTypeEntityIds.push('veggie');
-        }
-        const mainEntity: MainDishEntity = {
-          type: 'main',
-          id: oldDishDocument.id,
-          userId: oldDishDocument.userId,
-          name: oldDishDocument.name,
-          minimumInterval: oldDishDocument.minimumInterval,
-          last: oldDishDocument.last,
-          ingredientIds: oldDishDocument.ingredientIds,
-          prepEffort: oldDishDocument.prepEffort,
-          prepTime: oldDishDocument.prepTime,
-          cleanupEffort: oldDishDocument.cleanupEffort,
-          numAccompanimentsRequired,
-          allowableAccompanimentTypeEntityIds,
-        }
-        mainDishes.push(mainEntity);
-      } else {
-        let type: string = '';
-        switch (oldDishDocument.type) {
-          case DishType.Salad:
-            type = 'salad';
-            break;
-          case DishType.Side:
-            type = 'side';
-            break;
-          case DishType.Veggie:
-            type = 'veggie';
-            break;
-          default:
-            debugger;
-        }
-        const accompanimentDishEntity: AccompanimentDishEntity = {
-          type,
-          id: oldDishDocument.id,
-          userId: oldDishDocument.userId,
-          name: oldDishDocument.name,
-          minimumInterval: oldDishDocument.minimumInterval,
-          last: oldDishDocument.last,
-          ingredientIds: oldDishDocument.ingredientIds,
-          prepEffort: oldDishDocument.prepEffort,
-          prepTime: oldDishDocument.prepTime,
-          cleanupEffort: oldDishDocument.cleanupEffort,
-        }
-        accompanimentDishes.push(accompanimentDishEntity);
-      }
-    });
+    //     if (requiresSide) {
+    //       numAccompanimentsRequired++;
+    //       allowableAccompanimentTypeEntityIds.push('side');
+    //     }
+    //     if (requiresSalad) {
+    //       numAccompanimentsRequired++;
+    //       allowableAccompanimentTypeEntityIds.push('salad');
+    //     }
+    //     if (requiresVeggie) {
+    //       numAccompanimentsRequired++;
+    //       allowableAccompanimentTypeEntityIds.push('veggie');
+    //     }
+    //     const mainEntity: MainDishEntity = {
+    //       type: 'main',
+    //       id: oldDishDocument.id,
+    //       userId: oldDishDocument.userId,
+    //       name: oldDishDocument.name,
+    //       minimumInterval: oldDishDocument.minimumInterval,
+    //       last: oldDishDocument.last,
+    //       ingredientIds: oldDishDocument.ingredientIds,
+    //       prepEffort: oldDishDocument.prepEffort,
+    //       prepTime: oldDishDocument.prepTime,
+    //       cleanupEffort: oldDishDocument.cleanupEffort,
+    //       numAccompanimentsRequired,
+    //       allowableAccompanimentTypeEntityIds,
+    //     }
+    //     mainDishes.push(mainEntity);
+    //   } else {
+    //     let type: string = '';
+    //     switch (oldDishDocument.type) {
+    //       case DishType.Salad:
+    //         type = 'salad';
+    //         break;
+    //       case DishType.Side:
+    //         type = 'side';
+    //         break;
+    //       case DishType.Veggie:
+    //         type = 'veggie';
+    //         break;
+    //       default:
+    //         debugger;
+    //     }
+    //     const accompanimentDishEntity: AccompanimentDishEntity = {
+    //       type,
+    //       id: oldDishDocument.id,
+    //       userId: oldDishDocument.userId,
+    //       name: oldDishDocument.name,
+    //       minimumInterval: oldDishDocument.minimumInterval,
+    //       last: oldDishDocument.last,
+    //       ingredientIds: oldDishDocument.ingredientIds,
+    //       prepEffort: oldDishDocument.prepEffort,
+    //       prepTime: oldDishDocument.prepTime,
+    //       cleanupEffort: oldDishDocument.cleanupEffort,
+    //     }
+    //     accompanimentDishes.push(accompanimentDishEntity);
+    //   }
+    // });
   
     return {
       mainDishes,
