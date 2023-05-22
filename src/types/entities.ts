@@ -1,6 +1,6 @@
 import { MealStatus } from '../types';
 
-interface IDish {
+export interface IDish {
   type: string;
   id: string;
   userId: string;

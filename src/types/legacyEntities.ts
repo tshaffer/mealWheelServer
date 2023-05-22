@@ -1,4 +1,4 @@
-import { DishType } from './entities';
+import { DishType, IDish } from './entities';
 
 export enum RequiredAccompanimentFlags {
   None = 0,
@@ -40,3 +40,9 @@ export interface OldMainDishEntity extends OldBaseDishEntity {
   accompanimentRequired: RequiredAccompanimentFlags;
 }
 
+interface IMainDishGen2 extends IDish {
+  numAccompanimentsRequired: number,
+  allowableAccompanimentTypeEntityIds: string[],
+}
+
+export type MainDishEntityGen2 = IMainDishGen2;

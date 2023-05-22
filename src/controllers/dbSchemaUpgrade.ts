@@ -1,13 +1,38 @@
 import { isNil } from "lodash";
 import Olddish from "../models/Olddish";
-import { OldBaseDishEntity, AccompanimentDishEntity, DishType, OldMainDishEntity, RequiredAccompanimentFlags, MainDishEntity } from "../types";
+import Gen2dish from '../models/Gen2dish';
+import { OldBaseDishEntity, AccompanimentDishEntity, DishType, OldMainDishEntity, RequiredAccompanimentFlags, MainDishEntity, MainDishEntityGen2 } from "../types";
 import { createMainDocument, createAccompanimentDocument } from "./dbInterface";
 
 export const upgradeDbSchemaGen2ToGen3 = (
 ): Promise<any> => {
   console.log('upgradeDbSchemaGen2ToGen3');
-  return Promise.resolve();
+  const promise: Promise<MainDishEntityGen2[]> = getGen2DishesFromDb();
+  return promise.then( (mainDishEntitiesGen2) => {
+    console.log('promise resolved in getGen2DishesFromDb');
+    console.log(mainDishEntitiesGen2);
+    return Promise.resolve(mainDishEntitiesGen2);
+  })
 };
+
+const getGen2DishesFromDb = (): Promise<MainDishEntityGen2[]> => {
+  const query = Gen2dish.find({});
+  return getGen2DishesFromDbHelper(query);
+}
+
+const getGen2DishesFromDbHelper = (query: any): Promise<MainDishEntityGen2[]> => {
+  
+  const promise: Promise<Document[]> = query.exec();
+  return promise.then((dishDocuments: Document[]) => {
+
+    const dishEntities: MainDishEntityGen2[] = dishDocuments.map((dishDocument: any) => {
+      const dishEntity: MainDishEntityGen2 = dishDocument.toObject();
+      return dishEntity;
+    });
+
+    return Promise.resolve(dishEntities);
+  });
+}
 
 export const upgradeDbSchema = (
   ): Promise<any> => {
