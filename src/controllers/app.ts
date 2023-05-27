@@ -10,7 +10,8 @@ import {
   IngredientEntity,
   IngredientInDishEntity,
   MainDishEntity,
-  ScheduledMealEntity
+  ScheduledMealEntity,
+  SuggestedAccompanimentTypeForMainEntity
 } from '../types';
 
 import {
@@ -36,6 +37,8 @@ import {
   getAllAccompanimentsFromDb,
   getAccompanimentsFromDb,
   getAccompanimentTypesFromDb,
+  getSuggestedAccompanimentTypesForMains,
+  createSuggestedAccompanimentTypeForMain,
   // deleteDishFromDb
 } from './dbInterface';
 
@@ -310,6 +313,33 @@ export const getAccompanimentTypes = (request: Request, response: Response) => {
   return getAccompanimentTypesFromDb(userId)
     .then((accompanimentTypes: AccompanimentTypeEntity[]) => {
       response.json(accompanimentTypes);
+    });
+}
+
+export const addSuggestedAccompanimentTypeForMain = (request: Request, response: Response, next: any) => {
+
+  console.log('addSuggestedAccompanimentTypeForMain');
+  // console.log(request);
+  console.log(Object.keys(request));
+  console.log(request.body);
+
+  const { mainDishId, allowableAccompanimentTypeEntityId, count } = request.body;
+  const suggestedAccompanimentTypeForMainEntity: SuggestedAccompanimentTypeForMainEntity = {
+    mainDishId, allowableAccompanimentTypeEntityId, count
+  };
+  createSuggestedAccompanimentTypeForMain(suggestedAccompanimentTypeForMainEntity);
+
+  response.sendStatus(200);
+}
+
+export const getSuggestedAccompanimentTypesForMain = (request: Request, response: Response) => {
+
+  console.log('getSuggestedAccompanimentTypesForMain');
+
+  return getSuggestedAccompanimentTypesForMains()
+    .then((suggestedAccompanimentTypeForMainEntities: SuggestedAccompanimentTypeForMainEntity[]) => {
+      console.log('promise resolved in getSuggestedAccompanimentTypesForMain');
+      response.json(suggestedAccompanimentTypeForMainEntities);
     });
 }
 

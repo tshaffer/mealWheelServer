@@ -76,5 +76,5 @@ export interface IngredientInDishEntity {
 export interface SuggestedAccompanimentTypeForMainEntity {
   mainDishId: string,
   allowableAccompanimentTypeEntityId: string,
-  count: number,
+  count: string,
 }

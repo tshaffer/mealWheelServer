@@ -35,6 +35,8 @@ import {
   getAccompaniments,
   getAccompanimentTypes,
   upgradeSchema,
+  getSuggestedAccompanimentTypesForMain,
+  addSuggestedAccompanimentTypeForMain,
   // deleteDish,
 } from './controllers';
 // import { getIngredientsByDish } from './controllers/ingredients';
@@ -85,9 +87,12 @@ class App {
     this.app.get('/api/v1/mains', getMains);
     this.app.get('/api/v1/allAccompaniments', getAllAccompaniments);
     this.app.get('/api/v1/accompaniments', getAccompaniments);
+    this.app.get('/api/v1/suggestedAccompanimentTypesForMain', getSuggestedAccompanimentTypesForMain);
 
     this.app.post('/api/v1/addMain', addMain);
     this.app.post('/api/v1/addAccompaniment', addAccompaniment);
+    this.app.post('/api/v1/addSuggestedAccompanimentTypeForMain', addSuggestedAccompanimentTypeForMain);
+
     // this.app.post('/api/v1/addDish', addDish);
     this.app.post('/api/v1/addIngredient', addIngredient)
     // this.app.post('/api/v1/addIngredientToDish', addIngredientToDish)

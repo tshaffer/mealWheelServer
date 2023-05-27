@@ -1,6 +1,6 @@
 import { isArray } from 'lodash';
 import { Document } from 'mongoose';
-import SuggestedAccompanimentTypeForMain from '../models/SuggestedAccompanimentTypeForMain';
+import SuggestedAccompanimentTypesForMain from '../models/SuggestedAccompanimentTypesForMain';
 import AccompanimentType from '../models/AccompanimentType';
 
 import { MainModel, AccompanimentModel } from '../models/DishModels';
@@ -494,13 +494,20 @@ export const deleteIngredientFromDishDb = (
   });
 }
 
-export const suggestedAccompanimentTypeForMain = (
+export const createSuggestedAccompanimentTypeForMain = (
   suggestedAccompanimentTypeForMainEntity: SuggestedAccompanimentTypeForMainEntity)
   : Promise<Document | void> => {
-  return SuggestedAccompanimentTypeForMain.create(suggestedAccompanimentTypeForMainEntity)
+  console.log('createSuggestedAccompanimentTypeForMain invoked');
+  console.log(suggestedAccompanimentTypeForMainEntity);
+  return SuggestedAccompanimentTypesForMain.create(suggestedAccompanimentTypeForMainEntity)
     .then((suggestedAccompanimentTypeForMainEntityDoc: Document) => {
+      console.log('createSuggestedAccompanimentTypeForMain success');
+      console.log(suggestedAccompanimentTypeForMainEntityDoc);
       return Promise.resolve(suggestedAccompanimentTypeForMainEntityDoc);
     }).catch((err: any) => {
+      console.log('createSuggestedAccompanimentTypeForMain failure');
+      console.log(err.name);
+      console.log(err.code);
       if (err.name === 'MongoError' && err.code === 11000) {
         console.log('Duplicate key error in createIngredientDocument: ', suggestedAccompanimentTypeForMainEntity);
       }
@@ -509,15 +516,39 @@ export const suggestedAccompanimentTypeForMain = (
     });
 }
 
-const getSuggestedAccompanimentTypesForMain = (dishId: string): Promise<SuggestedAccompanimentTypeForMainEntity[]> => {
+// const getSuggestedAccompanimentTypesForMain = (dishId: string): Promise<SuggestedAccompanimentTypeForMainEntity[]> => {
 
-  const query = SuggestedAccompanimentTypeForMain.find({ dishId });
+//   const query = SuggestedAccompanimentTypesForMain.find({ dishId });
+
+//   const promise: Promise<Document[]> = query.exec();
+
+//   return promise.then((suggestedAccompanimentTypesForMainDocuments: Document[]) => {
+
+//     const suggestedAccompanimentTypeForMainEntities: SuggestedAccompanimentTypeForMainEntity[] = suggestedAccompanimentTypesForMainDocuments.map((suggestedAccompanimentTypeForMainDocuments: any) => {
+//       const suggestedAccompanimentTypeForMainEntity: SuggestedAccompanimentTypeForMainEntity = suggestedAccompanimentTypeForMainDocuments.toObject();
+//       return suggestedAccompanimentTypeForMainEntity;
+//     });
+
+//     return Promise.resolve(suggestedAccompanimentTypeForMainEntities);
+
+//   });
+// }
+
+export const getSuggestedAccompanimentTypesForMains = (): Promise<SuggestedAccompanimentTypeForMainEntity[]> => {
+
+  console.log('getSuggestedAccompanimentTypesForMains');
+
+  const query = SuggestedAccompanimentTypesForMain.find( { allowableAccompanimentTypeEntityId: "a-0" });
+  // const query = SuggestedAccompanimentTypesForMain.find( { });
 
   const promise: Promise<Document[]> = query.exec();
 
-  return promise.then((suggestedAccompanimentTypesForMainDocuments: Document[]) => {
+  return promise.then((suggestedAccompanimentTypeForMainDocuments: Document[]) => {
 
-    const suggestedAccompanimentTypeForMainEntities: SuggestedAccompanimentTypeForMainEntity[] = suggestedAccompanimentTypesForMainDocuments.map((suggestedAccompanimentTypeForMainDocuments: any) => {
+    console.log('getSuggestedAccompanimentTypesForMains - return from query');
+    console.log(suggestedAccompanimentTypeForMainDocuments);
+
+    const suggestedAccompanimentTypeForMainEntities: SuggestedAccompanimentTypeForMainEntity[] = suggestedAccompanimentTypeForMainDocuments.map((suggestedAccompanimentTypeForMainDocuments: any) => {
       const suggestedAccompanimentTypeForMainEntity: SuggestedAccompanimentTypeForMainEntity = suggestedAccompanimentTypeForMainDocuments.toObject();
       return suggestedAccompanimentTypeForMainEntity;
     });
