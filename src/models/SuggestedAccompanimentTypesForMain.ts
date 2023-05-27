@@ -8,7 +8,7 @@ const SuggestedAccompanimentTypesForMainSchema = new Schema(
   {
     mainDishId: { type: String, required: true },
     allowableAccompanimentTypeEntityId: { type: String, required: true },
-    count: { type: String, required: true },
+    count: { type: Number, required: true },
   },
 );
 
