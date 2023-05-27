@@ -22,8 +22,8 @@ const baseDishSchema = new Schema(
 const BaseDishModel = mongoose.model('BaseDish', baseDishSchema);
 
 const mainDishSchema = new Schema({
-  numAccompanimentsRequired: { type: Number, required: true },
-  allowableAccompanimentTypeEntityIds: { type: [String], required: true },    // TEDTODO - obsolete
+  numSuggestedAccompaniments: { type: Number, required: true },
+  suggestedAccompanimentTypeEntityIds: { type: [String], required: true },    // TEDTODO - obsolete
 });
 
 export const AccompanimentModel = mongoose.model('BaseDish', baseDishSchema);
@@ -51,7 +51,7 @@ export const MainModel = BaseDishModel.discriminator('main', mainDishSchema);
 // export const MainDish = AccompanimentDish.discriminator('MainDish',
 //   new mongoose.Schema(
 //     {
-//       numAccompanimentsRequired: { type: Number, required: true },
+//       numSuggestedAccompaniments: { type: Number, required: true },
 //       allowableAccompanimentTypes: { type: [Number], required: true },
 //     },
 //     options));

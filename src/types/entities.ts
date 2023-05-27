@@ -14,15 +14,15 @@ interface IDish {
 }
 
 interface IMainDish extends IDish {
-  numAccompanimentsRequired: number,
-  allowableAccompanimentTypeEntityIds: string[],
+  numSuggestedAccompaniments: number,
+  suggestedAccompanimentTypeEntityIds: string[],
 }
 
 export enum MealWheelEntityType {
   Meal = 'meal',
   Dish = 'dish',
   Ingredient = 'ingredient',
-  IngredientInDish= 'ingredientInDish',
+  IngredientInDish = 'ingredientInDish',
 };
 
 export enum DishType {
@@ -75,6 +75,6 @@ export interface IngredientInDishEntity {
 
 export interface SuggestedAccompanimentTypeForMainEntity {
   mainDishId: string,
-  allowableAccompanimentTypeEntityId: string,
+  suggestedAccompanimentTypeEntityId: string,
   count: number,
 }

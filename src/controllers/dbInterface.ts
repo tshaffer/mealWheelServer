@@ -72,8 +72,8 @@ export const updateDishDb = (
   type: MainDishEntity,
   minimumInterval: number,
   last: Date | null,
-  numAccompanimentsRequired: number,
-  allowableAccompanimentTypeEntityIds: string[],
+  numSuggestedAccompaniments: number,
+  suggestedAccompanimentTypeEntityIds: string[],
   prepEffort: number,
   prepTime: number,
   cleanupEffort: number,
@@ -89,8 +89,8 @@ export const updateDishDb = (
           // (dishDoc as MainDishEntity).type = type;   TEDTODO!!!!
           (dishDoc as MainDishEntity).minimumInterval = minimumInterval,
             (dishDoc as MainDishEntity).last = last,
-            (dishDoc as MainDishEntity).numAccompanimentsRequired = numAccompanimentsRequired;
-          (dishDoc as MainDishEntity).allowableAccompanimentTypeEntityIds = allowableAccompanimentTypeEntityIds;
+            (dishDoc as MainDishEntity).numSuggestedAccompaniments = numSuggestedAccompaniments;
+          (dishDoc as MainDishEntity).suggestedAccompanimentTypeEntityIds = suggestedAccompanimentTypeEntityIds;
           (dishDoc as MainDishEntity).prepEffort = prepEffort;
           (dishDoc as MainDishEntity).prepTime = prepTime;
           (dishDoc as MainDishEntity).cleanupEffort = cleanupEffort;
@@ -538,8 +538,7 @@ export const getSuggestedAccompanimentTypesForMains = (): Promise<SuggestedAccom
 
   console.log('getSuggestedAccompanimentTypesForMains');
 
-  const query = SuggestedAccompanimentTypesForMain.find( { allowableAccompanimentTypeEntityId: "a-0" });
-  // const query = SuggestedAccompanimentTypesForMain.find( { });
+  const query = SuggestedAccompanimentTypesForMain.find( { });
 
   const promise: Promise<Document[]> = query.exec();
 

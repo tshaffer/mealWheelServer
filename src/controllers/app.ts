@@ -200,8 +200,8 @@ export const updateDish = (request: Request, response: Response, next: any) => {
 
   const { dish } = request.body;
 
-  const { id, name, type, minimumInterval, last, numAccompanimentsRequired, allowableAccompanimentTypeEntityIds, prepEffort, prepTime, cleanupEffort } = dish;
-  updateDishDb(id, name, type, minimumInterval, last, numAccompanimentsRequired, allowableAccompanimentTypeEntityIds, prepEffort, prepTime, cleanupEffort);
+  const { id, name, type, minimumInterval, last, numSuggestedAccompaniments, suggestedAccompanimentTypeEntityIds, prepEffort, prepTime, cleanupEffort } = dish;
+  updateDishDb(id, name, type, minimumInterval, last, numSuggestedAccompaniments, suggestedAccompanimentTypeEntityIds, prepEffort, prepTime, cleanupEffort);
 
   response.sendStatus(200);
 
@@ -323,9 +323,9 @@ export const addSuggestedAccompanimentTypeForMain = (request: Request, response:
   console.log(Object.keys(request));
   console.log(request.body);
 
-  const { mainDishId, allowableAccompanimentTypeEntityId, count } = request.body;
+  const { mainDishId, suggestedAccompanimentTypeEntityId, count } = request.body;
   const suggestedAccompanimentTypeForMainEntity: SuggestedAccompanimentTypeForMainEntity = {
-    mainDishId, allowableAccompanimentTypeEntityId, count
+    mainDishId, suggestedAccompanimentTypeEntityId, count
   };
   createSuggestedAccompanimentTypeForMain(suggestedAccompanimentTypeForMainEntity);
 
