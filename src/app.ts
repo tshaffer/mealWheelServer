@@ -30,13 +30,14 @@ import {
   addMain,
   addAccompaniment,
   // getAccompanimentDishes,
-  getAllAccompaniments,
-  getMains,
-  getAccompaniments,
+  // getAllAccompaniments,
+  // getMains,
+  // getAccompaniments,
   getAccompanimentTypes,
   upgradeSchema,
   getSuggestedAccompanimentTypesForMain,
   addSuggestedAccompanimentTypeForMain,
+  getMains,
   // deleteDish,
 } from './controllers';
 // import { getIngredientsByDish } from './controllers/ingredients';
@@ -81,13 +82,14 @@ class App {
     this.app.get('/api/v1/accompanimentTypes', getAccompanimentTypes);
 
     this.app.get('/api/v1/dishes', getDishes);
+    this.app.get('/api/v1/mains', getMains);
+    this.app.get('/api/v1/suggestedAccompanimentTypesForMain', getSuggestedAccompanimentTypesForMain);
     // this.app.get('/api/v1/ingredients', getIngredients);
     // this.app.get('/api/v1/ingredientsByDish', getIngredientsByDish);
 
-    this.app.get('/api/v1/mains', getMains);
-    this.app.get('/api/v1/allAccompaniments', getAllAccompaniments);
-    this.app.get('/api/v1/accompaniments', getAccompaniments);
-    this.app.get('/api/v1/suggestedAccompanimentTypesForMain', getSuggestedAccompanimentTypesForMain);
+    // this.app.get('/api/v1/mains', getMains);
+    // this.app.get('/api/v1/allAccompaniments', getAllAccompaniments);
+    // this.app.get('/api/v1/accompaniments', getAccompaniments);
 
     this.app.post('/api/v1/addMain', addMain);
     this.app.post('/api/v1/addAccompaniment', addAccompaniment);

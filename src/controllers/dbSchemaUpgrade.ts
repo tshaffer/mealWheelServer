@@ -55,21 +55,21 @@ const generateNewDishesFromOldDishes = (oldDishDocuments: any[]) => {
         numSuggestedAccompaniments++;
         suggestedAccompanimentTypeEntityIds.push('veggie');
       }
-      const mainEntity: MainDishEntity = {
-        type: 'main',
-        id: oldDishDocument.id,
-        userId: oldDishDocument.userId,
-        name: oldDishDocument.name,
-        minimumInterval: oldDishDocument.minimumInterval,
-        last: oldDishDocument.last,
-        ingredientIds: oldDishDocument.ingredientIds,
-        prepEffort: oldDishDocument.prepEffort,
-        prepTime: oldDishDocument.prepTime,
-        cleanupEffort: oldDishDocument.cleanupEffort,
-        numSuggestedAccompaniments: numSuggestedAccompaniments,
-        suggestedAccompanimentTypeEntityIds: suggestedAccompanimentTypeEntityIds,
-      }
-      mainDishes.push(mainEntity);
+      // const mainEntity: MainDishEntity = {
+      //   type: 'main',
+      //   id: oldDishDocument.id,
+      //   userId: oldDishDocument.userId,
+      //   name: oldDishDocument.name,
+      //   minimumInterval: oldDishDocument.minimumInterval,
+      //   last: oldDishDocument.last,
+      //   ingredientIds: oldDishDocument.ingredientIds,
+      //   prepEffort: oldDishDocument.prepEffort,
+      //   prepTime: oldDishDocument.prepTime,
+      //   cleanupEffort: oldDishDocument.cleanupEffort,
+      //   // numSuggestedAccompaniments: numSuggestedAccompaniments,
+      //   // suggestedAccompanimentTypeEntityIds: suggestedAccompanimentTypeEntityIds,
+      // }
+      // mainDishes.push(mainEntity);
     } else {
       let type: string = '';
       switch (oldDishDocument.type) {

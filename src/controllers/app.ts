@@ -11,7 +11,8 @@ import {
   IngredientInDishEntity,
   MainDishEntity,
   ScheduledMealEntity,
-  SuggestedAccompanimentTypeForMainEntity
+  SuggestedAccompanimentTypeForMainEntityInDb,
+  SuggestedAccompanimentTypeForMainSpec
 } from '../types';
 
 import {
@@ -37,7 +38,7 @@ import {
   getAllAccompanimentsFromDb,
   getAccompanimentsFromDb,
   getAccompanimentTypesFromDb,
-  getSuggestedAccompanimentTypesForMains,
+  getSuggestedAccompanimentTypesForMains as getSuggestedAccompanimentTypesForMainsFromDb,
   createSuggestedAccompanimentTypeForMain,
   // deleteDishFromDb
 } from './dbInterface';
@@ -128,43 +129,105 @@ export const getDishes = (request: Request, response: Response) => {
 }
 
 export const getMains = (request: Request, response: Response) => {
-  const id: string = request.query.id as string;
+  const userId: string = request.query.id as string;
 
-  console.log('getMains');
-  console.log(id);
+  console.log('getDishes');
+  console.log(userId);
 
-  return getMainDishesFromDb(id)
-    .then((dishEntities: AccompanimentDishEntity[]) => {
-      response.json(dishEntities);
+  const mainDishEntitiesPromise: Promise<MainDishEntity[]> = getDishesFromDb(userId);
+  const suggestedAccompanimentTypeForMainEntityInDbPromise: Promise<SuggestedAccompanimentTypeForMainEntityInDb[]> = getSuggestedAccompanimentTypesForMainsFromDb();
+
+  return Promise.all([mainDishEntitiesPromise, suggestedAccompanimentTypeForMainEntityInDbPromise])
+    .then((values) => {
+      const rawDishEntities: DishEntity[] = values[0];
+      const suggestedAccompanimentTypesForMainsFromDb: SuggestedAccompanimentTypeForMainEntityInDb[] = values[1];
+
+      const mainDishEntities: MainDishEntity[] = [];
+
+      rawDishEntities.forEach((rawDishEntity: MainDishEntity) => {
+
+        const suggestedAccompanimentTypeSpecs: SuggestedAccompanimentTypeForMainSpec[] = [];
+
+        const mainDishId = rawDishEntity.id;
+        suggestedAccompanimentTypesForMainsFromDb.forEach((suggestedAccompanimentTypeForMainsFromDb: SuggestedAccompanimentTypeForMainEntityInDb) => {
+          if (suggestedAccompanimentTypeForMainsFromDb.mainDishId === mainDishId) {
+            const suggestedAccompanimentTypeForMainSpec: SuggestedAccompanimentTypeForMainSpec = {
+              suggestedAccompanimentTypeEntityId: suggestedAccompanimentTypeForMainsFromDb.suggestedAccompanimentTypeEntityId,
+              count: suggestedAccompanimentTypeForMainsFromDb.count,
+            };
+            suggestedAccompanimentTypeSpecs.push(suggestedAccompanimentTypeForMainSpec);
+          }
+        });
+
+        const { type, id, userId, name, minimumInterval, last, ingredientIds, prepEffort, prepTime, cleanupEffort } = rawDishEntity;
+        const mainDishEntity: MainDishEntity = {
+          type,
+          id,
+          userId,
+          name,
+          minimumInterval,
+          last,
+          ingredientIds,
+          prepEffort,
+          prepTime,
+          cleanupEffort,
+          suggestedAccompanimentTypeSpecs,
+        };
+        mainDishEntities.push(mainDishEntity);
+      })
+      response.json(mainDishEntities);
     });
 }
 
-export const getAccompaniments = (request: Request, response: Response) => {
-  const id: string = request.query.id as string;
-  const accompanimentType: string = request.query.type as string;
+export const getSuggestedAccompanimentTypesForMain = (request: Request, response: Response) => {
 
-  console.log('getAccompaniments');
-  console.log(id);
-  console.log('accompanimentType');
-  console.log(accompanimentType);
+  console.log('getSuggestedAccompanimentTypesForMain');
 
-  return getAccompanimentsFromDb(id, accompanimentType)
-    .then((dishEntities: AccompanimentDishEntity[]) => {
-      response.json(dishEntities);
+  return getSuggestedAccompanimentTypesForMainsFromDb()
+    .then((suggestedAccompanimentTypeForMainEntities: SuggestedAccompanimentTypeForMainEntityInDb[]) => {
+      console.log('promise resolved in getSuggestedAccompanimentTypesForMain');
+      response.json(suggestedAccompanimentTypeForMainEntities);
     });
 }
 
-export const getAllAccompaniments = (request: Request, response: Response) => {
-  const id: string = request.query.id as string;
+// export const getMains = (request: Request, response: Response) => {
+//   const id: string = request.query.id as string;
 
-  console.log('getAllAccompaniments');
-  console.log(id);
+//   console.log('getMains');
+//   console.log(id);
 
-  return getAllAccompanimentsFromDb(id)
-    .then((dishEntities: AccompanimentDishEntity[]) => {
-      response.json(dishEntities);
-    });
-}
+//   return getMainDishesFromDb(id)
+//     .then((dishEntities: AccompanimentDishEntity[]) => {
+//       response.json(dishEntities);
+//     });
+// }
+
+// export const getAccompaniments = (request: Request, response: Response) => {
+//   const id: string = request.query.id as string;
+//   const accompanimentType: string = request.query.type as string;
+
+//   console.log('getAccompaniments');
+//   console.log(id);
+//   console.log('accompanimentType');
+//   console.log(accompanimentType);
+
+//   return getAccompanimentsFromDb(id, accompanimentType)
+//     .then((dishEntities: AccompanimentDishEntity[]) => {
+//       response.json(dishEntities);
+//     });
+// }
+
+// export const getAllAccompaniments = (request: Request, response: Response) => {
+//   const id: string = request.query.id as string;
+
+//   console.log('getAllAccompaniments');
+//   console.log(id);
+
+//   return getAllAccompanimentsFromDb(id)
+//     .then((dishEntities: AccompanimentDishEntity[]) => {
+//       response.json(dishEntities);
+//     });
+// }
 
 export const addAccompaniment = (request: Request, response: Response, next: any) => {
 
@@ -200,8 +263,8 @@ export const updateDish = (request: Request, response: Response, next: any) => {
 
   const { dish } = request.body;
 
-  const { id, name, type, minimumInterval, last, numSuggestedAccompaniments, suggestedAccompanimentTypeEntityIds, prepEffort, prepTime, cleanupEffort } = dish;
-  updateDishDb(id, name, type, minimumInterval, last, numSuggestedAccompaniments, suggestedAccompanimentTypeEntityIds, prepEffort, prepTime, cleanupEffort);
+  const { id, name, type, minimumInterval, last, suggestedAccompanimentTypeSpecs, prepEffort, prepTime, cleanupEffort } = dish;
+  updateDishDb(id, name, type, minimumInterval, last, suggestedAccompanimentTypeSpecs, prepEffort, prepTime, cleanupEffort);
 
   response.sendStatus(200);
 
@@ -324,23 +387,12 @@ export const addSuggestedAccompanimentTypeForMain = (request: Request, response:
   console.log(request.body);
 
   const { mainDishId, suggestedAccompanimentTypeEntityId, count } = request.body;
-  const suggestedAccompanimentTypeForMainEntity: SuggestedAccompanimentTypeForMainEntity = {
+  const suggestedAccompanimentTypeForMainEntity: SuggestedAccompanimentTypeForMainEntityInDb = {
     mainDishId, suggestedAccompanimentTypeEntityId, count
   };
   createSuggestedAccompanimentTypeForMain(suggestedAccompanimentTypeForMainEntity);
 
   response.sendStatus(200);
-}
-
-export const getSuggestedAccompanimentTypesForMain = (request: Request, response: Response) => {
-
-  console.log('getSuggestedAccompanimentTypesForMain');
-
-  return getSuggestedAccompanimentTypesForMains()
-    .then((suggestedAccompanimentTypeForMainEntities: SuggestedAccompanimentTypeForMainEntity[]) => {
-      console.log('promise resolved in getSuggestedAccompanimentTypesForMain');
-      response.json(suggestedAccompanimentTypeForMainEntities);
-    });
 }
 
 export const upgradeSchema = (request: Request, response: Response, next: any) => {

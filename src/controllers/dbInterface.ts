@@ -15,7 +15,8 @@ import {
   IngredientEntity,
   IngredientInDishEntity,
   AccompanimentTypeEntity,
-  SuggestedAccompanimentTypeForMainEntity,
+  SuggestedAccompanimentTypeForMainEntityInDb,
+  SuggestedAccompanimentTypeForMainSpec,
 } from '../types';
 
 
@@ -72,8 +73,7 @@ export const updateDishDb = (
   type: MainDishEntity,
   minimumInterval: number,
   last: Date | null,
-  numSuggestedAccompaniments: number,
-  suggestedAccompanimentTypeEntityIds: string[],
+  suggestedAccompanimentTypeSpecs: SuggestedAccompanimentTypeForMainSpec[],
   prepEffort: number,
   prepTime: number,
   cleanupEffort: number,
@@ -86,11 +86,9 @@ export const updateDishDb = (
         if (isArray(dishDocs) && dishDocs.length === 1) {
           const dishDoc: any = dishDocs[0];
           (dishDoc as MainDishEntity).name = name;
-          // (dishDoc as MainDishEntity).type = type;   TEDTODO!!!!
           (dishDoc as MainDishEntity).minimumInterval = minimumInterval,
-            (dishDoc as MainDishEntity).last = last,
-            (dishDoc as MainDishEntity).numSuggestedAccompaniments = numSuggestedAccompaniments;
-          (dishDoc as MainDishEntity).suggestedAccompanimentTypeEntityIds = suggestedAccompanimentTypeEntityIds;
+          (dishDoc as MainDishEntity).last = last,
+          (dishDoc as MainDishEntity).suggestedAccompanimentTypeSpecs = suggestedAccompanimentTypeSpecs;
           (dishDoc as MainDishEntity).prepEffort = prepEffort;
           (dishDoc as MainDishEntity).prepTime = prepTime;
           (dishDoc as MainDishEntity).cleanupEffort = cleanupEffort;
@@ -495,7 +493,7 @@ export const deleteIngredientFromDishDb = (
 }
 
 export const createSuggestedAccompanimentTypeForMain = (
-  suggestedAccompanimentTypeForMainEntity: SuggestedAccompanimentTypeForMainEntity)
+  suggestedAccompanimentTypeForMainEntity: SuggestedAccompanimentTypeForMainEntityInDb)
   : Promise<Document | void> => {
   console.log('createSuggestedAccompanimentTypeForMain invoked');
   console.log(suggestedAccompanimentTypeForMainEntity);
@@ -534,21 +532,18 @@ export const createSuggestedAccompanimentTypeForMain = (
 //   });
 // }
 
-export const getSuggestedAccompanimentTypesForMains = (): Promise<SuggestedAccompanimentTypeForMainEntity[]> => {
+export const getSuggestedAccompanimentTypesForMains = (): Promise<SuggestedAccompanimentTypeForMainEntityInDb[]> => {
 
   console.log('getSuggestedAccompanimentTypesForMains');
 
-  const query = SuggestedAccompanimentTypesForMain.find( { });
+  const query = SuggestedAccompanimentTypesForMain.find({});
 
   const promise: Promise<Document[]> = query.exec();
 
   return promise.then((suggestedAccompanimentTypeForMainDocuments: Document[]) => {
 
-    console.log('getSuggestedAccompanimentTypesForMains - return from query');
-    console.log(suggestedAccompanimentTypeForMainDocuments);
-
-    const suggestedAccompanimentTypeForMainEntities: SuggestedAccompanimentTypeForMainEntity[] = suggestedAccompanimentTypeForMainDocuments.map((suggestedAccompanimentTypeForMainDocuments: any) => {
-      const suggestedAccompanimentTypeForMainEntity: SuggestedAccompanimentTypeForMainEntity = suggestedAccompanimentTypeForMainDocuments.toObject();
+    const suggestedAccompanimentTypeForMainEntities: SuggestedAccompanimentTypeForMainEntityInDb[] = suggestedAccompanimentTypeForMainDocuments.map((suggestedAccompanimentTypeForMainDocuments: any) => {
+      const suggestedAccompanimentTypeForMainEntity: SuggestedAccompanimentTypeForMainEntityInDb = suggestedAccompanimentTypeForMainDocuments.toObject();
       return suggestedAccompanimentTypeForMainEntity;
     });
 
