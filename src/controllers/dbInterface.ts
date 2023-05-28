@@ -168,13 +168,13 @@ export const getMainDishesFromDb = (userId: string): Promise<MainDishEntity[]> =
 //   return getAccompanimentDishesFromDbHelper(query);
 // }
 
-export const getAccompanimentsFromDb = (userId: string, accompanimentType: string): Promise<AccompanimentDishEntity[]> => {
-  const query = AccompanimentModel.find({
-    userId,
-    type: { $eq: accompanimentType },
-  });
-  return getAccompanimentDishesFromDbHelper(query);
-}
+// export const getAccompanimentsFromDb = (userId: string, accompanimentType: string): Promise<AccompanimentDishEntity[]> => {
+//   const query = AccompanimentModel.find({
+//     userId,
+//     type: { $eq: accompanimentType },
+//   });
+//   return getAccompanimentDishesFromDbHelper(query);
+// }
 
 export const getAllAccompanimentsFromDb = (userId: string): Promise<AccompanimentDishEntity[]> => {
   const query = AccompanimentModel.find({

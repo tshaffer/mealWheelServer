@@ -36,7 +36,7 @@ import {
   updateIngredientDb,
   createAccompanimentDocument as createAccompanimentDocument,
   getAllAccompanimentsFromDb,
-  getAccompanimentsFromDb,
+  // getAccompanimentsFromDb,
   getAccompanimentTypesFromDb,
   getSuggestedAccompanimentTypesForMains as getSuggestedAccompanimentTypesForMainsFromDb,
   createSuggestedAccompanimentTypeForMain,
@@ -116,19 +116,19 @@ export const deleteScheduledMeal = (request: Request, response: Response, next: 
   response.sendStatus(200);
 }
 
+// export const getDishes = (request: Request, response: Response) => {
+//   const id: string = request.query.id as string;
+
+//   console.log('getDishes');
+//   console.log(id);
+
+//   return getDishesFromDb(id)
+//     .then((dishEntities: DishEntity[]) => {
+//       response.json(dishEntities);
+//     });
+// }
+
 export const getDishes = (request: Request, response: Response) => {
-  const id: string = request.query.id as string;
-
-  console.log('getDishes');
-  console.log(id);
-
-  return getDishesFromDb(id)
-    .then((dishEntities: DishEntity[]) => {
-      response.json(dishEntities);
-    });
-}
-
-export const getMains = (request: Request, response: Response) => {
   const userId: string = request.query.id as string;
 
   console.log('getDishes');
