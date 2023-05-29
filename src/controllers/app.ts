@@ -40,6 +40,7 @@ import {
   getAccompanimentTypesFromDb,
   getSuggestedAccompanimentTypesForMains as getSuggestedAccompanimentTypesForMainsFromDb,
   createSuggestedAccompanimentTypeForMain,
+  createSuggestedAccompanimentTypesForMain,
   // deleteDishFromDb
 } from './dbInterface';
 
@@ -250,9 +251,12 @@ export const addMain = (request: Request, response: Response, next: any) => {
   const { dish, userId } = request.body;
 
   dish.userId = userId;
-  createMainDocument(dish);
+  createMainDocument(dish)
+    .then((dishDocument: any) => {
+      createSuggestedAccompanimentTypesForMain(dish.id, (dish as MainDishEntity).suggestedAccompanimentTypeSpecs);
+      response.sendStatus(200);
+    });
 
-  response.sendStatus(200);
 }
 
 export const updateDish = (request: Request, response: Response, next: any) => {

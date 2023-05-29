@@ -48,21 +48,21 @@ export const createAccompanimentDocument = (accompanimentEntity: AccompanimentDi
 
 export const createMainDocument = (mainEntity: MainDishEntity): Promise<Document | void> => {
   const getExistingDishesPromise: Promise<any> = getMainByNameFromDb(mainEntity.userId, mainEntity.name);
-  getExistingDishesPromise
+  return getExistingDishesPromise
     .then((existingDishes: any) => {
       // console.log('existingDishes: ', existingDishes);
+      return MainModel.create(mainEntity)
+        .then((dish: Document) => {
+          return Promise.resolve(dish);
+        }).catch((err: any) => {
+          if (err.name === 'MongoError' && err.code === 11000) {
+            console.log('Duplicate key error in createMainDishDocument: ', mainEntity);
+          }
+          // return Promise.reject(err);
+          return Promise.resolve();
+        });
     }).catch((err: any) => {
       console.log('getExistingDishes error: ', err);
-      return Promise.resolve();
-    });
-  return MainModel.create(mainEntity)
-    .then((dish: Document) => {
-      return Promise.resolve(dish);
-    }).catch((err: any) => {
-      if (err.name === 'MongoError' && err.code === 11000) {
-        console.log('Duplicate key error in createMainDishDocument: ', mainEntity);
-      }
-      // return Promise.reject(err);
       return Promise.resolve();
     });
 };
@@ -87,8 +87,8 @@ export const updateDishDb = (
           const dishDoc: any = dishDocs[0];
           (dishDoc as MainDishEntity).name = name;
           (dishDoc as MainDishEntity).minimumInterval = minimumInterval,
-          (dishDoc as MainDishEntity).last = last,
-          (dishDoc as MainDishEntity).suggestedAccompanimentTypeSpecs = suggestedAccompanimentTypeSpecs;
+            (dishDoc as MainDishEntity).last = last,
+            (dishDoc as MainDishEntity).suggestedAccompanimentTypeSpecs = suggestedAccompanimentTypeSpecs;
           (dishDoc as MainDishEntity).prepEffort = prepEffort;
           (dishDoc as MainDishEntity).prepTime = prepTime;
           (dishDoc as MainDishEntity).cleanupEffort = cleanupEffort;
@@ -491,6 +491,28 @@ export const deleteIngredientFromDishDb = (
     console.log('Ingredient deletion from dish failed: ', error);
   });
 }
+
+export const createSuggestedAccompanimentTypesForMain = (
+  mainDishId: string,
+  suggestedAccompanimentTypesForMainEntity: SuggestedAccompanimentTypeForMainSpec[],
+): Promise<(Document | void)[]> => {
+  console.log('createSuggestedAccompanimentTypesForMain');
+  console.log('mainId: ', mainDishId);
+  
+  const promises: (Promise<Document | void>)[] = [];
+  suggestedAccompanimentTypesForMainEntity.forEach((suggestedAccompanimentTypeForMainEntity: SuggestedAccompanimentTypeForMainSpec) => {
+    console.log(suggestedAccompanimentTypeForMainEntity.suggestedAccompanimentTypeEntityId);
+    console.log(suggestedAccompanimentTypeForMainEntity.count);
+    const suggestedAccompanimentTypeForMainEntityInDb: SuggestedAccompanimentTypeForMainEntityInDb = {
+      mainDishId,
+      suggestedAccompanimentTypeEntityId: suggestedAccompanimentTypeForMainEntity.suggestedAccompanimentTypeEntityId,
+      count: suggestedAccompanimentTypeForMainEntity.count,
+    };
+    const promise = createSuggestedAccompanimentTypeForMain(suggestedAccompanimentTypeForMainEntityInDb);
+    promises.push(promise);
+  });
+  return Promise.all(promises);
+};
 
 export const createSuggestedAccompanimentTypeForMain = (
   suggestedAccompanimentTypeForMainEntity: SuggestedAccompanimentTypeForMainEntityInDb)
