@@ -81,7 +81,7 @@ class App {
     this.app.get('/api/v1/accompanimentTypes', getAccompanimentTypes);
 
     // this.app.get('/api/v1/dishes', getDishes);
-    this.app.get('/api/v1/mains', getDishes);
+    this.app.get('/api/v1/dishes', getDishes);
     this.app.get('/api/v1/suggestedAccompanimentTypesForMain', getSuggestedAccompanimentTypesForMain);
     // this.app.get('/api/v1/ingredients', getIngredients);
     // this.app.get('/api/v1/ingredientsByDish', getIngredientsByDish);
