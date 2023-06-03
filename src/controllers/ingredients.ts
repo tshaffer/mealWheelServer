@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import {
-  // getIngredientsByDishFromDb,
+  getIngredientsByDishFromDb,
    getIngredientsFromDb
 } from './dbInterface';
 
@@ -17,15 +17,15 @@ export function getIngredients(request: Request, response: Response) {
 }
 
 
-// export function getIngredientsByDish(request: Request, response: Response) {
+export function getIngredientsByDish(request: Request, response: Response) {
 
-//   const userId: string = request.query.id as string;
+  const userId: string = request.query.id as string;
 
-//   return getIngredientsByDishFromDb(userId)
-//     .then((values: any[]) => {
-//       console.log('return from getIngredientsByDishFromDb, invoke response.json');
-//       response.json(values);
-//     });
+  return getIngredientsByDishFromDb(userId)
+    .then((values: any[]) => {
+      console.log('return from getIngredientsByDishFromDb, invoke response.json');
+      response.json(values);
+    });
 
-// }
+}
 

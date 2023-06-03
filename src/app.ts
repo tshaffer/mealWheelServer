@@ -39,7 +39,7 @@ import {
   addSuggestedAccompanimentTypeForMain,
   // deleteDish,
 } from './controllers';
-// import { getIngredientsByDish } from './controllers/ingredients';
+import { getIngredients, getIngredientsByDish } from './controllers/ingredients';
 
 class App {
 
@@ -83,8 +83,8 @@ class App {
     // this.app.get('/api/v1/dishes', getDishes);
     this.app.get('/api/v1/dishes', getDishes);
     this.app.get('/api/v1/suggestedAccompanimentTypesForMain', getSuggestedAccompanimentTypesForMain);
-    // this.app.get('/api/v1/ingredients', getIngredients);
-    // this.app.get('/api/v1/ingredientsByDish', getIngredientsByDish);
+    this.app.get('/api/v1/ingredients', getIngredients);
+    this.app.get('/api/v1/ingredientsByDish', getIngredientsByDish);
 
     // this.app.get('/api/v1/mains', getMains);
     // this.app.get('/api/v1/allAccompaniments', getAllAccompaniments);

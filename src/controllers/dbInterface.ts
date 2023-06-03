@@ -410,22 +410,22 @@ export const createIngredientInDishDocument = (ingredientInDishEntity: Ingredien
 };
 
 // TODO - rewrite using a single query
-// export const getIngredientsByDishFromDb = (userId: string): Promise<any> => {
-//   const ingredientsByDishId: any = {};
-//   const getDishes: Promise<BaseDishEntity[]> = getDishesFromDb(userId);
-//   return getDishes.then((dishes: BaseDishEntity[]) => {
-//     const ingredientsInDishesPromises: Promise<any>[] = [];
-//     for (const dish of dishes) {
-//       ingredientsByDishId[dish.id] = [];
-//       const getIngredientsInDishPromise: Promise<IngredientInDishEntity[]> = getIngredientsInDishFromDb(dish.id);
-//       ingredientsInDishesPromises.push(getIngredientsInDishPromise);
-//     }
-//     return Promise.all(ingredientsInDishesPromises).then((ingredientsInDishes) => {
-//       getIngredientsInDishes(ingredientsByDishId, ingredientsInDishes);
-//       return Promise.resolve(ingredientsByDishId);
-//     });
-//   });
-// }
+export const getIngredientsByDishFromDb = (userId: string): Promise<any> => {
+  const ingredientsByDishId: any = {};
+  const getDishes: Promise<MainDishEntity[]> = getDishesFromDb(userId);
+  return getDishes.then((dishes: MainDishEntity[]) => {
+    const ingredientsInDishesPromises: Promise<any>[] = [];
+    for (const dish of dishes) {
+      ingredientsByDishId[dish.id] = [];
+      const getIngredientsInDishPromise: Promise<IngredientInDishEntity[]> = getIngredientsInDishFromDb(dish.id);
+      ingredientsInDishesPromises.push(getIngredientsInDishPromise);
+    }
+    return Promise.all(ingredientsInDishesPromises).then((ingredientsInDishes) => {
+      getIngredientsInDishes(ingredientsByDishId, ingredientsInDishes);
+      return Promise.resolve(ingredientsByDishId);
+    });
+  });
+}
 
 const getIngredientsInDishFromDb = (dishId: string): Promise<IngredientInDishEntity[]> => {
 
