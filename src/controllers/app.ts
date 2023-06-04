@@ -1,7 +1,4 @@
 import { Request, Response } from 'express';
-import * as fs from 'fs';
-import { v4 as uuidv4 } from 'uuid';
-const path = require('node:path');
 
 import {
   AccompanimentTypeEntity,
@@ -18,7 +15,6 @@ import {
   createMainDocument,
   createScheduledMealDocument,
   getDishesFromDb,
-  getMainDishesFromDb,
   getScheduledMealsFromDb,
   updateDishDb,
   updateMealDb,
@@ -30,7 +26,7 @@ import {
   updateIngredientDb,
   createAccompanimentDocument as createAccompanimentDocument,
   getAccompanimentTypesFromDb,
-  getSuggestedAccompanimentTypesForMains as getSuggestedAccompanimentTypesForMainsFromDb,
+  getSuggestedAccompanimentTypesForMains,
   createSuggestedAccompanimentTypeForMain,
   createSuggestedAccompanimentTypesForMain,
   deleteDishFromDb,
@@ -97,7 +93,7 @@ export const getDishes = (request: Request, response: Response) => {
   console.log(userId);
 
   const mainDishEntitiesPromise: Promise<MainDishEntity[]> = getDishesFromDb(userId);
-  const suggestedAccompanimentTypeForMainEntityInDbPromise: Promise<SuggestedAccompanimentTypeForMainEntityInDb[]> = getSuggestedAccompanimentTypesForMainsFromDb();
+  const suggestedAccompanimentTypeForMainEntityInDbPromise: Promise<SuggestedAccompanimentTypeForMainEntityInDb[]> = getSuggestedAccompanimentTypesForMains();
 
   return Promise.all([mainDishEntitiesPromise, suggestedAccompanimentTypeForMainEntityInDbPromise])
     .then((values) => {
@@ -145,7 +141,7 @@ export const getSuggestedAccompanimentTypesForMain = (request: Request, response
 
   console.log('getSuggestedAccompanimentTypesForMain');
 
-  return getSuggestedAccompanimentTypesForMainsFromDb()
+  return getSuggestedAccompanimentTypesForMains()
     .then((suggestedAccompanimentTypeForMainEntities: SuggestedAccompanimentTypeForMainEntityInDb[]) => {
       console.log('promise resolved in getSuggestedAccompanimentTypesForMain');
       response.json(suggestedAccompanimentTypeForMainEntities);
