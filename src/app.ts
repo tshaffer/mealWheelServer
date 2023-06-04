@@ -25,7 +25,6 @@ import {
   addMain,
   addAccompaniment,
   getAccompanimentTypes,
-  upgradeSchema,
   getSuggestedAccompanimentTypesForMain,
   addSuggestedAccompanimentTypeForMain,
   deleteDish,
@@ -98,8 +97,6 @@ class App {
 
     // this.app.get('/api/v1/validate', validate);
     // this.app.post('/api/v1/mealWheelSpec', uploadMealWheelSpec);
-    this.app.get('/api/v1/upgradeSchema', upgradeSchema);
-
   }
 
   private config(): void {

@@ -8,8 +8,7 @@ import Ingredient from '../models/Ingredient';
 import IngredientInDish from '../models/IngredientInDish';
 import ScheduledMeal from '../models/ScheduledMeal';
 import {
-  AccompanimentDishEntity,
-  MainDishEntity,
+  DishEntity,
   ScheduledMealEntity,
   MealStatus,
   IngredientEntity,
@@ -33,44 +32,48 @@ export const createScheduledMealDocument = (scheduledMealEntity: ScheduledMealEn
     });
 }
 
-export const createAccompanimentDocument = (accompanimentEntity: AccompanimentDishEntity): Promise<Document | void> => {
-  console.log('createAccompanimentDocument');
-  console.log(accompanimentEntity);
-  return AccompanimentModel.create(accompanimentEntity)
-    .then((dish: Document) => {
-      console.log('successful returned from create');
-      return Promise.resolve(dish);
-    }).catch((err: any) => {
-      console.log(err);
-      return Promise.resolve();
-    });
-};
+export const createDishDocument = (dishEntity: DishEntity): Promise<Document | void> => {
+  return Promise.resolve();
+}
 
-export const createMainDocument = (mainEntity: MainDishEntity): Promise<Document | void> => {
-  const getExistingDishesPromise: Promise<any> = getMainByNameFromDb(mainEntity.userId, mainEntity.name);
-  return getExistingDishesPromise
-    .then((existingDishes: any) => {
-      // console.log('existingDishes: ', existingDishes);
-      return MainModel.create(mainEntity)
-        .then((dish: Document) => {
-          return Promise.resolve(dish);
-        }).catch((err: any) => {
-          if (err.name === 'MongoError' && err.code === 11000) {
-            console.log('Duplicate key error in createMainDishDocument: ', mainEntity);
-          }
-          // return Promise.reject(err);
-          return Promise.resolve();
-        });
-    }).catch((err: any) => {
-      console.log('getExistingDishes error: ', err);
-      return Promise.resolve();
-    });
-};
+// export const createAccompanimentDocument = (accompanimentEntity: AccompanimentDishEntity): Promise<Document | void> => {
+//   console.log('createAccompanimentDocument');
+//   console.log(accompanimentEntity);
+//   return AccompanimentModel.create(accompanimentEntity)
+//     .then((dish: Document) => {
+//       console.log('successful returned from create');
+//       return Promise.resolve(dish);
+//     }).catch((err: any) => {
+//       console.log(err);
+//       return Promise.resolve();
+//     });
+// };
+
+// export const createMainDocument = (mainEntity: MainDishEntity): Promise<Document | void> => {
+//   const getExistingDishesPromise: Promise<any> = getMainByNameFromDb(mainEntity.userId, mainEntity.name);
+//   return getExistingDishesPromise
+//     .then((existingDishes: any) => {
+//       // console.log('existingDishes: ', existingDishes);
+//       return MainModel.create(mainEntity)
+//         .then((dish: Document) => {
+//           return Promise.resolve(dish);
+//         }).catch((err: any) => {
+//           if (err.name === 'MongoError' && err.code === 11000) {
+//             console.log('Duplicate key error in createMainDishDocument: ', mainEntity);
+//           }
+//           // return Promise.reject(err);
+//           return Promise.resolve();
+//         });
+//     }).catch((err: any) => {
+//       console.log('getExistingDishes error: ', err);
+//       return Promise.resolve();
+//     });
+// };
 
 export const updateDishDb = (
   id: string,
   name: string,
-  type: MainDishEntity,
+  type: DishEntity,
   minimumInterval: number,
   last: Date | null,
   suggestedAccompanimentTypeSpecs: SuggestedAccompanimentTypeForMainSpec[],
@@ -85,13 +88,13 @@ export const updateDishDb = (
       } else
         if (isArray(dishDocs) && dishDocs.length === 1) {
           const dishDoc: any = dishDocs[0];
-          (dishDoc as MainDishEntity).name = name;
-          (dishDoc as MainDishEntity).minimumInterval = minimumInterval,
-            (dishDoc as MainDishEntity).last = last,
-            (dishDoc as MainDishEntity).suggestedAccompanimentTypeSpecs = suggestedAccompanimentTypeSpecs;
-          (dishDoc as MainDishEntity).prepEffort = prepEffort;
-          (dishDoc as MainDishEntity).prepTime = prepTime;
-          (dishDoc as MainDishEntity).cleanupEffort = cleanupEffort;
+          (dishDoc as DishEntity).name = name;
+          (dishDoc as DishEntity).minimumInterval = minimumInterval,
+            (dishDoc as DishEntity).last = last,
+            (dishDoc as DishEntity).suggestedAccompanimentTypeSpecs = suggestedAccompanimentTypeSpecs;
+          (dishDoc as DishEntity).prepEffort = prepEffort;
+          (dishDoc as DishEntity).prepTime = prepTime;
+          (dishDoc as DishEntity).cleanupEffort = cleanupEffort;
           dishDoc.save();
         }
     });
@@ -123,14 +126,14 @@ export const getScheduledMealsFromDb = (userId: string): Promise<ScheduledMealEn
   });
 }
 
-const getMainDishesFromDbHelper = (query: any): Promise<MainDishEntity[]> => {
+const getMainDishesFromDbHelper = (query: any): Promise<DishEntity[]> => {
 
   const promise: Promise<Document[]> = query.exec();
   return promise.then((mainDishDocuments: Document[]) => {
 
-    const mainDishEntities: MainDishEntity[] = mainDishDocuments.map((mainDishDocument: any) => {
-      const mainDishEntity: MainDishEntity = mainDishDocument.toObject();
-      return mainDishEntity;
+    const mainDishEntities: DishEntity[] = mainDishDocuments.map((mainDishDocument: any) => {
+      const DishEntity: DishEntity = mainDishDocument.toObject();
+      return DishEntity;
     });
 
     return Promise.resolve(mainDishEntities);
@@ -138,12 +141,12 @@ const getMainDishesFromDbHelper = (query: any): Promise<MainDishEntity[]> => {
 
 }
 
-export const getDishesFromDb = (userId: string): Promise<MainDishEntity[]> => {
+export const getDishesFromDb = (userId: string): Promise<DishEntity[]> => {
   const query = AccompanimentModel.find({ userId });
   return getMainDishesFromDbHelper(query);
 }
 
-export const getMainDishesFromDb = (userId: string): Promise<MainDishEntity[]> => {
+export const getMainDishesFromDb = (userId: string): Promise<DishEntity[]> => {
   const query = MainModel.find({ userId, type: 'main' });
   return getMainDishesFromDbHelper(query);
 }
@@ -172,7 +175,7 @@ export const getAccompanimentTypesFromDb = (userId: string): Promise<Accompanime
 }
 
 
-const getMainByNameFromDb = (userId: string, name: string): Promise<MainDishEntity[]> => {
+const getMainByNameFromDb = (userId: string, name: string): Promise<DishEntity[]> => {
   const query = MainModel.find({ userId, name, type: 'main' });
   return getMainDishesFromDbHelper(query);
 }
@@ -376,8 +379,8 @@ export const createIngredientInDishDocument = (ingredientInDishEntity: Ingredien
 // TODO - rewrite using a single query
 export const getIngredientsByDishFromDb = (userId: string): Promise<any> => {
   const ingredientsByDishId: any = {};
-  const getDishes: Promise<MainDishEntity[]> = getDishesFromDb(userId);
-  return getDishes.then((dishes: MainDishEntity[]) => {
+  const getDishes: Promise<DishEntity[]> = getDishesFromDb(userId);
+  return getDishes.then((dishes: DishEntity[]) => {
     const ingredientsInDishesPromises: Promise<any>[] = [];
     for (const dish of dishes) {
       ingredientsByDishId[dish.id] = [];

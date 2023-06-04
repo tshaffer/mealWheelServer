@@ -1,40 +1,17 @@
 import { MealStatus } from '../types';
 
-interface IDish {
-  type: string;
+export interface DishEntity {
   id: string;
+  type: string;
   userId: string;
   name: string;
   minimumInterval: number;
   last: Date | null;
-  // ingredientIds: string[];
   prepEffort: number;
   prepTime: number;
   cleanupEffort: number;
-}
-
-interface IMainDish extends IDish {
   suggestedAccompanimentTypeSpecs: SuggestedAccompanimentTypeForMainSpec[],
 }
-
-export enum MealWheelEntityType {
-  Meal = 'meal',
-  Dish = 'dish',
-  Ingredient = 'ingredient',
-  IngredientInDish = 'ingredientInDish',
-};
-
-export enum DishType {
-  Main = 'main',
-  Side = 'side',
-  Salad = 'salad',
-  Veggie = 'veggie',
-}
-
-export type DishEntity = IDish;
-export type AccompanimentDishEntity = IDish;
-export type MainDishEntity = IMainDish;
-
 
 export interface AccompanimentTypeEntity {
   id: string;

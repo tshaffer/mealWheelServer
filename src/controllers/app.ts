@@ -5,14 +5,13 @@ import {
   DishEntity,
   IngredientEntity,
   IngredientInDishEntity,
-  MainDishEntity,
   ScheduledMealEntity,
   SuggestedAccompanimentTypeForMainEntityInDb,
   SuggestedAccompanimentTypeForMainSpec
 } from '../types';
 
 import {
-  createMainDocument,
+  createDishDocument,
   createScheduledMealDocument,
   getDishesFromDb,
   getScheduledMealsFromDb,
@@ -24,7 +23,6 @@ import {
   deleteIngredientFromDishDb,
   replaceIngredientInDishDb,
   updateIngredientDb,
-  createAccompanimentDocument as createAccompanimentDocument,
   getAccompanimentTypesFromDb,
   getSuggestedAccompanimentTypesForMains,
   createSuggestedAccompanimentTypeForMain,
@@ -34,7 +32,6 @@ import {
 } from './dbInterface';
 
 import { version } from '../version';
-import { upgradeDbSchema } from './dbSchemaUpgrade';
 
 export const getVersion = (request: Request, response: Response, next: any) => {
   console.log('getVersion');
@@ -92,7 +89,7 @@ export const getDishes = (request: Request, response: Response) => {
   console.log('getDishes');
   console.log(userId);
 
-  const mainDishEntitiesPromise: Promise<MainDishEntity[]> = getDishesFromDb(userId);
+  const mainDishEntitiesPromise: Promise<DishEntity[]> = getDishesFromDb(userId);
   const suggestedAccompanimentTypeForMainEntityInDbPromise: Promise<SuggestedAccompanimentTypeForMainEntityInDb[]> = getSuggestedAccompanimentTypesForMains();
 
   return Promise.all([mainDishEntitiesPromise, suggestedAccompanimentTypeForMainEntityInDbPromise])
@@ -100,9 +97,9 @@ export const getDishes = (request: Request, response: Response) => {
       const rawDishEntities: DishEntity[] = values[0];
       const suggestedAccompanimentTypesForMainsFromDb: SuggestedAccompanimentTypeForMainEntityInDb[] = values[1];
 
-      const mainDishEntities: MainDishEntity[] = [];
+      const mainDishEntities: DishEntity[] = [];
 
-      rawDishEntities.forEach((rawDishEntity: MainDishEntity) => {
+      rawDishEntities.forEach((rawDishEntity: DishEntity) => {
 
         const suggestedAccompanimentTypeSpecs: SuggestedAccompanimentTypeForMainSpec[] = [];
 
@@ -117,16 +114,14 @@ export const getDishes = (request: Request, response: Response) => {
           }
         });
 
-        // const { type, id, userId, name, minimumInterval, last, ingredientIds, prepEffort, prepTime, cleanupEffort } = rawDishEntity;
         const { type, id, userId, name, minimumInterval, last, prepEffort, prepTime, cleanupEffort } = rawDishEntity;
-        const mainDishEntity: MainDishEntity = {
+        const mainDishEntity: DishEntity = {
           type,
           id,
           userId,
           name,
           minimumInterval,
           last,
-          // ingredientIds,
           prepEffort,
           prepTime,
           cleanupEffort,
@@ -157,7 +152,7 @@ export const addAccompaniment = (request: Request, response: Response, next: any
   const { dish, userId } = request.body;
 
   dish.userId = userId;
-  createAccompanimentDocument(dish);
+  createDishDocument(dish);
 
   response.sendStatus(200);
 }
@@ -170,9 +165,9 @@ export const addMain = (request: Request, response: Response, next: any) => {
   const { dish, userId } = request.body;
 
   dish.userId = userId;
-  createMainDocument(dish)
+  createDishDocument(dish)
     .then((dishDocument: any) => {
-      createSuggestedAccompanimentTypesForMain(dish.id, (dish as MainDishEntity).suggestedAccompanimentTypeSpecs);
+      createSuggestedAccompanimentTypesForMain(dish.id, (dish as DishEntity).suggestedAccompanimentTypeSpecs);
       response.sendStatus(200);
     });
 
@@ -315,11 +310,6 @@ export const addSuggestedAccompanimentTypeForMain = (request: Request, response:
   };
   createSuggestedAccompanimentTypeForMain(suggestedAccompanimentTypeForMainEntity);
 
-  response.sendStatus(200);
-}
-
-export const upgradeSchema = (request: Request, response: Response, next: any) => {
-  upgradeDbSchema();
   response.sendStatus(200);
 }
 
