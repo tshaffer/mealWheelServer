@@ -12,32 +12,25 @@ import {
   addScheduledMeal,
   getDishes,
   getScheduledMeals,
-  // addDish,
-  // getIngredients,
   getUsers,
   getVersion,
-  // uploadMealWheelSpec,
   updateDish,
   updateMeal,
-  // validate,
   deleteScheduledMeal,
   addIngredient,
   addIngredientToDish,
   deleteIngredientFromDish,
   replaceIngredientInDish,
   updateIngredient,
-  // addAccompanimentDish,
   addMain,
   addAccompaniment,
-  // getAccompanimentDishes,
-  // getAllAccompaniments,
-  // getMains,
-  // getAccompaniments,
   getAccompanimentTypes,
   upgradeSchema,
   getSuggestedAccompanimentTypesForMain,
   addSuggestedAccompanimentTypeForMain,
   deleteDish,
+  // uploadMealWheelSpec,
+  // validate,
 } from './controllers';
 import { getIngredients, getIngredientsByDish } from './controllers/ingredients';
 
@@ -76,7 +69,6 @@ class App {
     // app routes
     this.app.get('/api/v1/version', getVersion);
     this.app.get('/api/v1/users', getUsers);
-    // this.app.post('/api/v1/mealWheelSpec', uploadMealWheelSpec);
 
     this.app.get('/api/v1/accompanimentTypes', getAccompanimentTypes);
 
@@ -85,15 +77,10 @@ class App {
     this.app.get('/api/v1/ingredients', getIngredients);
     this.app.get('/api/v1/ingredientsByDish', getIngredientsByDish);
 
-    // this.app.get('/api/v1/mains', getMains);
-    // this.app.get('/api/v1/allAccompaniments', getAllAccompaniments);
-    // this.app.get('/api/v1/accompaniments', getAccompaniments);
-
     this.app.post('/api/v1/addMain', addMain);
     this.app.post('/api/v1/addAccompaniment', addAccompaniment);
     this.app.post('/api/v1/addSuggestedAccompanimentTypeForMain', addSuggestedAccompanimentTypeForMain);
 
-    // this.app.post('/api/v1/addDish', addDish);
     this.app.post('/api/v1/addIngredient', addIngredient)
     this.app.post('/api/v1/addIngredientToDish', addIngredientToDish)
 
@@ -110,6 +97,7 @@ class App {
     this.app.post('/api/v1/deleteScheduledMeal', deleteScheduledMeal);
 
     // this.app.get('/api/v1/validate', validate);
+    // this.app.post('/api/v1/mealWheelSpec', uploadMealWheelSpec);
     this.app.get('/api/v1/upgradeSchema', upgradeSchema);
 
   }

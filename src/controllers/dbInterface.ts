@@ -138,21 +138,6 @@ const getMainDishesFromDbHelper = (query: any): Promise<MainDishEntity[]> => {
 
 }
 
-const getAccompanimentDishesFromDbHelper = (query: any): Promise<AccompanimentDishEntity[]> => {
-
-  const promise: Promise<Document[]> = query.exec();
-  return promise.then((accompanimentDishDocuments: Document[]) => {
-
-    const accompanimentDishEntities: AccompanimentDishEntity[] = accompanimentDishDocuments.map((accompanimentDishDocument: any) => {
-      const accompanimentDishEntity: AccompanimentDishEntity = accompanimentDishDocument.toObject();
-      return accompanimentDishEntity;
-    });
-
-    return Promise.resolve(accompanimentDishEntities);
-  });
-
-}
-
 export const getDishesFromDb = (userId: string): Promise<MainDishEntity[]> => {
   const query = AccompanimentModel.find({ userId });
   return getMainDishesFromDbHelper(query);
@@ -161,27 +146,6 @@ export const getDishesFromDb = (userId: string): Promise<MainDishEntity[]> => {
 export const getMainDishesFromDb = (userId: string): Promise<MainDishEntity[]> => {
   const query = MainModel.find({ userId, type: 'main' });
   return getMainDishesFromDbHelper(query);
-}
-
-// export const getAccompanimentDishesFromDb = (userId: string): Promise<AccompanimentDishEntity[]> => {
-//   const query = AccompanimentModel.find({ userId });
-//   return getAccompanimentDishesFromDbHelper(query);
-// }
-
-// export const getAccompanimentsFromDb = (userId: string, accompanimentType: string): Promise<AccompanimentDishEntity[]> => {
-//   const query = AccompanimentModel.find({
-//     userId,
-//     type: { $eq: accompanimentType },
-//   });
-//   return getAccompanimentDishesFromDbHelper(query);
-// }
-
-export const getAllAccompanimentsFromDb = (userId: string): Promise<AccompanimentDishEntity[]> => {
-  const query = AccompanimentModel.find({
-    userId,
-    type: { $ne: 'main' },
-  });
-  return getAccompanimentDishesFromDbHelper(query);
 }
 
 const getAccompanimentTypesFromDbHelper = (query: any): Promise<AccompanimentTypeEntity[]> => {
@@ -249,9 +213,9 @@ export const deleteScheduledMealDb = (
   });
 }
 
-interface MainDishMap {
-  [key: string]: MainDishEntity; // id or name
-}
+// interface MainDishMap {
+//   [key: string]: MainDishEntity; // id or name
+// }
 
 // export const validateDb = () => {
 //   const userId = '0';
@@ -535,24 +499,6 @@ export const createSuggestedAccompanimentTypeForMain = (
       return Promise.resolve();
     });
 }
-
-// const getSuggestedAccompanimentTypesForMain = (dishId: string): Promise<SuggestedAccompanimentTypeForMainEntity[]> => {
-
-//   const query = SuggestedAccompanimentTypesForMain.find({ dishId });
-
-//   const promise: Promise<Document[]> = query.exec();
-
-//   return promise.then((suggestedAccompanimentTypesForMainDocuments: Document[]) => {
-
-//     const suggestedAccompanimentTypeForMainEntities: SuggestedAccompanimentTypeForMainEntity[] = suggestedAccompanimentTypesForMainDocuments.map((suggestedAccompanimentTypeForMainDocuments: any) => {
-//       const suggestedAccompanimentTypeForMainEntity: SuggestedAccompanimentTypeForMainEntity = suggestedAccompanimentTypeForMainDocuments.toObject();
-//       return suggestedAccompanimentTypeForMainEntity;
-//     });
-
-//     return Promise.resolve(suggestedAccompanimentTypeForMainEntities);
-
-//   });
-// }
 
 export const getSuggestedAccompanimentTypesForMains = (): Promise<SuggestedAccompanimentTypeForMainEntityInDb[]> => {
 

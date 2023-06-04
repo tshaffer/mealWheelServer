@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from 'uuid';
 const path = require('node:path');
 
 import {
-  AccompanimentDishEntity,
   AccompanimentTypeEntity,
   DishEntity,
   IngredientEntity,
@@ -16,32 +15,26 @@ import {
 } from '../types';
 
 import {
-  // createBaseDishDocument,
   createMainDocument,
   createScheduledMealDocument,
-  // getAccompanimentDishesFromDb,
   getDishesFromDb,
   getMainDishesFromDb,
   getScheduledMealsFromDb,
   updateDishDb,
   updateMealDb,
   createIngredientDocument,
-  // getDefinedMealsFromDb,
-  // validateDb,
   deleteScheduledMealDb,
-  // createDishDocument,
   createIngredientInDishDocument,
   deleteIngredientFromDishDb,
   replaceIngredientInDishDb,
   updateIngredientDb,
   createAccompanimentDocument as createAccompanimentDocument,
-  getAllAccompanimentsFromDb,
-  // getAccompanimentsFromDb,
   getAccompanimentTypesFromDb,
   getSuggestedAccompanimentTypesForMains as getSuggestedAccompanimentTypesForMainsFromDb,
   createSuggestedAccompanimentTypeForMain,
   createSuggestedAccompanimentTypesForMain,
-  deleteDishFromDb
+  deleteDishFromDb,
+  // validateDb,
 } from './dbInterface';
 
 import { version } from '../version';
@@ -65,26 +58,6 @@ export function getScheduledMeals(request: Request, response: Response) {
       response.json(scheduledMealEntities);
     });
 }
-
-export function getMainDishes(request: Request, response: Response) {
-
-  const id: string = request.query.id as string;
-
-  return getMainDishesFromDb(id)
-    .then((dishEntities: MainDishEntity[]) => {
-      response.json(dishEntities);
-    });
-
-}
-
-// export function getAccompanimentDishes(request: Request, response: Response) {
-//   const id: string = request.query.id as string;
-
-//   return getAccompanimentDishesFromDb(id)
-//     .then((dishEntities: AccompanimentDishEntity[]) => {
-//       response.json(dishEntities);
-//     });
-// }
 
 export const addScheduledMeal = (request: Request, response: Response, next: any) => {
 
@@ -116,18 +89,6 @@ export const deleteScheduledMeal = (request: Request, response: Response, next: 
   deleteScheduledMealDb(id);
   response.sendStatus(200);
 }
-
-// export const getDishes = (request: Request, response: Response) => {
-//   const id: string = request.query.id as string;
-
-//   console.log('getDishes');
-//   console.log(id);
-
-//   return getDishesFromDb(id)
-//     .then((dishEntities: DishEntity[]) => {
-//       response.json(dishEntities);
-//     });
-// }
 
 export const getDishes = (request: Request, response: Response) => {
   const userId: string = request.query.id as string;
@@ -190,45 +151,6 @@ export const getSuggestedAccompanimentTypesForMain = (request: Request, response
       response.json(suggestedAccompanimentTypeForMainEntities);
     });
 }
-
-// export const getMains = (request: Request, response: Response) => {
-//   const id: string = request.query.id as string;
-
-//   console.log('getMains');
-//   console.log(id);
-
-//   return getMainDishesFromDb(id)
-//     .then((dishEntities: AccompanimentDishEntity[]) => {
-//       response.json(dishEntities);
-//     });
-// }
-
-// export const getAccompaniments = (request: Request, response: Response) => {
-//   const id: string = request.query.id as string;
-//   const accompanimentType: string = request.query.type as string;
-
-//   console.log('getAccompaniments');
-//   console.log(id);
-//   console.log('accompanimentType');
-//   console.log(accompanimentType);
-
-//   return getAccompanimentsFromDb(id, accompanimentType)
-//     .then((dishEntities: AccompanimentDishEntity[]) => {
-//       response.json(dishEntities);
-//     });
-// }
-
-// export const getAllAccompaniments = (request: Request, response: Response) => {
-//   const id: string = request.query.id as string;
-
-//   console.log('getAllAccompaniments');
-//   console.log(id);
-
-//   return getAllAccompanimentsFromDb(id)
-//     .then((dishEntities: AccompanimentDishEntity[]) => {
-//       response.json(dishEntities);
-//     });
-// }
 
 export const addAccompaniment = (request: Request, response: Response, next: any) => {
 
