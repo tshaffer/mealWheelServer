@@ -92,7 +92,7 @@ const generateNewDishesFromOldDishes = (oldDishDocuments: any[]) => {
         name: oldDishDocument.name,
         minimumInterval: oldDishDocument.minimumInterval,
         last: oldDishDocument.last,
-        ingredientIds: oldDishDocument.ingredientIds,
+        // ingredientIds: oldDishDocument.ingredientIds,
         prepEffort: oldDishDocument.prepEffort,
         prepTime: oldDishDocument.prepTime,
         cleanupEffort: oldDishDocument.cleanupEffort,

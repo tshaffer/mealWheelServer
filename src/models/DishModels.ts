@@ -12,7 +12,7 @@ const baseDishSchema = new Schema(
     type: { type: String, required: true },
     minimumInterval: { type: Number, required: true },
     last: { type: Date },
-    ingredientIds: { type: [String] },
+    // ingredientIds: { type: [String] },
     prepEffort: { type: Number, required: true },
     prepTime: { type: Number, required: true },
     cleanupEffort: { type: Number, required: true },

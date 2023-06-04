@@ -7,7 +7,7 @@ interface IDish {
   name: string;
   minimumInterval: number;
   last: Date | null;
-  ingredientIds: string[];
+  // ingredientIds: string[];
   prepEffort: number;
   prepTime: number;
   cleanupEffort: number;

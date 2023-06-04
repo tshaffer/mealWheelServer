@@ -117,7 +117,8 @@ export const getDishes = (request: Request, response: Response) => {
           }
         });
 
-        const { type, id, userId, name, minimumInterval, last, ingredientIds, prepEffort, prepTime, cleanupEffort } = rawDishEntity;
+        // const { type, id, userId, name, minimumInterval, last, ingredientIds, prepEffort, prepTime, cleanupEffort } = rawDishEntity;
+        const { type, id, userId, name, minimumInterval, last, prepEffort, prepTime, cleanupEffort } = rawDishEntity;
         const mainDishEntity: MainDishEntity = {
           type,
           id,
@@ -125,7 +126,7 @@ export const getDishes = (request: Request, response: Response) => {
           name,
           minimumInterval,
           last,
-          ingredientIds,
+          // ingredientIds,
           prepEffort,
           prepTime,
           cleanupEffort,
