@@ -41,7 +41,7 @@ import {
   getSuggestedAccompanimentTypesForMains as getSuggestedAccompanimentTypesForMainsFromDb,
   createSuggestedAccompanimentTypeForMain,
   createSuggestedAccompanimentTypesForMain,
-  // deleteDishFromDb
+  deleteDishFromDb
 } from './dbInterface';
 
 import { version } from '../version';
@@ -274,17 +274,17 @@ export const updateDish = (request: Request, response: Response, next: any) => {
 
 }
 
-// export const deleteDish = (request: Request, response: Response, next: any) => {
+export const deleteDish = (request: Request, response: Response, next: any) => {
 
-//   console.log('deleteDish');
-//   console.log(request.body);
+  console.log('deleteDish');
+  console.log(request.body);
 
-//   const { dishId } = request.body;
+  const { dishId } = request.body;
 
-//   deleteDishFromDb(dishId);
+  deleteDishFromDb(dishId);
 
-//   response.sendStatus(200);
-// }
+  response.sendStatus(200);
+}
 
 // export const validate = (request: Request, response: Response, next: any) => {
 //   validateDb();
@@ -330,45 +330,45 @@ export const updateIngredient = (request: Request, response: Response, next: any
   response.sendStatus(200);
 }
 
-// export const addIngredientToDish = (request: Request, response: Response, next: any) => {
+export const addIngredientToDish = (request: Request, response: Response, next: any) => {
 
-//   console.log('addIngredientToDish');
-//   console.log(request.body);
+  console.log('addIngredientToDish');
+  console.log(request.body);
 
-//   const { dishId, ingredientId } = request.body;
+  const { dishId, ingredientId } = request.body;
 
-//   const ingredientInDishEntity: IngredientInDishEntity = {
-//     dishId,
-//     ingredientId
-//   };
-//   createIngredientInDishDocument(ingredientInDishEntity);
+  const ingredientInDishEntity: IngredientInDishEntity = {
+    dishId,
+    ingredientId
+  };
+  createIngredientInDishDocument(ingredientInDishEntity);
 
-//   response.sendStatus(200);
-// }
+  response.sendStatus(200);
+}
 
-// export const replaceIngredientInDish = (request: Request, response: Response, next: any) => {
+export const replaceIngredientInDish = (request: Request, response: Response, next: any) => {
 
-//   console.log('replaceIngredientInDish');
-//   console.log(request.body);
+  console.log('replaceIngredientInDish');
+  console.log(request.body);
 
-//   const { dishId, existingIngredientId, newIngredientId } = request.body;
+  const { dishId, existingIngredientId, newIngredientId } = request.body;
 
-//   replaceIngredientInDishDb(dishId, existingIngredientId, newIngredientId);
+  replaceIngredientInDishDb(dishId, existingIngredientId, newIngredientId);
 
-//   response.sendStatus(200);
-// }
+  response.sendStatus(200);
+}
 
-// export const deleteIngredientFromDish = (request: Request, response: Response, next: any) => {
+export const deleteIngredientFromDish = (request: Request, response: Response, next: any) => {
 
-//   console.log('deleteIngredientFromDish');
-//   console.log(request.body);
+  console.log('deleteIngredientFromDish');
+  console.log(request.body);
 
-//   const { dishId, ingredientId } = request.body;
+  const { dishId, ingredientId } = request.body;
 
-//   deleteIngredientFromDishDb(dishId, ingredientId);
+  deleteIngredientFromDishDb(dishId, ingredientId);
 
-//   response.sendStatus(200);
-// }
+  response.sendStatus(200);
+}
 
 export const getAccompanimentTypes = (request: Request, response: Response) => {
 

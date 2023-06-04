@@ -97,13 +97,13 @@ export const updateDishDb = (
     });
 }
 
-// export const deleteDishFromDb = (id: string): void => {
-//   Dish.deleteOne({ id }).then(() => {
-//     console.log('Deleted dish');
-//   }).catch((error: any) => {
-//     console.log('Dish deletion failed: ', error);
-//   });
-// };
+export const deleteDishFromDb = (id: string): void => {
+  MainModel.deleteOne({ id }).then(() => {
+    console.log('Deleted dish');
+  }).catch((error: any) => {
+    console.log('Dish deletion failed: ', error);
+  });
+};
 
 export const getScheduledMealsFromDb = (userId: string): Promise<ScheduledMealEntity[]> => {
 

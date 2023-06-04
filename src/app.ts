@@ -22,9 +22,9 @@ import {
   // validate,
   deleteScheduledMeal,
   addIngredient,
-  // addIngredientToDish,
-  // deleteIngredientFromDish,
-  // replaceIngredientInDish,
+  addIngredientToDish,
+  deleteIngredientFromDish,
+  replaceIngredientInDish,
   updateIngredient,
   // addAccompanimentDish,
   addMain,
@@ -37,7 +37,7 @@ import {
   upgradeSchema,
   getSuggestedAccompanimentTypesForMain,
   addSuggestedAccompanimentTypeForMain,
-  // deleteDish,
+  deleteDish,
 } from './controllers';
 import { getIngredients, getIngredientsByDish } from './controllers/ingredients';
 
@@ -80,7 +80,6 @@ class App {
 
     this.app.get('/api/v1/accompanimentTypes', getAccompanimentTypes);
 
-    // this.app.get('/api/v1/dishes', getDishes);
     this.app.get('/api/v1/dishes', getDishes);
     this.app.get('/api/v1/suggestedAccompanimentTypesForMain', getSuggestedAccompanimentTypesForMain);
     this.app.get('/api/v1/ingredients', getIngredients);
@@ -96,14 +95,14 @@ class App {
 
     // this.app.post('/api/v1/addDish', addDish);
     this.app.post('/api/v1/addIngredient', addIngredient)
-    // this.app.post('/api/v1/addIngredientToDish', addIngredientToDish)
+    this.app.post('/api/v1/addIngredientToDish', addIngredientToDish)
 
     this.app.post('/api/v1/updateDish', updateDish);
-    // this.app.post('/api/v1/deleteDish', deleteDish);
+    this.app.post('/api/v1/deleteDish', deleteDish);
 
     this.app.post('/api/v1/updateIngredient', updateIngredient)
-    // this.app.post('/api/v1/replaceIngredientInDish', replaceIngredientInDish)
-    // this.app.post('/api/v1/deleteIngredientFromDish', deleteIngredientFromDish)
+    this.app.post('/api/v1/replaceIngredientInDish', replaceIngredientInDish)
+    this.app.post('/api/v1/deleteIngredientFromDish', deleteIngredientFromDish)
 
     this.app.get('/api/v1/scheduledMeals', getScheduledMeals);
     this.app.post('/api/v1/addScheduledMeal', addScheduledMeal);
