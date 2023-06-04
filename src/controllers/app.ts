@@ -144,9 +144,9 @@ export const getSuggestedAccompanimentTypesForMain = (request: Request, response
     });
 }
 
-export const addAccompaniment = (request: Request, response: Response, next: any) => {
+export const addDish =  (request: Request, response: Response, next: any) => {
 
-  console.log('addAccompaniment');
+  console.log('addDish');
   console.log(request.body);
 
   const { dish, userId } = request.body;
@@ -155,22 +155,6 @@ export const addAccompaniment = (request: Request, response: Response, next: any
   createDishDocument(dish);
 
   response.sendStatus(200);
-}
-
-export const addMain = (request: Request, response: Response, next: any) => {
-
-  console.log('addMain');
-  console.log(request.body);
-
-  const { dish, userId } = request.body;
-
-  dish.userId = userId;
-  createDishDocument(dish)
-    .then((dishDocument: any) => {
-      createSuggestedAccompanimentTypesForMain(dish.id, (dish as DishEntity).suggestedAccompanimentTypeSpecs);
-      response.sendStatus(200);
-    });
-
 }
 
 export const updateDish = (request: Request, response: Response, next: any) => {

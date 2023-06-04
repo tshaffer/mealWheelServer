@@ -22,8 +22,6 @@ import {
   deleteIngredientFromDish,
   replaceIngredientInDish,
   updateIngredient,
-  addMain,
-  addAccompaniment,
   getAccompanimentTypes,
   getSuggestedAccompanimentTypesForMain,
   addSuggestedAccompanimentTypeForMain,
@@ -76,8 +74,6 @@ class App {
     this.app.get('/api/v1/ingredients', getIngredients);
     this.app.get('/api/v1/ingredientsByDish', getIngredientsByDish);
 
-    this.app.post('/api/v1/addMain', addMain);
-    this.app.post('/api/v1/addAccompaniment', addAccompaniment);
     this.app.post('/api/v1/addSuggestedAccompanimentTypeForMain', addSuggestedAccompanimentTypeForMain);
 
     this.app.post('/api/v1/addIngredient', addIngredient)

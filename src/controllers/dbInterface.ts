@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 import SuggestedAccompanimentTypesForMain from '../models/SuggestedAccompanimentTypesForMain';
 import AccompanimentType from '../models/AccompanimentType';
 
-import { MainModel, AccompanimentModel } from '../models/DishModels';
+import Dish from '../models/Dish';
 import Ingredient from '../models/Ingredient';
 import IngredientInDish from '../models/IngredientInDish';
 import ScheduledMeal from '../models/ScheduledMeal';
@@ -81,7 +81,7 @@ export const updateDishDb = (
   prepTime: number,
   cleanupEffort: number,
 ): void => {
-  MainModel.find({ id, }
+  Dish.find({ id, }
     , (err, dishDocs: any) => {
       if (err) {
         console.log(err);
@@ -101,7 +101,7 @@ export const updateDishDb = (
 }
 
 export const deleteDishFromDb = (id: string): void => {
-  MainModel.deleteOne({ id }).then(() => {
+  Dish.deleteOne({ id }).then(() => {
     console.log('Deleted dish');
   }).catch((error: any) => {
     console.log('Dish deletion failed: ', error);
@@ -142,12 +142,12 @@ const getMainDishesFromDbHelper = (query: any): Promise<DishEntity[]> => {
 }
 
 export const getDishesFromDb = (userId: string): Promise<DishEntity[]> => {
-  const query = AccompanimentModel.find({ userId });
+  const query = Dish.find({ userId });
   return getMainDishesFromDbHelper(query);
 }
 
 export const getMainDishesFromDb = (userId: string): Promise<DishEntity[]> => {
-  const query = MainModel.find({ userId, type: 'main' });
+  const query = Dish.find({ userId, type: 'main' });
   return getMainDishesFromDbHelper(query);
 }
 
@@ -166,7 +166,6 @@ const getAccompanimentTypesFromDbHelper = (query: any): Promise<AccompanimentTyp
 
 }
 
-
 export const getAccompanimentTypesFromDb = (userId: string): Promise<AccompanimentTypeEntity[]> => {
   const query = AccompanimentType.find({
     userId,
@@ -176,7 +175,7 @@ export const getAccompanimentTypesFromDb = (userId: string): Promise<Accompanime
 
 
 const getMainByNameFromDb = (userId: string, name: string): Promise<DishEntity[]> => {
-  const query = MainModel.find({ userId, name, type: 'main' });
+  const query = Dish.find({ userId, name, type: 'main' });
   return getMainDishesFromDbHelper(query);
 }
 
